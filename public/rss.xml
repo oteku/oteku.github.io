@@ -1,0 +1,38 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Les carnets d&#x27;Oteku</title>
+        <link>https://oteku.github.io</link>
+        <description>Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #Ocaml #Rust</description>
+        <generator>Zola</generator>
+        <language>fr</language>
+        <atom:link href="https://oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 29 Mar 2019 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Pipe macro en Rust</title>
+                <pubDate>Fri, 29 Mar 2019 00:00:00 +0000</pubDate>
+                <link>https://oteku.github.io/something/</link>
+                <guid>https://oteku.github.io/something/</guid>
+                <description>&lt;p&gt;Ceci est un article de boilerplate.
+De vrais articles arrivent bientôt.&lt;&#x2f;p&gt;
+&lt;pre style=&quot;background-color:#212733;&quot;&gt;
+&lt;span style=&quot;color:#ccc9c2;&quot;&gt;
+&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ffa759;&quot;&gt;pub &lt;&#x2f;span&gt;&lt;span style=&quot;color:#f28779;&quot;&gt;macro_rules! &lt;&#x2f;span&gt;&lt;span style=&quot;color:#73d0ff;&quot;&gt;pipe &lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;{
+    ( &lt;&#x2f;span&gt;&lt;span style=&quot;color:#ffcc66;&quot;&gt;$last&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2cc;&quot;&gt;:&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ffa759;&quot;&gt;expr &lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;) &lt;&#x2f;span&gt;&lt;span style=&quot;color:#f29e74;&quot;&gt;=&amp;gt; &lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;{ $last };
+    ( &lt;&#x2f;span&gt;&lt;span style=&quot;color:#ffcc66;&quot;&gt;$head&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2cc;&quot;&gt;:&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ffa759;&quot;&gt;expr&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;, &lt;&#x2f;span&gt;&lt;span style=&quot;color:#f29e74;&quot;&gt;$&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;($tail:expr), +) =&amp;gt; {
+        pipe_two($head, pipe!($($tail),&lt;&#x2f;span&gt;&lt;span style=&quot;color:#f29e74;&quot;&gt;+&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;))
+    };
+}
+
+fn pipe_two&amp;lt;A, B, C, G, F&amp;gt;(f&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2cc;&quot;&gt;:&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt; F&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2cc;&quot;&gt;,&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt; g&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2cc;&quot;&gt;:&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt; G) -&amp;gt; impl Fn(A) -&amp;gt; C
+where
+    F: Fn(A) -&amp;gt; B,
+    G: Fn(B) -&amp;gt; C,
+{
+    &lt;&#x2f;span&gt;&lt;span style=&quot;color:#ffa759;&quot;&gt;move &lt;&#x2f;span&gt;&lt;span style=&quot;color:#f29e74;&quot;&gt;|&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;x&lt;&#x2f;span&gt;&lt;span style=&quot;color:#f29e74;&quot;&gt;| &lt;&#x2f;span&gt;&lt;span style=&quot;color:#f28779;&quot;&gt;g&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;(&lt;&#x2f;span&gt;&lt;span style=&quot;color:#f28779;&quot;&gt;f&lt;&#x2f;span&gt;&lt;span style=&quot;color:#ccc9c2;&quot;&gt;(x))
+}
+&lt;&#x2f;span&gt;&lt;&#x2f;pre&gt;</description>
+            </item>
+        
+    </channel>
+</rss>
