@@ -14,41 +14,9 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ get_url(path="print.css", trailing_slash=false)
-
-
-
-
-
-
-
-
     }}" media="print"> <link rel="stylesheet" href="{{ get_url(path="poole.css", trailing_slash=false)
-
-
-
-
-
-
-
-
     }}"> <link rel="stylesheet" href="{{ get_url(path="hyde.css", trailing_slash=false)
-
-
-
-
-
-
-
-
-    }}"><link rel="stylesheet" href="{{ get_url(path="fontawsome.css", trailing_slash=false)
-
-
-
-
-
-
-
-
+    }}"> <link rel="stylesheet" href="{{ get_url(path="fontawsome.css", trailing_slash=false)
     }}">
     <link
       rel="stylesheet"
@@ -57,14 +25,6 @@
 
     {% if config.generate_rss %} <link rel="alternate"
     type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false)
-
-
-
-
-
-
-
-
     }}"> {% endif %} {% block extra_head %} {% endblock extra_head %}
   </head>
 
@@ -119,7 +79,7 @@
             >{{ page.date | date(format="%Y-%m-%d") }}</span
           >
           <span class="post-date"
-            >{{ page.content | safe | truncate(length=500) }}
+            >{{ page.content | safe | truncate(length=300) }}
             <a href="{{ page.permalink }}">
               lire
             </a>
