@@ -2,7 +2,7 @@
     <channel>
         <title>Les carnets d&#x27;Oteku</title>
         <link>https://oteku.github.io</link>
-        <description>Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #Ocaml #Rust</description>
+        <description>Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust</description>
         <generator>Zola</generator>
         <language>fr</language>
         <atom:link href="https://oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
