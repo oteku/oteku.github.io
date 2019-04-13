@@ -2,7 +2,7 @@
 title = "Opérateur pipe en Rust ?" 
 date = 2019-03-29
 [taxonomies]
-tags = ["Rust"]
+tags = ["rust"]
 +++
 
 L'absence d'opérateur de composition, similaire au `.` de Haskell, ou de pipeline similaire au `|>` de ReasonML et Ocaml, est assez frustrante lors qu'on essait de faire du code Rust déclaratif.
