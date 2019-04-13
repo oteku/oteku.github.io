@@ -5,7 +5,7 @@ date = 2019-03-29
 tags = ["rust"]
 +++
 
-L'absence d'opérateur de composition, similaire au `.` de Haskell, ou de pipeline similaire au `|>` de ReasonML et OCaml, est assez frustrante lors qu'on essait de faire du code Rust déclaratif.
+L'absence d'opérateur de composition, similaire au `.` de Haskell, ou de pipeline similaire au `|>` de ReasonML et OCaml, est assez frustrante lors qu'on essaie de faire du code Rust déclaratif.
 
 Il est possible d'envisager la _dot notation_ mais d'une part ce n'est pas totalement satisfaisant et d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.
 

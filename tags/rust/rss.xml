@@ -13,7 +13,7 @@
                 <pubDate>Fri, 29 Mar 2019 00:00:00 +0000</pubDate>
                 <link>https://oteku.github.io/pipe-macro-rust/</link>
                 <guid>https://oteku.github.io/pipe-macro-rust/</guid>
-                <description>&lt;p&gt;L&#x27;absence d&#x27;opérateur de composition, similaire au &lt;code&gt;.&lt;&#x2f;code&gt; de Haskell, ou de pipeline similaire au &lt;code&gt;|&amp;gt;&lt;&#x2f;code&gt; de ReasonML et OCaml, est assez frustrante lors qu&#x27;on essait de faire du code Rust déclaratif.&lt;&#x2f;p&gt;
+                <description>&lt;p&gt;L&#x27;absence d&#x27;opérateur de composition, similaire au &lt;code&gt;.&lt;&#x2f;code&gt; de Haskell, ou de pipeline similaire au &lt;code&gt;|&amp;gt;&lt;&#x2f;code&gt; de ReasonML et OCaml, est assez frustrante lors qu&#x27;on essaie de faire du code Rust déclaratif.&lt;&#x2f;p&gt;
 &lt;p&gt;Il est possible d&#x27;envisager la &lt;em&gt;dot notation&lt;&#x2f;em&gt; mais d&#x27;une part ce n&#x27;est pas totalement satisfaisant et d&#x27;autre part cela nécessite d&#x27;implémenter des traits pour chacun des types de données qui composent le flux de traitement.&lt;&#x2f;p&gt;
 &lt;p&gt;Heureusement la programmation générique et les macros de &lt;strong&gt;Rust&lt;&#x2f;strong&gt; peuvent nous aider à implémenter la composition assez facilement :&lt;&#x2f;p&gt;
 &lt;pre style=&quot;background-color:#212733;&quot;&gt;

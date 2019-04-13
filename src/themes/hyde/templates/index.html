@@ -11,27 +11,13 @@
     />
 
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
-
+    <link rel="icon" type="image/png" href="favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="{{ get_url(path="print.css", trailing_slash=false)
-
-
-
-    }}" media="print"> <link rel="stylesheet" href="{{ get_url(path="poole.css", trailing_slash=false)
-
-
-
-
-    }}"> <link rel="stylesheet" href="{{ get_url(path="hyde.css", trailing_slash=false)
-
-
-
-    }}"> <link rel="stylesheet" href="{{ get_url(path="fontawsome.css", trailing_slash=false)
-
-
-
-
-    }}">
+    }}" media="print" /> <link rel="stylesheet" href="{{ get_url(path="poole.css", trailing_slash=false)
+    }}" /> <link rel="stylesheet" href="{{ get_url(path="hyde.css", trailing_slash=false)
+    }}" /> <link rel="stylesheet" href="{{ get_url(path="fontawsome.css", trailing_slash=false)
+    }}" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Special+Elite"
@@ -40,9 +26,7 @@
     {% if config.generate_rss %} <link rel="alternate"
     type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false)
 
-
-
-    }}"> {% endif %} {% block extra_head %} {% endblock extra_head %}
+    }}" /> {% endif %} {% block extra_head %} {% endblock extra_head %}
   </head>
 
   <body
@@ -75,7 +59,14 @@
               ><a href="{{ link.url }}">{{ link.name }}</a></i
             >
           </li>
-          {% endfor %} {% endblock sidebar_nav %}
+          {% endfor %}
+          <hr />
+          <li class="sidebar-nav-item">
+            <i class="icon-gift">
+              Merci <a href="https://www.getzola.org/">Zola</a> pour ce site</i
+            >
+          </li>
+          {% endblock sidebar_nav %}
         </ul>
       </div>
     </div>

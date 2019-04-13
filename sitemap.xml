@@ -1,12 +1,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
         <url>
-            <loc>https://oteku.github.io/tags/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://oteku.github.io/tags/rust/</loc>
+            <loc>https://oteku.github.io/</loc>
             
         </url>
     
@@ -18,7 +13,12 @@
         </url>
     
         <url>
-            <loc>https://oteku.github.io/</loc>
+            <loc>https://oteku.github.io/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://oteku.github.io/tags/</loc>
             
         </url>
     
