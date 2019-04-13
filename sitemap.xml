@@ -1,14 +1,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
         <url>
-            <loc>https://oteku.github.io/something/</loc>
+            <loc>https://oteku.github.io/pipe-macro-rust/</loc>
             
                 <lastmod>2019-03-29</lastmod>
             
         </url>
     
         <url>
+            <loc>https://oteku.github.io/tags/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://oteku.github.io/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://oteku.github.io/tags/rust/</loc>
             
         </url>
     

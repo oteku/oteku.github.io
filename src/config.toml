@@ -25,6 +25,12 @@ theme = "hyde"
 # Whether to generate a RSS feed automatically
 generate_rss = true
 
+taxonomies = [
+       {name = "tags", rss = true} # each tag will have its own RSS feed
+]
+
+tags = ["Rust", "ReasonML", "Ocaml"]
+
 [extra]
 # Put all your custom variables here
 hyde_theme = "theme-base-0b"
