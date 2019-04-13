@@ -70,6 +70,13 @@
               ><a href="https:&#x2f;&#x2f;www.meetup.com&#x2f;fr-FR&#x2f;Lille-FP">LilleFP</a></i
             >
           </li>
+          
+          <li class="sidebar-nav-item">
+            <i
+              class="icon-rss"
+              ><a href="rss.xml">Flux rss</a></i
+            >
+          </li>
            
         </ul>
       </div>
@@ -81,9 +88,9 @@
 <div class="post">
   <h1 class="post-title">Opérateur pipe en Rust ?</h1>
   <span class="post-date">2019-03-29</span>
-  <p>L'absence d'opérateur de composition, similaire au <code>.</code> de Haskell, ou de pipeline similaire au <code>|&gt;</code> de ReasonML et Ocaml, est assez frustrante lors qu'on essait de faire du code Rust déclaratif.</p>
+  <p>L'absence d'opérateur de composition, similaire au <code>.</code> de Haskell, ou de pipeline similaire au <code>|&gt;</code> de ReasonML et OCaml, est assez frustrante lors qu'on essait de faire du code Rust déclaratif.</p>
 <p>Il est possible d'envisager la <em>dot notation</em> mais d'une part ce n'est pas totalement satisfaisant et d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.</p>
-<p>Heureusement la programmation générique et les macros de <strong>Rust</strong> peuvent nous aider, à implémenter la composition assez facilement :</p>
+<p>Heureusement la programmation générique et les macros de <strong>Rust</strong> peuvent nous aider à implémenter la composition assez facilement :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">
 </span><span style="font-style:italic;color:#5c6773;">// function used to compose
@@ -172,7 +179,7 @@
     </span><span style="color:#f28779;">println!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Result is </span><span style="color:#ffcc66;">{}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ccc9c2;">(Scalar(</span><span style="color:#ffcc66;">10</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">|</span><span style="color:#ccc9c2;"> double </span><span style="color:#f29e74;">|</span><span style="color:#ccc9c2;"> add2)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;
 </span><span style="color:#ccc9c2;">}
 </span></pre>
-<p>On peut donc conclure qu'avec peu de code boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter les opérateurs infixe amène une complexité supplémentaire à cause de la nécessité de mettre en place les <em>wrapping</em> et <em>unwrapping</em>, c'est pourquoi je préfère utiliser les macros dans mon code.</p>
+<p>On peut donc conclure qu'avec peu de code boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter l'opérateur infixe amène une complexité supplémentaire, à cause de la nécessité de mettre en place les <em>wrapping</em> et <em>unwrapping</em>, c'est pourquoi je préfère utiliser les macros dans mon code.</p>
 
 </div>
 

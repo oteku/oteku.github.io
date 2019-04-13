@@ -6,6 +6,11 @@
         </url>
     
         <url>
+            <loc>https://oteku.github.io/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://oteku.github.io/pipe-macro-rust/</loc>
             
                 <lastmod>2019-03-29</lastmod>
@@ -14,11 +19,6 @@
     
         <url>
             <loc>https://oteku.github.io/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://oteku.github.io/tags/rust/</loc>
             
         </url>
     

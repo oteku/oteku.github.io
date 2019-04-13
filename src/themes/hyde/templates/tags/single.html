@@ -1,6 +1,7 @@
 {% extends "index.html" %} {% block content %}
 <div class="posts">
-  {% for page in term.pages | reverse %}
+  {% for page in term.pages | filter(attribute="draft", value=false) |
+  sort(attribute="date") | reverse %}
   <div class="post">
     <h1 class="post-title">
       <a href="{{ page.permalink }}">

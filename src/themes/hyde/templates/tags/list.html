@@ -1,7 +1,7 @@
 {% extends "index.html" %} {% block content %}
 <div class="posts">
   <h1>Choississez une catégorie d'article</h1>
-  {% for term in terms | reverse %}
+  {% for term in terms | sort(attribute="name") %}
   <div class="post">
     <a href="{{ term.permalink }}">
       {{ term.name }}

@@ -14,10 +14,22 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ get_url(path="print.css", trailing_slash=false)
+
+
+
     }}" media="print"> <link rel="stylesheet" href="{{ get_url(path="poole.css", trailing_slash=false)
 
+
+
+
     }}"> <link rel="stylesheet" href="{{ get_url(path="hyde.css", trailing_slash=false)
+
+
+
     }}"> <link rel="stylesheet" href="{{ get_url(path="fontawsome.css", trailing_slash=false)
+
+
+
 
     }}">
     <link
@@ -27,6 +39,9 @@
 
     {% if config.generate_rss %} <link rel="alternate"
     type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false)
+
+
+
     }}"> {% endif %} {% block extra_head %} {% endblock extra_head %}
   </head>
 
@@ -69,7 +84,8 @@
     <div class="content container">
       {% block content %}
       <div class="posts">
-        {% for page in section.pages | reverse %}
+        {% for page in section.pages | filter(attribute="draft", value=false) |
+        sort(attribute="date") | reverse %}
         <div class="post">
           <h1 class="post-title">
             <a href="{{ page.permalink }}">

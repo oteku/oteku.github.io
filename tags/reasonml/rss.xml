@@ -1,0 +1,21 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Les carnets d&#x27;Oteku</title>
+        <link>https://oteku.github.io</link>
+        <description>Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust</description>
+        <generator>Zola</generator>
+        <language>fr</language>
+        <atom:link href="https://oteku.github.io/tags/reasonml/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sat, 13 Apr 2019 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Take it esy</title>
+                <pubDate>Sat, 13 Apr 2019 00:00:00 +0000</pubDate>
+                <link>https://oteku.github.io/esy-reasonml/</link>
+                <guid>https://oteku.github.io/esy-reasonml/</guid>
+                <description>&lt;p&gt;Pour démarrer un projet ReasonML natif,&lt;&#x2f;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>

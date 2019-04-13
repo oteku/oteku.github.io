@@ -5,11 +5,11 @@ date = 2019-03-29
 tags = ["rust"]
 +++
 
-L'absence d'opérateur de composition, similaire au `.` de Haskell, ou de pipeline similaire au `|>` de ReasonML et Ocaml, est assez frustrante lors qu'on essait de faire du code Rust déclaratif.
+L'absence d'opérateur de composition, similaire au `.` de Haskell, ou de pipeline similaire au `|>` de ReasonML et OCaml, est assez frustrante lors qu'on essait de faire du code Rust déclaratif.
 
 Il est possible d'envisager la _dot notation_ mais d'une part ce n'est pas totalement satisfaisant et d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.
 
-Heureusement la programmation générique et les macros de **Rust** peuvent nous aider, à implémenter la composition assez facilement :
+Heureusement la programmation générique et les macros de **Rust** peuvent nous aider à implémenter la composition assez facilement :
 
 ```rust
 
@@ -111,4 +111,4 @@ fn main() {
 }
 ```
 
-On peut donc conclure qu'avec peu de code boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter les opérateurs infixe amène une complexité supplémentaire à cause de la nécessité de mettre en place les _wrapping_ et _unwrapping_, c'est pourquoi je préfère utiliser les macros dans mon code.
+On peut donc conclure qu'avec peu de code boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter l'opérateur infixe amène une complexité supplémentaire, à cause de la nécessité de mettre en place les _wrapping_ et _unwrapping_, c'est pourquoi je préfère utiliser les macros dans mon code.
