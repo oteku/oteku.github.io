@@ -6,7 +6,89 @@
         <generator>Zola</generator>
         <language>fr</language>
         <atom:link href="https://oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Fri, 29 Mar 2019 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Thu, 20 Jun 2019 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Rust my Node.js</title>
+                <pubDate>Thu, 20 Jun 2019 00:00:00 +0000</pubDate>
+                <link>https://oteku.github.io/rust-my-node/</link>
+                <guid>https://oteku.github.io/rust-my-node/</guid>
+                <description>&lt;p&gt;Si vous êtes développeur node.js vous vous confronterez tôt ou tard au développement d&#x27;addons natifs ... et à tout un lot de nouveaux problèmes : langage C++ en lui même, mais également API V8, build system ou dépendance aux versions de V8. Pourtant dès que vous avez besoins de multi-threading, d&#x27;accès aux ressources machine ou même simplement pour réutiliser des librairies existantes vous n&#x27;y coupez pas. Ce billet vise à vous faire découvrir comment le langage Rust permet de rendre vos modules natifs &amp;quot;fast &amp;amp; safe&amp;quot;.&lt;&#x2f;p&gt;
+&lt;h2 id=&quot;une-histoire-de-node&quot;&gt;Une histoire de Node&lt;&#x2f;h2&gt;
+&lt;p&gt;J&#x27;aime beaucoup le runtime &lt;a href=&quot;https:&#x2f;&#x2f;nodejs.org&quot;&gt;Node.js&lt;&#x2f;a&gt; :&lt;&#x2f;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Un écosystème impressionnant grâce à &lt;a href=&quot;https:&#x2f;&#x2f;www.npmjs.com&#x2f;&quot;&gt;npm&lt;&#x2f;a&gt;, qui se trouve être un excellet outil de gestion de dépendance, de sandboxing de projet et de publication de librairie&lt;&#x2f;li&gt;
+&lt;li&gt;La communauté javascript est très prolifique, ce qui permet également de trouver beaucoup de librairies intéressante via npm&lt;&#x2f;li&gt;
+&lt;li&gt;Le runtime est très performant pour créer des API web et de manière générale, pour tout cas d&#x27;usage consommateur d&#x27;I&#x2f;O&lt;&#x2f;li&gt;
+&lt;li&gt;Le modèle de gestion de l&#x27;asynchronisme proposé par l&#x27;event-loop, mimant la webAPI JS, est également une force&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;p&gt;Tout ceci est supporté par une architecture robuste, rendue possible principalement grâce au moteur ECMAScript &lt;a href=&quot;https:&#x2f;&#x2f;v8.dev&#x2f;&quot;&gt;V8&lt;&#x2f;a&gt; et la librairie &lt;a href=&quot;http:&#x2f;&#x2f;libuv.org&#x2f;&quot;&gt;libuv&lt;&#x2f;a&gt;.&lt;&#x2f;p&gt;
+&lt;p&gt;&lt;img src=&quot;..&#x2f;img&#x2f;node.png&quot; alt=&quot;Node.js architecture&quot; &#x2f;&gt;&lt;&#x2f;p&gt;
+&lt;p&gt;Node.js est donc un runtime C&#x2f;C++ qui exécute du code Javascript. Cependant Javascript est un langage conçu initialement pour être exécuté dans un navigateur web. Pour des raisons de sécurité un certain nombre d&#x27;actions ne sont pas possible depuis un navigateur et de fait ne font pas parti des spécifications et API javascript, par exemple l&#x27;accès direct au système de fichier, accès aux périhériques réseaux, ...&lt;&#x2f;p&gt;
+&lt;p&gt;Node.js fournit donc une &lt;a href=&quot;https:&#x2f;&#x2f;nodejs.org&#x2f;dist&#x2f;latest-v12.x&#x2f;docs&#x2f;api&#x2f;&quot;&gt;API&lt;&#x2f;a&gt; permettant d&#x27;accéder à certaines des ces fonctionnalités pour réaliser de réelles applications serveur en Javascipt. En réalité, ces modules sont des programmes C++ qui expose des bindings javascript grâce à l&#x27;API de V8. Ceci est &amp;quot;masqué&amp;quot; par node.js quand vous utilisez des modules tel que &lt;code&gt;fs&lt;&#x2f;code&gt; ou &lt;code&gt;net&lt;&#x2f;code&gt;. Cepedant cette API ne pouvant être exhaustive et pour ouvrir le champ des possibles, Node.js permet également de faire des addons C++ et d&#x27;exposer vos propres bindings.&lt;&#x2f;p&gt;
+&lt;p&gt;Lorsque l&#x27;on développe une application pour Node.js nous pouvons donc faire du code Javascript ou du code C++ packagé sous forme d&#x27;addon.&lt;&#x2f;p&gt;
+&lt;h2 id=&quot;que-sont-ces-addons&quot;&gt;Que sont ces addons ?&lt;&#x2f;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Des « dynamically-linked shared objects », écrits en C++, en utilisant l’api V8 api, qui peuvent être importé par la fonction &lt;code&gt;require()&lt;&#x2f;code&gt;&lt;&#x2f;li&gt;
+&lt;li&gt;Des modules compilés dépendant de V8 et donc dépendant de la version de node et de l&#x27;architecture du processeur&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;p&gt;Depuis Node 8, il existe &lt;a href=&quot;https:&#x2f;&#x2f;nodejs.org&#x2f;dist&#x2f;latest-v12.x&#x2f;docs&#x2f;api&#x2f;n-api.html&quot;&gt;n-api&lt;&#x2f;a&gt;, une abstraction indépendante de la version de V8.&lt;&#x2f;p&gt;
+&lt;p&gt;Un addon doit donc être compilé pour chaque version de node et chaque architecture. En général, il suffit de prévoir le build de l&#x27;addon dans le script npm &lt;code&gt;postinstall&lt;&#x2f;code&gt; de son projet.&lt;&#x2f;p&gt;
+&lt;h2 id=&quot;a-quoi-ca-sert&quot;&gt;A quoi ça sert ?&lt;&#x2f;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Réutiliser du code C ou C++ existant dans votre base de code d&#x27;entreprise&lt;&#x2f;li&gt;
+&lt;li&gt;Utiliser des librairies binaires : statiques (.a) ou dynamiques (.so &#x2f; .dylib &#x2f; .dll), potentiellement des librairies tierces non libres.&lt;&#x2f;li&gt;
+&lt;li&gt;Viser des performances natives, ce qui peut être intéressant pour certains algoritmes&lt;&#x2f;li&gt;
+&lt;li&gt;Avoir accès aux ressources systèmes, non accessibles depuis Javascript (I&#x2f;O, ports séries, GPU, …)&lt;&#x2f;li&gt;
+&lt;li&gt;Utiliser des worker threads pour des algo plus intéressant en multithreading (Il est possible depuis Node 10.5 de faire du multithreading en javascript mais cela reste expérimental et limité)&lt;&#x2f;li&gt;
+&lt;li&gt;Typer statiquement une librairie&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;h2 id=&quot;les-anti-patterns&quot;&gt;Les anti-patterns&lt;&#x2f;h2&gt;
+&lt;p&gt;A ce stade on pourrait être tenter de réaliser toute son application sous forme d&#x27;addon ! Ce n&#x27;est pas le but et il y a quelques anti-patterns à connaitre :&lt;&#x2f;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vouloir ré-écrire l&#x27;event-loop : node a été conçu pour ça, libuv est &amp;quot;battle tested&amp;quot;&lt;&#x2f;li&gt;
+&lt;li&gt;Faire des I&#x2f;O intensif : là encore c&#x27;est la foce de libuv&lt;&#x2f;li&gt;
+&lt;li&gt;Uniquement typer un programme : si le côté dynamique de javascript vous dérange, d&#x27;autres approches sont plus productives :
+&lt;ul&gt;
+&lt;li&gt;Js as a Bytecode : avoir un langage statique qui compile vers Javascript, tel que OCaml + js_of_ocaml, F# + Fable, ou Purescript. Ces compilateurs apportent beaucoup d&#x27;optimisations et ces langages sont plus sûrs que C++&lt;&#x2f;li&gt;
+&lt;li&gt;Webassembly : quand vous êtes dans un langage ne disposant pas d&#x27;un bon compilateur vers JS mais disposant d&#x27;un compilateur wasm (ex : Rust). C&#x27;est d&#x27;ailleurs l&#x27;objectif de WASM de servir d&#x27;assembleur pour le web et d&#x27;éviter le passage par JS. De plus Node.js peut tout à fait charger un module WASM.&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;p&gt;&lt;strong&gt;Donc je peux utiliser Javascript et C++ en même temps&lt;&#x2f;strong&gt;
+&lt;img src=&quot;..&#x2f;img&#x2f;large.png&quot; alt=&quot;Large amount of code&quot; &#x2f;&gt;&lt;&#x2f;p&gt;
+&lt;p&gt;C++ est un langage qui cumule beaucoup de problématiques : unsound, unsafe, manque d&#x27;outillage, ...
+Néanmoins c&#x27;est un langage parfois utile pour faire des programmes &lt;em&gt;bas niveau&lt;&#x2f;em&gt; performant.&lt;&#x2f;p&gt;
+&lt;p&gt;A titre personnel, j&#x27;utilise &lt;a href=&quot;https:&#x2f;&#x2f;www.rust-lang.org&#x2f;&quot;&gt;Rust&lt;&#x2f;a&gt; pour ce type de besoin. Les avantages de Rust de manière synthétique sont :&lt;&#x2f;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Un langage &lt;em&gt;Memory Safe&lt;&#x2f;em&gt;&lt;&#x2f;li&gt;
+&lt;li&gt;Un compilateur qui bloque la plupart des erreurs de runtime&lt;&#x2f;li&gt;
+&lt;li&gt;Un interfaçage facile avec C&#x2f;C++&lt;&#x2f;li&gt;
+&lt;li&gt;La programmation générique&lt;&#x2f;li&gt;
+&lt;li&gt;Un système de &lt;em&gt;type ML&lt;&#x2f;em&gt;, incluant types algébriques et filtrage par motif&lt;&#x2f;li&gt;
+&lt;li&gt;Pas de &lt;em&gt;rammasse miette&lt;&#x2f;em&gt;&lt;&#x2f;li&gt;
+&lt;li&gt;Pas d&#x27;allocation &#x2f; désallocation manuelle de mémoire&lt;&#x2f;li&gt;
+&lt;li&gt;Pas de &lt;em&gt;segmentation fault&lt;&#x2f;em&gt;&lt;&#x2f;li&gt;
+&lt;li&gt;Pas de &lt;em&gt;data race&lt;&#x2f;em&gt;&lt;&#x2f;li&gt;
+&lt;li&gt;Un outillage impressionant&lt;&#x2f;li&gt;
+&lt;li&gt;Compile vers des applications natives, des librairie rust ou C, du webassembly ou même des addon node.js&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;p&gt;Effectivement le projet &lt;a href=&quot;https:&#x2f;&#x2f;neon-bindings.com&#x2f;&quot;&gt;Neon Bindings&lt;&#x2f;a&gt; permet de compiler une librairie rust vers un addon natif node, et de l&#x27;utiliser directement depuis votre code javascript.&lt;&#x2f;p&gt;
+&lt;p&gt;Vous pouvez découvrir &lt;strong&gt;Neon&lt;&#x2f;strong&gt; avec ces quelques exemples : https:&#x2f;&#x2f;github.com&#x2f;oteku&#x2f;rust-my-node&lt;&#x2f;p&gt;
+&lt;ul&gt;
+&lt;li&gt;fibo-sync : comparer les performances d&#x27;un calcul &lt;em&gt;couteux&lt;&#x2f;em&gt; (ici un fibonacci naïf) en Javascript et Rust.
+&lt;ul&gt;
+&lt;li&gt;Sur des &lt;em&gt;petits calculs&lt;&#x2f;em&gt; (&lt;code&gt;node fibo-sync.js --value 1&lt;&#x2f;code&gt;), javascript est plus performant : c&#x27;est assez logique nous sommes dans le cas où le &lt;em&gt;coût&lt;&#x2f;em&gt; d&#x27;appel d&#x27;un addon est supérieur au coût du calcul&lt;&#x2f;li&gt;
+&lt;li&gt;Sur de &lt;em&gt;gros calculs&lt;&#x2f;em&gt; (&lt;code&gt;node fibo-sync.js --value 45&lt;&#x2f;code&gt;), on a un gain notable&lt;&#x2f;li&gt;
+&lt;li&gt;Il est aisé grace au type &lt;code&gt;JsResult&lt;&#x2f;code&gt; de Neon de passer des erreurs du code Rust au code Javascript (&lt;code&gt;node fibo-sync.js --value 50&lt;&#x2f;code&gt;)&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;&#x2f;li&gt;
+&lt;li&gt;fibo-async : dans un programme node.js, on prend l&#x27;habitude découper un algorithme couteux en code asynchrone pour ne pas bloquer l&#x27;event loop. Neon offre un trait &lt;code&gt;Task&lt;&#x2f;code&gt; qui permet facilité la création de code asynchrone dans vos addons et de ne pas bloquer la callstack JS (&lt;code&gt;node fibo-async.js --value 45&lt;&#x2f;code&gt;)&lt;&#x2f;li&gt;
+&lt;li&gt;foldersize : sert à montrer comment un addon permet de bénéficier de librairies Rust existantes pour les réutiliser au sein d&#x27;un programme node (&lt;code&gt;node foldersize.js&lt;&#x2f;code&gt;)&lt;&#x2f;li&gt;
+&lt;&#x2f;ul&gt;
+&lt;p&gt;&lt;em&gt;Ce billet a été rédigé pour servir de pilote au talk Rust my node présenté lors de &lt;a href=&quot;https:&#x2f;&#x2f;www.meetup.com&#x2f;fr-FR&#x2f;LambdaLille&#x2f;events&#x2f;260541114&#x2f;&quot;&gt;Lambda Lille#14&lt;&#x2f;a&gt; et d&#x27;un &lt;a href=&quot;https:&#x2f;&#x2f;www.meetup.com&#x2f;fr-FR&#x2f;NightClazz-Lille-by-Zenika&#x2f;events&#x2f;262219651&quot;&gt;BBL Zenika&lt;&#x2f;a&gt;&lt;&#x2f;em&gt;&lt;&#x2f;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>Opérateur pipe en Rust ?</title>

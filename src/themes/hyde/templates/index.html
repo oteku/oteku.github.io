@@ -11,7 +11,8 @@
     />
 
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
-    <link rel="icon" type="image/png" href="favicon.ico" />
+    <link rel="icon" type="image/png" href="{{ get_url(path="favicon.ico", trailing_slash=false)
+    }}" />
     <!-- CSS -->
     <link rel="stylesheet" href="{{ get_url(path="print.css", trailing_slash=false)
     }}" media="print" /> <link rel="stylesheet" href="{{ get_url(path="poole.css", trailing_slash=false)
@@ -25,7 +26,6 @@
 
     {% if config.generate_rss %} <link rel="alternate"
     type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false)
-
     }}" /> {% endif %} {% block extra_head %} {% endblock extra_head %}
   </head>
 
