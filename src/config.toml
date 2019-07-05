@@ -39,6 +39,6 @@ hyde_links = [
     {url = "https://twitter.com/oteku", name = "Twitter", icon = "icon-twitter"},
     {url = "https://mastodon.social/@oteku", name = "Mastodon"},
     {url = "https://github.com/oteku", name = "Github", icon = "icon-github"},
-    {url = "https://www.meetup.com/fr-FR/Lille-FP", name = "LilleFP", icon = "icon-beer"},
+    {url = "https://www.meetup.com/fr-FR/LambdaLille/", name = "Lambda Lille", icon = "icon-beer"},
     {url = "rss.xml", name = "Flux rss", icon = "icon-rss"},
 ]
