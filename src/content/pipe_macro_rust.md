@@ -7,7 +7,7 @@ tags = ["rust"]
 
 L'absence d'opérateur de composition, similaire au `.` de Haskell, ou de pipeline similaire au `|>` de ReasonML et OCaml, est assez frustrante lors qu'on essaie de faire du code Rust déclaratif.
 
-Il est possible d'envisager la _dot notation_ mais d'une part ce n'est pas totalement satisfaisant et d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.
+Il est possible d'envisager la _dot notation_ mais, d'une part ce n'est pas totalement satisfaisant et, d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.
 
 Heureusement la programmation générique et les macros de **Rust** peuvent nous aider à implémenter la composition assez facilement :
 
@@ -63,7 +63,7 @@ macro_rules! pipe {
 }
 ```
 
-Dorenavant nous pouvons directement pipeliner nos fonctions ainsi :
+Dorénavant, nous pouvons directement pipeliner nos fonctions ainsi :
 
 ```rust
 fn main() {
@@ -74,7 +74,7 @@ fn main() {
 }
 ```
 
-Implémenter un opérateur infixe est un peu plus complexe parce que Rust limite les opérateurs surchargeables à certains opérateurs via le module [std::ops](https://doc.rust-lang.org/std/ops/index.html), malheureusement `|>` n'en fait pas parti, cependant il est possible d'utiliser `|` ce qui nous rappelera le pipelining Linux.
+Implémenter un opérateur infixe est un peu plus complexe parce que Rust limite les opérateurs surchargeables à certains opérateurs via le module [std::ops](https://doc.rust-lang.org/std/ops/index.html), malheureusement `|>` n'en fait pas partie. Cependant, il est possible d'utiliser `|`, ce qui nous rappelera le pipelining Linux.
 
 Un autre point à prendre en compte est que nous avons besoin d'un type pour encapsuler nos données, si on veut éviter d'implémenter le trait [BitOr](https://doc.rust-lang.org/std/ops/trait.BitOr.html) pour chaque type initiant un pipelining.
 
@@ -111,4 +111,4 @@ fn main() {
 }
 ```
 
-On peut donc conclure qu'avec peu de code boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter l'opérateur infixe amène une complexité supplémentaire, à cause de la nécessité de mettre en place les _wrapping_ et _unwrapping_, c'est pourquoi je préfère utiliser les macros dans mon code.
+On peut donc conclure qu'avec peu de boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter l'opérateur infixe amène une complexité supplémentaire, à cause de la nécessité de mettre en place les _wrapping_ et _unwrapping_, c'est pourquoi je préfère utiliser les macros dans mon code.
