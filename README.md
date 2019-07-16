@@ -1,6 +1,7 @@
 # Personal Blog
 
 This repository contains data of my personal blog
+<<<<<<< HEAD
 
 ![TRAVIS BUILD](https://travis-ci.com/oteku/oteku.github.io.svg?branch=publication)
 
@@ -14,3 +15,5 @@ Before submiting a PR :
 - Contents are in folder `src/content`
 
 The `master` branch is dedicated to the deployment of new version of the blog and is automatized with travais after each commit on `publication`
+=======
+>>>>>>> :construction_worker: add travis to publish
