@@ -67,7 +67,7 @@
           <li class="sidebar-nav-item">
             <i
               class="icon-beer"
-              ><a href="https:&#x2f;&#x2f;www.meetup.com&#x2f;fr-FR&#x2f;Lille-FP">LilleFP</a></i
+              ><a href="https:&#x2f;&#x2f;www.meetup.com&#x2f;fr-FR&#x2f;LambdaLille&#x2f;">Lambda Lille</a></i
             >
           </li>
           
@@ -96,7 +96,7 @@
   <h1 class="post-title">Opérateur pipe en Rust ?</h1>
   <span class="post-date">2019-03-29</span>
   <p>L'absence d'opérateur de composition, similaire au <code>.</code> de Haskell, ou de pipeline similaire au <code>|&gt;</code> de ReasonML et OCaml, est assez frustrante lors qu'on essaie de faire du code Rust déclaratif.</p>
-<p>Il est possible d'envisager la <em>dot notation</em> mais d'une part ce n'est pas totalement satisfaisant et d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.</p>
+<p>Il est possible d'envisager la <em>dot notation</em> mais, d'une part ce n'est pas totalement satisfaisant et, d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.</p>
 <p>Heureusement la programmation générique et les macros de <strong>Rust</strong> peuvent nous aider à implémenter la composition assez facilement :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">
@@ -145,7 +145,7 @@
     };
 }
 </span></pre>
-<p>Dorenavant nous pouvons directement pipeliner nos fonctions ainsi :</p>
+<p>Dorénavant, nous pouvons directement pipeliner nos fonctions ainsi :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ffa759;">fn </span><span style="color:#ffd580;">main</span><span style="color:#ccc9c2;">() {
     </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">double </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">|</span><span style="color:#ffcc66;">x</span><span style="color:#ccc9c2;">| x </span><span style="color:#f29e74;">* </span><span style="color:#ffcc66;">2</span><span style="color:#ccc9c2cc;">;
@@ -154,7 +154,7 @@
     </span><span style="color:#f28779;">println!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Result is </span><span style="color:#ffcc66;">{}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f28779;">pipe!</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">10</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> double</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> add2))</span><span style="color:#ccc9c2cc;">;
 </span><span style="color:#ccc9c2;">}
 </span></pre>
-<p>Implémenter un opérateur infixe est un peu plus complexe parce que Rust limite les opérateurs surchargeables à certains opérateurs via le module <a href="https://doc.rust-lang.org/std/ops/index.html">std::ops</a>, malheureusement <code>|&gt;</code> n'en fait pas parti, cependant il est possible d'utiliser <code>|</code> ce qui nous rappelera le pipelining Linux.</p>
+<p>Implémenter un opérateur infixe est un peu plus complexe parce que Rust limite les opérateurs surchargeables à certains opérateurs via le module <a href="https://doc.rust-lang.org/std/ops/index.html">std::ops</a>, malheureusement <code>|&gt;</code> n'en fait pas partie. Cependant, il est possible d'utiliser <code>|</code>, ce qui nous rappelera le pipelining Linux.</p>
 <p>Un autre point à prendre en compte est que nous avons besoin d'un type pour encapsuler nos données, si on veut éviter d'implémenter le trait <a href="https://doc.rust-lang.org/std/ops/trait.BitOr.html">BitOr</a> pour chaque type initiant un pipelining.</p>
 <pre style="background-color:#212733;">
 <span style="font-style:italic;color:#5c6773;">// Need a wrapper to implement pipe operator
@@ -186,7 +186,7 @@
     </span><span style="color:#f28779;">println!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Result is </span><span style="color:#ffcc66;">{}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ccc9c2;">(Scalar(</span><span style="color:#ffcc66;">10</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">|</span><span style="color:#ccc9c2;"> double </span><span style="color:#f29e74;">|</span><span style="color:#ccc9c2;"> add2)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;
 </span><span style="color:#ccc9c2;">}
 </span></pre>
-<p>On peut donc conclure qu'avec peu de code boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter l'opérateur infixe amène une complexité supplémentaire, à cause de la nécessité de mettre en place les <em>wrapping</em> et <em>unwrapping</em>, c'est pourquoi je préfère utiliser les macros dans mon code.</p>
+<p>On peut donc conclure qu'avec peu de boilerplate, il est relativement aisé de composer des fonctions en Rust. Pour ma part, je trouve qu'implémenter l'opérateur infixe amène une complexité supplémentaire, à cause de la nécessité de mettre en place les <em>wrapping</em> et <em>unwrapping</em>, c'est pourquoi je préfère utiliser les macros dans mon code.</p>
 
 </div>
 
