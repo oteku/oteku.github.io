@@ -1,23 +1,17 @@
-language: rust
 os: osx
 addons:
   homebrew:
     packages:
       - zola
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_PAT # Set in the settings page of your repository, as a secure variable
+  keep_history: true
+  on:
+    branch: master
 jobs:
   include:
-    - stage: build
+    - # require the branch name to be master (note for PRs this is the base branch name)
       if: branch = publication
-      install: brew install zola
       script: ./build.sh
-    - stage: deploy
-      if: branch = publication
-      script: skip # usually you do not want to rerun any tests
-      deploy:
-        provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_PAT # Set in the settings page of your repository, as a secure variable
-        keep_history: true
-        target_branch: master
-        on:
-          branch: publication
