@@ -12,12 +12,17 @@
 
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
     <link rel="icon" type="image/png" href="{{ get_url(path="favicon.ico", trailing_slash=false)
+
     }}" />
     <!-- CSS -->
     <link rel="stylesheet" href="{{ get_url(path="print.css", trailing_slash=false)
+
     }}" media="print" /> <link rel="stylesheet" href="{{ get_url(path="poole.css", trailing_slash=false)
+
     }}" /> <link rel="stylesheet" href="{{ get_url(path="hyde.css", trailing_slash=false)
+
     }}" /> <link rel="stylesheet" href="{{ get_url(path="fontawsome.css", trailing_slash=false)
+
     }}" />
     <link
       rel="stylesheet"
@@ -26,6 +31,7 @@
 
     {% if config.generate_rss %} <link rel="alternate"
     type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false)
+
     }}" /> {% endif %} {% block extra_head %} {% endblock extra_head %}
   </head>
 
@@ -89,7 +95,7 @@
             <a href="tags/{{ tag }}"> #{{ tag }} </a>{% endfor %}
           </span>
           <span class="post-date"
-            >{{ page.content | safe | truncate(length=300) }}
+            >{{ page.content| truncate(length=300) | safe }}
             <a href="{{ page.permalink }}">
               lire
             </a>
