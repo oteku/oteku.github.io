@@ -1,31 +1,39 @@
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     
         <url>
-            <loc>https://oteku.github.io/</loc>
+            <loc>https%3A//oteku.github.io/</loc>
             
         </url>
     
         <url>
-            <loc>https://oteku.github.io/rust-my-node/</loc>
-            
-                <lastmod>2019-06-20</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://oteku.github.io/pipe-macro-rust/</loc>
+            <loc>https%3A//oteku.github.io/pipe-macro-rust/</loc>
             
                 <lastmod>2019-03-29</lastmod>
             
         </url>
     
         <url>
-            <loc>https://oteku.github.io/tags/</loc>
+            <loc>https%3A//oteku.github.io/rust-my-node/</loc>
+            
+                <lastmod>2019-06-20</lastmod>
             
         </url>
     
         <url>
-            <loc>https://oteku.github.io/tags/rust/</loc>
+            <loc>https%3A//oteku.github.io/tags/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https%3A//oteku.github.io/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https%3A//oteku.github.io/thread-to-the-future/</loc>
+            
+                <lastmod>2019-08-07</lastmod>
             
         </url>
     

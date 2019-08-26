@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <!-- Enable responsiveness on mobile devices-->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+
+    <title>Les carnets d&#x27;Oteku</title>
+    <link rel="icon" type="image/png" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;favicon.ico" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;print.css" media="print" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;poole.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;hyde.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Special+Elite"
+    />
+
+     <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" />   
+  </head>
+
+  <body
+    class="theme-base-0b layout-reverse"
+  >
+    
+    <div class="sidebar">
+      <div
+        class="container sidebar-sticky"
+      >
+        <div class="sidebar-about">
+          
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><h1>Les carnets d&#x27;Oteku</h1></a
+          >
+          
+          <p class="lead">Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust</p>
+           
+        </div>
+
+        <ul class="sidebar-nav">
+           
+          <li class="sidebar-nav-item">
+            <i
+              class="icon-twitter"
+              ><a href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku">Twitter</a></i
+            >
+          </li>
+          
+          <li class="sidebar-nav-item">
+            <i
+              class="icon-link"
+              ><a href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku">Mastodon</a></i
+            >
+          </li>
+          
+          <li class="sidebar-nav-item">
+            <i
+              class="icon-github"
+              ><a href="https:&#x2F;&#x2F;github.com&#x2F;oteku">Github</a></i
+            >
+          </li>
+          
+          <li class="sidebar-nav-item">
+            <i
+              class="icon-beer"
+              ><a href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;">Lambda Lille</a></i
+            >
+          </li>
+          
+          <li class="sidebar-nav-item">
+            <i
+              class="icon-rss"
+              ><a href="rss.xml">Flux rss</a></i
+            >
+          </li>
+          
+          <hr />
+          <li class="sidebar-nav-item">
+            <i class="icon-gift">
+              Merci <a href="https://www.getzola.org/">Zola</a> pour ce site</i
+            >
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    <div class="content container">
+      
+<div class="post">
+  <h1 class="post-title">Thead to the Future</h1>
+  <span class="post-date">2019-08-07</span>
+  <p>Je travaille actuellement sur un robot compagon nommé <a href="https://www.cutii.io/cutii/">Cutii</a> pour lequel nous avons besoins de communiquer sur port série entre le PC du robot et nos différentes cartes électronique, nous avons fait le choix il y a quelques mois d'implémenter une librairie de communication en Rust, afin de rendre plus sûrs et plus performants nos échanges. Ce billet vise à dresser un état des lieux de la gestion de communications asynchrones en Rust.</p>
+<p>Pour illustrer les exemples, imaginons que nous ayons un protocole simplifié de communication, nous permettant de faire des <strong>GET</strong> et <strong>SET</strong> sur des valeur, en mode requête / réponse et sur port série :</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;"># requête GET pour une valeur foo
+</span><span style="color:#ffd580;">foo?</span><span style="color:#95e6cb;">\n
+</span><span style="font-style:italic;color:#5c6773;"># réponse à la requête GET
+</span><span style="color:#ffd580;">foo</span><span style="color:#ccc9c2;">=1</span><span style="color:#95e6cb;">\n
+</span><span style="font-style:italic;color:#5c6773;"># requête SET pour une valeur foo
+</span><span style="color:#ccc9c2;">foo=2</span><span style="color:#95e6cb;">\n
+</span><span style="font-style:italic;color:#5c6773;"># réponse d&#39;acquitement à la requête SET
+</span><span style="color:#ccc9c2;">foo=2</span><span style="color:#95e6cb;">\n
+</span></pre>
+<p>Nous considérons que les messages sont toujours traité dans l'ordre des requêtes émises et que leur réponse est immédiate.</p>
+<p><em>Ce protocole est suffisant pour les besoins de cet article, bien sûr il pourrait être remplacé par http, mqtt, enocean ou n'importe quel protocole industriel.</em></p>
+<p>Outillons nous pour simuler ce protocole avec <code>echo</code>, <code>cat</code> et <code>socat</code> :</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;"># In terminal 0, emulate a writable port /tmp/ttyS0 that passthrough the readable port /tmp/ttyS1
+</span><span style="color:#ffd580;">socat</span><span style="color:#ccc9c2;"> PTY,link=/tmp/ttyS0,raw,echo=0 PTY,link=/tmp/ttyS1,raw,echo=0
+</span><span style="font-style:italic;color:#5c6773;"># In terminal 1, read the port  /tmp/ttyS0
+</span><span style="color:#ccc9c2;">cat</span><span style="color:#ffcc66;"> -v </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;"> /tmp/ttyS0
+</span><span style="font-style:italic;color:#5c6773;"># In terminal 2, read the port  /tmp/ttyS#
+</span><span style="color:#ccc9c2;">cat</span><span style="color:#ffcc66;"> -v </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;"> /tmp/ttyS1
+</span><span style="font-style:italic;color:#5c6773;"># In terminal 3, simulate the GET request
+</span><span style="color:#ccc9c2;">echo</span><span style="color:#ffcc66;"> -ne </span><span style="color:#bae67e;">&#39;foo?\n&#39; </span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2;"> /tmp/ttyS0
+</span><span style="color:#f28779;">echo </span><span style="color:#ffcc66;">-ne </span><span style="color:#bae67e;">&#39;foo=1\n&#39; </span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2;"> /tmp/ttyS1
+</span><span style="color:#f28779;">echo </span><span style="color:#ffcc66;">-ne </span><span style="color:#bae67e;">&#39;foo=2\n&#39; </span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2;"> /tmp/ttyS0
+</span><span style="color:#f28779;">echo </span><span style="color:#ffcc66;">-ne </span><span style="color:#bae67e;">&#39;foo=2\n&#39; </span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2;"> /tmp/ttyS1
+</span></pre>
+<p><em>Implémenter la communication sur port série, ne nous intéresse pas vraiment ici, c'est un cas d'exemple qui pourrait être remplacé par des socket unix, socket tcp, ... aussi nous utiliserons la librairie <a href="https://crates.io/crates/serialport">serialport</a></em></p>
+<p>Notre objectif est bien sûr de mettre en place un processus de communication sur port série non bloquant, afin que le programme principale puisse effectuer d'autres traitements.</p>
+<h1 id="premiere-version-les-threads">Première version : les threads</h1>
+<p>Chose très intéressante avec Rust, la librairie standard dispose de plusieurs pattern intéressants pour la programmation multi-threadée :</p>
+<ul>
+<li><a href="https://doc.rust-lang.org/std/sync/struct.Arc.html">Atomically Reference Counted</a> : <code>Arc&lt;T&gt;</code> fournit un <em>ownership</em> partagé pour une valeur de type <code>T</code>, <em>thread-safe</em> et allouée dans la <em>heap</em></li>
+<li><a href="https://doc.rust-lang.org/std/sync/struct.Mutex.html">Mutex</a> : un mécanisme d'exclusion mutuelle pour protéger des données partagées entre plusieurs thread</li>
+<li><a href="https://static.rust-lang.org/doc/master/std/sync/mpsc/index.html">Canaux de communication orientés messages</a> : le module <code>mspc</code> fournit les primitives de queue de communication <em>First In Fist Out</em> <em>multi-producer, single-consumer</em> qui permettent à un thread de collecter des informations issus de plusieurs autres threads.</li>
+</ul>
+<p>Faisons un premier programme qui écrit la requete <code>foo?\n</code> sur le port <code>/tmp/ttyS0</code> et qui pour chaque requete envoie une valuer de foo incrémentée de 1, en utilisant un <strong>Mutex</strong>.</p>
+<p>Le cheminement du programme peut être schématisé ainsi :</p>
+<p>_thread1 <em>-[/tmp/ttyS0] &quot;foo?\n&quot; [/tmp/ttyS1]-&gt;</em> _thread2 <em>- foo++ -&gt;</em> thread3 <em>- [/tmp/ttyS0] &quot;foo=1\n&quot; [/tmp/ttyS1] -&gt;</em> _thread0 <em>-&gt; [stdout] &quot;foo=1\n&quot;</em></p>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">extern crate</span><span style="color:#ccc9c2;"> serialport</span><span style="color:#ccc9c2cc;">;
+
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">serialport</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">prelude</span><span style="color:#f29e74;">::*</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">io</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">sync</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{Arc</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Mutex}</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">time</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Duration</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{env</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffa759;">str</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> thread}</span><span style="color:#ccc9c2cc;">;
+
+</span><span style="color:#ffa759;">const </span><span style="color:#ffcc66;">TTY0</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">str </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;/tmp/ttyS0&quot;</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">const </span><span style="color:#ffcc66;">TTY1</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">str </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;/tmp/ttyS1&quot;</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">main</span><span style="color:#ccc9c2;">() {
+    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> args </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">env</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">args()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> tty0_path </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> args</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">nth</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap_or_else</span><span style="color:#ccc9c2;">(|| </span><span style="color:#ffcc66;">TTY0</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">into</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> tty1_path </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> args</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">nth</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">2</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap_or_else</span><span style="color:#ccc9c2;">(|| </span><span style="color:#ffcc66;">TTY1</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">into</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> settings</span><span style="color:#ccc9c2cc;">:</span><span style="color:#ccc9c2;"> SerialPortSettings </span><span style="color:#f29e74;">= </span><span style="font-style:italic;color:#5ccfe6;">Default</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">default()</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+    settings</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">timeout </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Duration</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_millis(</span><span style="color:#ffcc66;">10</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+    settings</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">baud_rate </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">20</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="font-style:italic;color:#5c6773;">// send foo? requests and print responses
+    </span><span style="color:#ffa759;">match </span><span style="color:#ccc9c2;">serialport</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">open_with_settings(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">tty0_path</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">settings) {
+        </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> writer) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+            </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> reader </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> writer</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">try_clone</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to clone&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+
+            </span><span style="font-style:italic;color:#5c6773;">// read the port and write to stdout
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> _thread0 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Builder</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new()
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">name</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;reader0&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">())
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">spawn</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">move </span><span style="color:#f29e74;">|| </span><span style="color:#ccc9c2;">{
+                    </span><span style="font-style:italic;color:#5c6773;">// a buffer of bytes
+                    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Vec&lt;</span><span style="color:#ffa759;">u8</span><span style="color:#ccc9c2;">&gt; </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">vec!</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2cc;">; </span><span style="color:#ffcc66;">1000</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ffa759;">loop </span><span style="color:#ccc9c2;">{
+                        </span><span style="color:#ffa759;">match</span><span style="color:#ccc9c2;"> reader</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">read</span><span style="color:#ccc9c2;">(serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_mut_slice</span><span style="color:#ccc9c2;">()) {
+                            </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(t) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+                                </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> newline </span><span style="color:#f29e74;">= &amp;</span><span style="color:#ccc9c2;">serial_buf[</span><span style="color:#f29e74;">..</span><span style="color:#ccc9c2;">t]</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">iter</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">position</span><span style="color:#ccc9c2;">(|</span><span style="color:#ffcc66;">b</span><span style="color:#ccc9c2;">| </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;">b </span><span style="color:#f29e74;">== </span><span style="color:#ffa759;">b</span><span style="color:#bae67e;">&#39;</span><span style="color:#95e6cb;">\n</span><span style="color:#bae67e;">&#39;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+                                </span><span style="color:#ffa759;">if let </span><span style="font-style:italic;color:#5ccfe6;">Some</span><span style="color:#ccc9c2;">(n) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> newline {
+                                    </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(line</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">_</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">split_at</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;">n)</span><span style="color:#ccc9c2cc;">;
+                                    </span><span style="color:#f28779;">println!</span><span style="color:#ccc9c2;">(
+                                        </span><span style="color:#bae67e;">&quot;reader0 thread : </span><span style="color:#ffcc66;">{}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2cc;">,
+                                        </span><span style="color:#f29e74;">&amp;</span><span style="font-style:italic;color:#5ccfe6;">String</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_utf8(line</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()
+                                    )</span><span style="color:#ccc9c2cc;">;
+                                </span><span style="color:#ccc9c2;">}
+                            }
+                            </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">ref</span><span style="color:#ccc9c2;"> e) </span><span style="color:#ffa759;">if</span><span style="color:#ccc9c2;"> e</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">kind</span><span style="color:#ccc9c2;">() </span><span style="color:#f29e74;">== </span><span style="color:#ccc9c2;">io</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">ErrorKind</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">TimedOut </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">,
+                            </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;{:?}&quot;</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)</span><span style="color:#ccc9c2cc;">,
+                        </span><span style="color:#ccc9c2;">}
+                        thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">sleep(Duration</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_millis(</span><span style="color:#ffcc66;">50</span><span style="color:#ccc9c2;">))</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ccc9c2;">}
+                })</span><span style="color:#ccc9c2cc;">;
+
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> _thread1 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Builder</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new()
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">name</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;writer0&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">())
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">spawn</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">move </span><span style="color:#f29e74;">|| </span><span style="color:#ffa759;">loop </span><span style="color:#ccc9c2;">{
+                    writer</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">write</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">b</span><span style="color:#bae67e;">&quot;foo?</span><span style="color:#95e6cb;">\n</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to write&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">sleep(Duration</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_millis(</span><span style="color:#ffcc66;">50</span><span style="color:#ccc9c2;">))</span><span style="color:#ccc9c2cc;">;
+                </span><span style="color:#ccc9c2;">})</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ccc9c2;">}
+        </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+            </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to open </span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">{}</span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">. Error: {}&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffcc66;">TTY0</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">process</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">exit(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ccc9c2;">}
+    }
+
+    </span><span style="font-style:italic;color:#5c6773;">// Increment foo value on each request
+    </span><span style="color:#ffa759;">match </span><span style="color:#ccc9c2;">serialport</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">open_with_settings(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">tty1_path</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">settings) {
+        </span><span style="font-style:italic;color:#5c6773;">// get the serial port for writer thread
+        </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> writer) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+            </span><span style="font-style:italic;color:#5c6773;">// clone serialport for reader thread
+            </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> reader </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> writer</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">try_clone</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to clone&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+            </span><span style="font-style:italic;color:#5c6773;">// mutex to exchange data between threads
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> counter</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Arc&lt;Mutex&lt;</span><span style="color:#ffa759;">i32</span><span style="color:#ccc9c2;">&gt;&gt; </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Arc</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new(Mutex</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new(</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">))</span><span style="color:#ccc9c2cc;">;
+            </span><span style="font-style:italic;color:#5c6773;">// clone Arc to access pointer from another thread
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> counter2 </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> counter</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">clone</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+            </span><span style="font-style:italic;color:#5c6773;">// read the port and write to stdout
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> _thread2 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Builder</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new()
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">name</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;reader1&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">())
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">spawn</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">move </span><span style="color:#f29e74;">|| </span><span style="color:#ccc9c2;">{
+                    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Vec&lt;</span><span style="color:#ffa759;">u8</span><span style="color:#ccc9c2;">&gt; </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">vec!</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2cc;">; </span><span style="color:#ffcc66;">1000</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ffa759;">loop </span><span style="color:#ccc9c2;">{
+                        </span><span style="color:#ffa759;">match</span><span style="color:#ccc9c2;"> reader</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">read</span><span style="color:#ccc9c2;">(serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_mut_slice</span><span style="color:#ccc9c2;">()) {
+                            </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(t) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+                                </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(line</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">_</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">split_at</span><span style="color:#ccc9c2;">(t)</span><span style="color:#ccc9c2cc;">;
+                                </span><span style="font-style:italic;color:#5c6773;">// get a lock on mutex and increment the value
+                                </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> data </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> counter</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">lock</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+                                </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;">data </span><span style="color:#f29e74;">+= </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2cc;">;
+                            </span><span style="color:#ccc9c2;">}
+                            </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">ref</span><span style="color:#ccc9c2;"> e) </span><span style="color:#ffa759;">if</span><span style="color:#ccc9c2;"> e</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">kind</span><span style="color:#ccc9c2;">() </span><span style="color:#f29e74;">== </span><span style="color:#ccc9c2;">io</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">ErrorKind</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">TimedOut </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">,
+                            </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;{:?}&quot;</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)</span><span style="color:#ccc9c2cc;">,
+                        </span><span style="color:#ccc9c2;">}
+                        thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">sleep(Duration</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_millis(</span><span style="color:#ffcc66;">50</span><span style="color:#ccc9c2;">))</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ccc9c2;">}
+                })</span><span style="color:#ccc9c2cc;">;
+
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> thread3 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Builder</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new()
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">name</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;writer1&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">())
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">spawn</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">move </span><span style="color:#f29e74;">|| </span><span style="color:#ffa759;">loop </span><span style="color:#ccc9c2;">{
+                    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> foo_value </span><span style="color:#f29e74;">= *</span><span style="color:#ccc9c2;">counter2</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">lock</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> write_buf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Vec&lt;</span><span style="color:#ffa759;">u8</span><span style="color:#ccc9c2;">&gt; </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">vec!</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2cc;">; </span><span style="color:#ffcc66;">1000</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">append</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut b</span><span style="color:#bae67e;">&quot;foo=&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">append</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> foo_value</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_bytes</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">append</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut b</span><span style="color:#bae67e;">&quot;</span><span style="color:#95e6cb;">\n</span><span style="color:#bae67e;">&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    writer</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">write</span><span style="color:#ccc9c2;">(write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_slice</span><span style="color:#ccc9c2;">())</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to write&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">sleep(Duration</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_millis(</span><span style="color:#ffcc66;">50</span><span style="color:#ccc9c2;">))</span><span style="color:#ccc9c2cc;">;
+                </span><span style="color:#ccc9c2;">})</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+            thread3</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">join</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">; </span><span style="font-style:italic;color:#5c6773;">//need to handle the last thread to avoid exit the program
+        </span><span style="color:#ccc9c2;">}
+        </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+            </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to open </span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">{}</span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">. Error: {}&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffcc66;">TTY1</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">process</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">exit(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ccc9c2;">}
+    }
+}
+</span></pre>
+<p>Le <strong>Mutex</strong> est pratique pour partager une valeur entre plusieurs threads mais ne permet pas de savoir <em>quand</em> une valeur est mise à jour. Le code ci-dessus ne fonctionne que parce que les temporisations de threads sont égales, ce qui n'est pas satisfaisant. Nous pouvons améliorer cela grace au <strong>mpsc</strong>, en remplaçant le code des thread2 et thread3 par</p>
+<pre style="background-color:#212733;">
+<span style="color:#f29e74;">...
+</span><span style="font-style:italic;color:#5c6773;">// Increment foo value on each request
+    </span><span style="color:#ffa759;">match </span><span style="color:#ccc9c2;">serialport</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">open_with_settings(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">tty1_path</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">settings) {
+        </span><span style="font-style:italic;color:#5c6773;">// get the serial port for writer thread
+        </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> writer) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+            </span><span style="font-style:italic;color:#5c6773;">// clone serialport for reader thread
+            </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> reader </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> writer</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">try_clone</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to clone&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(tx</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> rx) </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">channel</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+            </span><span style="font-style:italic;color:#5c6773;">// read the port and write to stdout
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> _thread2 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Builder</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new()
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">name</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;reader1&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">())
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">spawn</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">move </span><span style="color:#f29e74;">|| </span><span style="color:#ccc9c2;">{
+                    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Vec&lt;</span><span style="color:#ffa759;">u8</span><span style="color:#ccc9c2;">&gt; </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">vec!</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2cc;">; </span><span style="color:#ffcc66;">1000</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> data</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">i32 </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ffa759;">loop </span><span style="color:#ccc9c2;">{
+                        </span><span style="color:#ffa759;">match</span><span style="color:#ccc9c2;"> reader</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">read</span><span style="color:#ccc9c2;">(serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_mut_slice</span><span style="color:#ccc9c2;">()) {
+                            </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(t) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+                                </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(_line</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">_</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">split_at</span><span style="color:#ccc9c2;">(t)</span><span style="color:#ccc9c2cc;">;
+                                </span><span style="font-style:italic;color:#5c6773;">// increment the thread scoped var
+</span><span style="color:#ccc9c2;">                                data </span><span style="color:#f29e74;">+= </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                                tx</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">send</span><span style="color:#ccc9c2;">(data)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+                            </span><span style="color:#ccc9c2;">}
+                            </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">ref</span><span style="color:#ccc9c2;"> e) </span><span style="color:#ffa759;">if</span><span style="color:#ccc9c2;"> e</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">kind</span><span style="color:#ccc9c2;">() </span><span style="color:#f29e74;">== </span><span style="color:#ccc9c2;">io</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">ErrorKind</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">TimedOut </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">,
+                            </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;{:?}&quot;</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)</span><span style="color:#ccc9c2cc;">,
+                        </span><span style="color:#ccc9c2;">}
+                        thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">sleep(Duration</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_millis(</span><span style="color:#ffcc66;">50</span><span style="color:#ccc9c2;">))</span><span style="color:#ccc9c2cc;">;
+                    </span><span style="color:#ccc9c2;">}
+                })</span><span style="color:#ccc9c2cc;">;
+
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> thread3 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">thread</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Builder</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new()
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">name</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;writer1&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">())
+                </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">spawn</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">move </span><span style="color:#f29e74;">|| </span><span style="color:#ffa759;">loop </span><span style="color:#ccc9c2;">{
+                    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> foo_value </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> rx</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">recv</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">; </span><span style="font-style:italic;color:#5c6773;">// wait until received a value from tx
+                    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> write_buf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Vec&lt;</span><span style="color:#ffa759;">u8</span><span style="color:#ccc9c2;">&gt; </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">vec!</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2cc;">; </span><span style="color:#ffcc66;">1000</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">append</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut b</span><span style="color:#bae67e;">&quot;foo=&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">append</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> foo_value</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_bytes</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">append</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut b</span><span style="color:#bae67e;">&quot;</span><span style="color:#95e6cb;">\n</span><span style="color:#bae67e;">&quot;</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+                    writer</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">write</span><span style="color:#ccc9c2;">(write_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_slice</span><span style="color:#ccc9c2;">())</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to write&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+                </span><span style="color:#ccc9c2;">})</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+            thread3</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">join</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">; </span><span style="font-style:italic;color:#5c6773;">//need to handle the last thread to avoid exit the program
+        </span><span style="color:#ccc9c2;">}
+        </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+            </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to open </span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">{}</span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">. Error: {}&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffcc66;">TTY1</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">process</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">exit(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ccc9c2;">}
+    }
+</span></pre>
+<p>Nous avons maintenant réellement le fonctionnement voulu. Le fonctionnement de <em>channel</em> fournit nativement par Rust est vraiment pratique pour la communictaion entre threads, néanmoins on s'apperçoit avec ce cas trivial que cela demande beaucoup de code boilerplate et surtout on peut vite se perdre à la lecture du code quand on cherche à synchroniser plusieurs threads à partir de la mise à jour d'une donnée.</p>
+<p><em>NB : on accepte ici qu'une requête, il faudrait parser réellement les requêtes pour implémenter intégralement notre protocole.</em></p>
+<h1 id="seconde-version-les-futures">Seconde version : les futures</h1>
+<p>Une <a href="https://doc.rust-lang.org/std/future/trait.Future.html">Future</a>, parfois appellée <em>promesse</em> dans d'autres langages, est un calcul asynchrone pouvant produire une valeur. Une <strong>Future</strong> en Rust est évaluée de manière paresseuse (Lazy evaluation), c'est à dire qu'elle ne font rien à moins d'être <em>amenée</em> à l'état <code>Ready</code>, pour cela elle doit être activement <code>poll</code>. Ce fonctionnement peut surprendre si vous êtes habitué aux promesses de javascript ou futures de java. Il est donc nécessaire de construire également un <code>executor</code> pour utiliser une <strong>Future</strong>.</p>
+<p>Si on voulait réécrire l'équivalent des thread3 et 4, en considérant que nous avons un client séparé qui envoie les requête <code>foo?\n</code>, on voudrait avoir quelque chose de ce style :</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">// Conceptual code : doesn&#39;t work as is
+</span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">main</span><span style="color:#ccc9c2;">() {
+    </span><span style="color:#ffa759;">match </span><span style="color:#ccc9c2;">serialport</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">open_with_settings(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">tty1_path</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">settings) {
+        </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> writer) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> reader </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> writer</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">try_clone</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to clone&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(executor</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> spawner) </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">new_executor_and_spawner</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+            spawner</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">spawn</span><span style="color:#ccc9c2;">(
+                SerialRead{
+                    sp</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;*</span><span style="color:#ccc9c2;">writer</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;">
+                    shared_state</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Arc</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new((Mutex</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new(</span><span style="font-style:italic;color:#5ccfe6;">None</span><span style="color:#ccc9c2;">))
+                }</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">and_then</span><span style="color:#ccc9c2;">(| </span><span style="color:#ffcc66;">buffer </span><span style="color:#ccc9c2;">| SerialWrite{
+                    sp</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;*</span><span style="color:#ccc9c2;">writer</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;">
+                    data</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f28779;">build_write_buff_from_read_buff</span><span style="color:#ccc9c2;">(buffer)</span><span style="color:#ccc9c2cc;">, </span><span style="font-style:italic;color:#5c6773;">//build answer from request
+</span><span style="color:#ccc9c2;">                    shared_state</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Arc</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new((Mutex</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new(</span><span style="font-style:italic;color:#5ccfe6;">None</span><span style="color:#ccc9c2;">))
+                })</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">map_err</span><span style="color:#ccc9c2;">(|_| </span><span style="color:#f28779;">println!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;failed&quot;</span><span style="color:#ccc9c2;">))</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+            )</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#f28779;">drop</span><span style="color:#ccc9c2;">(spawner)</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+            executor</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">run</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+                </span><span style="color:#ccc9c2;">}
+        </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+            </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to open </span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">{}</span><span style="color:#95e6cb;">\&quot;</span><span style="color:#bae67e;">. Error: {}&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffcc66;">TTY1</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">process</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">exit(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ccc9c2;">}
+    }
+}
+</span></pre>
+<p>Utiliser les futures simplifie grandement la lecture du code au regard de la gestion des threads avec mpsc, mais créer ses Future n'est pas chose aisé. La struture <code>SerialRead</code>, par exemple, qui représente la lecture asynchrone sur le port série et qui implémente le trait <code>Future</code>, ressemblerait à ça</p>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">future</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Future</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">sync</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{Arc</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Mutex}</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">task</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{Context</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Poll</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Waker}</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">pin</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Pin</span><span style="color:#ccc9c2cc;">;
+
+</span><span style="color:#ffa759;">pub struct </span><span style="color:#73d0ff;">SerialRead</span><span style="color:#ccc9c2;">&lt;</span><span style="color:#ffa759;">&#39;a</span><span style="color:#ccc9c2;">&gt; {
+    sp</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">&#39;a</span><span style="color:#ccc9c2;"> dyn SerialPort,
+    shared_state</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Arc&lt;Mutex&lt;SharedState&gt;&gt;,
+}
+
+</span><span style="color:#ffa759;">struct </span><span style="color:#73d0ff;">SharedState </span><span style="color:#ccc9c2;">{
+    waker</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Option&lt;Waker&gt;,
+}
+
+</span><span style="color:#ffa759;">impl </span><span style="color:#ccc9c2;">Future </span><span style="color:#ffa759;">for </span><span style="color:#73d0ff;">SerialRead</span><span style="color:#ccc9c2;">&lt;&#39;</span><span style="color:#f29e74;">_</span><span style="color:#ccc9c2;">&gt; {
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Output </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Vec&lt;</span><span style="color:#ffa759;">u8</span><span style="color:#ccc9c2;">&gt;</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">poll</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">self</span><span style="color:#ccc9c2;">: Pin&lt;</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut Self</span><span style="color:#ccc9c2;">&gt;, </span><span style="color:#ffcc66;">cx</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> Context) </span><span style="color:#ccc9c2cc;">-&gt; </span><span style="color:#ccc9c2;">Poll&lt;</span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Output&gt; {
+        </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">Vec&lt;</span><span style="color:#ffa759;">u8</span><span style="color:#ccc9c2;">&gt; </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">vec!</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2cc;">; </span><span style="color:#ffcc66;">1000</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> shared_state </span><span style="color:#f29e74;">= </span><span style="font-style:italic;color:#5ccfe6;">self</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shared_state</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">lock</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ffa759;">if let </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(t) </span><span style="color:#f29e74;">= </span><span style="font-style:italic;color:#5ccfe6;">self
+            </span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">sp
+            </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">try_clone</span><span style="color:#ccc9c2;">()
+            </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">expect</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Failed to clone&quot;</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">read</span><span style="color:#ccc9c2;">(serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_mut_slice</span><span style="color:#ccc9c2;">())
+        {
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> newline </span><span style="color:#f29e74;">= &amp;</span><span style="color:#ccc9c2;">serial_buf[</span><span style="color:#f29e74;">..</span><span style="color:#ccc9c2;">t]</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">iter</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">position</span><span style="color:#ccc9c2;">(|</span><span style="color:#ffcc66;">b</span><span style="color:#ccc9c2;">| </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;">b </span><span style="color:#f29e74;">== </span><span style="color:#ffa759;">b</span><span style="color:#bae67e;">&#39;</span><span style="color:#95e6cb;">\n</span><span style="color:#bae67e;">&#39;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#ffa759;">if let </span><span style="font-style:italic;color:#5ccfe6;">Some</span><span style="color:#ccc9c2;">(n) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> newline {
+                </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(line</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">_</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> serial_buf</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">split_at</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;">n)</span><span style="color:#ccc9c2cc;">;
+                </span><span style="color:#ccc9c2;">Poll</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Ready(line</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_vec</span><span style="color:#ccc9c2;">())
+            } </span><span style="color:#ffa759;">else </span><span style="color:#ccc9c2;">{
+                </span><span style="font-style:italic;color:#5c6773;">// The serial does not yet have data
+</span><span style="color:#ccc9c2;">                shared_state</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">waker </span><span style="color:#f29e74;">= </span><span style="font-style:italic;color:#5ccfe6;">Some</span><span style="color:#ccc9c2;">(cx</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">waker</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">clone</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;
+                </span><span style="color:#ccc9c2;">Poll</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Pending
+            }
+        } </span><span style="color:#ffa759;">else </span><span style="color:#ccc9c2;">{
+            </span><span style="font-style:italic;color:#5c6773;">// The serial port cannot be block for read.
+</span><span style="color:#ccc9c2;">            shared_state</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">waker </span><span style="color:#f29e74;">= </span><span style="font-style:italic;color:#5ccfe6;">Some</span><span style="color:#ccc9c2;">(cx</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">waker</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">clone</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;
+            </span><span style="color:#ccc9c2;">Poll</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Pending
+        }
+    }
+}
+</span></pre>
+<p>Les <strong>futures</strong> Rust sont assez bas niveau, le langage fournit le contrat : le trait ; charge à nous de l'implémenter. Du coup, quelques autres concepts sont nécessaires à appréhender comme les <a href="https://rust-lang.github.io/async-book/02_execution/03_wakeups.html">Waker</a> et le <a href="https://rust-lang.github.io/async-book/04_pinning/01_chapter.html">Pinning</a>.</p>
+<p>Il nous faut également écrire un <a href="https://rust-lang.github.io/async-book/02_execution/05_io.html">Executor</a> qui va <code>poll</code> notre future jusqu'à l'atteinte d'une valeur de type <code>Poll::Ready&lt;Output&gt;</code> et les combinateurs <code>and_then</code>, <code>map_err</code> ou autres dont nous pourrions avoir besoin. La crates <a href="https://rust-lang-nursery.github.io/futures-api-docs/0.3.0-alpha.18/futures/">futures</a> qui a servi d'incubateur aux <strong>Futures</strong> fournit des modules qui peuvent faciliter la tâche. Néanmoins écrire un <strong>Executor</strong> est une tâche fastidieuse et complexe. Heureusement pour nous, il existe <a href="https://tokio.rs">Tokio</a> !</p>
+<h1 id="troisieme-version-futures-tokio">Troisième version : futures ❤ Tokio</h1>
+<p>Tokio est une plate-forme de gestion d'I/O non bloquante, gérée par événement, permettant d'écrire des applications asynchrones avec Rust. À un niveau élevé, il fournit quelques composants majeurs:</p>
+<ul>
+<li>Un planificateur de tâches multithreadées -&gt; <em>similaire à la notion d'Executor vue précédement</em></li>
+<li>Un <strong>Reactor</strong>, adossé à la file d’événements du système d’exploitation (epoll, kqueue, IOCP, etc…) -&gt; <em>un Executor reactif ... dans d'autre système on l'appelerait Event Loop</em></li>
+<li>Des sockets TCP et UDP asynchrones</li>
+</ul>
+<p>Au moment où j'écris cet artucle, le trait <strong>Future</strong> de Tokio, issu de la crate <code>futures</code> en version 0.1.x, est quelque peut différent de celui de la lib standard.
+La version 0.3.0 de la crates Futures, actuellement en alpha, va s'aligner sur std::future::Future. Cependant il est aisé de passer de l'un à l'autre :</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">// futures::future::Future (0.1.x)
+</span><span style="color:#ffa759;">trait </span><span style="color:#73d0ff;">Future </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Item</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Error</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">poll</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut </span><span style="color:#ffcc66;">self</span><span style="color:#ccc9c2;">) </span><span style="color:#ccc9c2cc;">-&gt; </span><span style="color:#ccc9c2;">Result&lt;Async&lt;</span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Item&gt;, </span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Error&gt;</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ccc9c2;">}
+</span><span style="color:#ffa759;">enum </span><span style="color:#73d0ff;">Async</span><span style="color:#ccc9c2;">&lt;T&gt; {
+    Ready(T)</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;">
+    NotReady</span><span style="color:#ccc9c2cc;">,
+</span><span style="color:#ccc9c2;">}
+</span></pre><pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">// std::future::Future &amp; futures::future::Future (0.3.x)
+</span><span style="color:#ffa759;">trait </span><span style="color:#73d0ff;">Future </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Output</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">poll</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">self</span><span style="color:#ccc9c2;">: Pin&lt;</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut Self</span><span style="color:#ccc9c2;">&gt;, </span><span style="color:#ffcc66;">cx</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> Context) </span><span style="color:#ccc9c2cc;">-&gt; </span><span style="color:#ccc9c2;">Poll&lt;</span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Output&gt;</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ccc9c2;">}
+
+</span><span style="color:#ffa759;">enum </span><span style="color:#73d0ff;">Poll</span><span style="color:#ccc9c2;">&lt;T&gt; {
+    Ready(T)</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;">
+    Pending</span><span style="color:#ccc9c2cc;">,
+</span><span style="color:#ccc9c2;">}
+</span></pre>
+<p>Tokio fournit aussi également le Trait <strong>Stream</strong>. Les Streams sont similaires aux Futures mais au lieu de retourner une unique valeur, ils donnent une ou plusieurs valeur de manière asynchrone.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">trait </span><span style="color:#73d0ff;">Stream </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Item</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Error</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">poll</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut </span><span style="color:#ffcc66;">self</span><span style="color:#ccc9c2;">) </span><span style="color:#ccc9c2cc;">-&gt; </span><span style="color:#ccc9c2;">Poll&lt;Option&lt;</span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Item&gt;, </span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Error&gt;</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ccc9c2;">}
+</span></pre>
+<p>Les Streams représentent bien ce que nous voulons faire avec notre serveur sur port série !</p>
+<p>L'implémentation des Streams pour un port série existe déjà, nous allons donc utiliser la crate <a href="https://github.com/berkowski/tokio-serial">tokio-serial</a>, il nous suffit de fournir un codec pour serialiser et déserialiser le contenu du port série.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">extern crate</span><span style="color:#ccc9c2;"> bytes</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">extern crate</span><span style="color:#ccc9c2;"> futures</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">extern crate</span><span style="color:#ccc9c2;"> tokio</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">extern crate</span><span style="color:#ccc9c2;"> tokio_serial</span><span style="color:#ccc9c2cc;">;
+
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">bytes</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{BufMut</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> BytesMut}</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">futures</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{Future</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Sink</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Stream}</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{env</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffa759;">str</span><span style="color:#ccc9c2;">}</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">use </span><span style="color:#ccc9c2;">tokio</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">codec</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">{Decoder</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Encoder}</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ffa759;">const </span><span style="color:#ffcc66;">DEFAULT_TTY</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">str </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;/tmp/ttyS1&quot;</span><span style="color:#ccc9c2cc;">;
+
+#</span><span style="color:#ccc9c2;">[</span><span style="color:#ffd580;">derive</span><span style="color:#ccc9c2;">(Clone</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Debug</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Eq</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> PartialEq</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Ord</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> PartialOrd</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> Hash)]
+</span><span style="color:#ffa759;">struct </span><span style="color:#73d0ff;">LineCodec</span><span style="color:#ccc9c2cc;">;
+
+</span><span style="color:#ffa759;">impl </span><span style="color:#ccc9c2;">Decoder </span><span style="color:#ffa759;">for </span><span style="color:#73d0ff;">LineCodec </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Item </span><span style="color:#f29e74;">= </span><span style="font-style:italic;color:#5ccfe6;">String</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Error </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">io</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Error</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">decode</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut </span><span style="color:#ffcc66;">self</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">src</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> BytesMut) </span><span style="color:#ccc9c2cc;">-&gt; </span><span style="color:#ccc9c2;">Result&lt;Option&lt;</span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Item&gt;, </span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Error&gt; {
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> newline </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> src</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_ref</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">iter</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">position</span><span style="color:#ccc9c2;">(|</span><span style="color:#ffcc66;">b</span><span style="color:#ccc9c2;">| </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;">b </span><span style="color:#f29e74;">== </span><span style="color:#ffa759;">b</span><span style="color:#bae67e;">&#39;</span><span style="color:#95e6cb;">\n</span><span style="color:#bae67e;">&#39;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+        </span><span style="color:#ffa759;">if let </span><span style="font-style:italic;color:#5ccfe6;">Some</span><span style="color:#ccc9c2;">(n) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> newline {
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> line </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> src</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">split_to</span><span style="color:#ccc9c2;">(n)</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+            src</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">take</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">; </span><span style="font-style:italic;color:#5c6773;">// flush the buffer
+            </span><span style="color:#ffa759;">if let </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(s) </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">str</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_utf8(line</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">as_ref</span><span style="color:#ccc9c2;">()) {
+                </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(</span><span style="font-style:italic;color:#5ccfe6;">Some</span><span style="color:#ccc9c2;">(s</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">to_string</span><span style="color:#ccc9c2;">()))
+            } </span><span style="color:#ffa759;">else </span><span style="color:#ccc9c2;">{
+                </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">io</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Error</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">new(
+                    std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">io</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">ErrorKind</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Other</span><span style="color:#ccc9c2cc;">,
+                    </span><span style="color:#bae67e;">&quot;Invalid String&quot;</span><span style="color:#ccc9c2cc;">,
+                </span><span style="color:#ccc9c2;">))
+            }
+        } </span><span style="color:#ffa759;">else </span><span style="color:#ccc9c2;">{
+            </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(</span><span style="font-style:italic;color:#5ccfe6;">None</span><span style="color:#ccc9c2;">)
+        }
+    }
+}
+
+</span><span style="color:#ffa759;">impl </span><span style="color:#ccc9c2;">Encoder </span><span style="color:#ffa759;">for </span><span style="color:#73d0ff;">LineCodec </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Item </span><span style="color:#f29e74;">= </span><span style="font-style:italic;color:#5ccfe6;">String</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">type </span><span style="color:#73d0ff;">Error </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">std</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">io</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Error</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">encode</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut </span><span style="color:#ffcc66;">self</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">item</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Item, </span><span style="color:#ffcc66;">dst</span><span style="color:#ccc9c2cc;">: </span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> BytesMut) </span><span style="color:#ccc9c2cc;">-&gt; </span><span style="color:#ccc9c2;">Result&lt;(), </span><span style="color:#ffa759;">Self</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Error&gt; {
+        </span><span style="color:#f28779;">println!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;In writer </span><span style="color:#ffcc66;">{:?}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">item)</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+        dst</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">reserve</span><span style="color:#ccc9c2;">(item</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">len</span><span style="color:#ccc9c2;">() </span><span style="color:#f29e74;">+ </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+        dst</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">put</span><span style="color:#ccc9c2;">(item)</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">
+        dst</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">put_u8</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">b</span><span style="color:#bae67e;">&#39;</span><span style="color:#95e6cb;">\n</span><span style="color:#bae67e;">&#39;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+        </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(())
+    }
+}
+
+</span><span style="color:#ffa759;">fn </span><span style="color:#ffd580;">main</span><span style="color:#ccc9c2;">() {
+    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> args </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">env</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">args()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> tty_path </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> args</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">nth</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap_or_else</span><span style="color:#ccc9c2;">(|| </span><span style="color:#ffcc66;">DEFAULT_TTY</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">into</span><span style="color:#ccc9c2;">())</span><span style="color:#ccc9c2cc;">;
+
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> settings </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">tokio_serial</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">SerialPortSettings</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">default()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="font-style:italic;color:#5c6773;">//tokio_serial::Serial implements tokio::prelude::AsyncRead, tokio::prelude::AsyncWrite
+    </span><span style="color:#ffa759;">let mut</span><span style="color:#ccc9c2;"> port </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">tokio_serial</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">Serial</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">from_path(tty_path</span><span style="color:#ccc9c2cc;">, </span><span style="color:#f29e74;">&amp;</span><span style="color:#ccc9c2;">settings)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">unwrap</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">if let </span><span style="font-style:italic;color:#5ccfe6;">Err</span><span style="color:#ccc9c2;">(e) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> port</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">set_exclusive</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">false</span><span style="color:#ccc9c2;">) {
+        </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Unable to set serial port exlusive{}&quot;</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e)
+    }</span><span style="color:#ccc9c2cc;">;
+    </span><span style="font-style:italic;color:#5c6773;">// provide a tokio::codec::Framed and split it into a Sink and a Stream
+    </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> writer</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> reader) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> LineCodec</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">framed</span><span style="color:#ccc9c2;">(port)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">split</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> echo_server </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> reader
+        </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">for_each</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">move </span><span style="color:#f29e74;">|</span><span style="color:#ccc9c2;">line</span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">{
+            </span><span style="font-style:italic;color:#5c6773;">// wait block the current thread until the future is resolved (similar with await from std)
+            </span><span style="color:#ffa759;">let </span><span style="color:#f29e74;">_ = </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&amp;</span><span style="color:#ffa759;">mut</span><span style="color:#ccc9c2;"> writer)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">send</span><span style="color:#ccc9c2;">(line)</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">wait</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+            </span><span style="font-style:italic;color:#5ccfe6;">Ok</span><span style="color:#ccc9c2;">(())
+        })
+        </span><span style="color:#f29e74;">.</span><span style="color:#f28779;">map_err</span><span style="color:#ccc9c2;">(|</span><span style="color:#ffcc66;">e</span><span style="color:#ccc9c2;">| </span><span style="color:#f28779;">eprintln!</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;{}&quot;</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> e))</span><span style="color:#ccc9c2cc;">;
+    </span><span style="font-style:italic;color:#5c6773;">// start the tokio runtime that will poll our future
+    </span><span style="color:#ccc9c2;">tokio</span><span style="color:#f29e74;">::</span><span style="color:#ccc9c2;">run(echo_server)</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ccc9c2;">}
+</span></pre>
+<p>Nous arrivons grâce aux futures à une version plus déclarative du code et surement plus facile à maintenir.
+Les crates <strong>Tokio</strong> et <strong>futures</strong> nous fournissent les outils pour gérer relativement simplement nos <em>Futures</em> ce qui est appréciable. Nous l'avons peu aborder mais le fait que Tokio fournissent également des impléméntations génériques pour les <a href="https://tokio.rs/docs/futures/streams/#adapters">adapteurs de Streams</a> (for_earch, fold, or_else, take, filter, ...) et pour les <a href="https://tokio.rs/docs/futures/combinators/#adapters">Futures</a> (map, map_err, then, join, select, ...) nous facilite le travail.</p>
+<p>Au final, nous sommes dans une période charnière car du côté de la librairie standard Rust la définition des <code>Futures</code> et de <code>async/await</code> se stabilisent seulement, ce qui demande un travail de boilerplate important pour créer ses propres futures et leur exécuteur, de l'autre nous avons avec <code>Tokio</code> et <code>futures</code> un environnement fonctionnel qui nous permet de nous concentrer sur nos applications. La convergence est en cours, mais il faut laisser le temps à la chronologie de se dérouler (futures est en train de s'aligner, puis se sera Tokio et les projets basé sur Tokio). Malgré cela l'usage de Tokio est un tel &quot;game changer&quot; que je l'utiliserai dès à présent pour mes nouveaux besoins, notamment l'évolution de notre librairie sur socket.</p>
+<p><em>Ce billet a été écrit au fur et à mesure de mes notes d'exploration, j'espère qu'il vous permettra de gagner du temps si vous vous avanturez sur le terrain des Futures Rust.</em></p>
+
+</div>
+
+    </div>
+  </body>
+</html>
