@@ -230,7 +230,7 @@ _NB : on accepte ici qu'une requête, il faudrait parser réellement les requêt
 
 # Seconde version : les futures
 
-Une [Future](https://doc.rust-lang.org/std/future/trait.Future.html), parfois appellée _promesse_ dans d'autres langages, est un calcul asynchrone pouvant produire une valeur. Une **Future** en Rust est évaluée de manière paresseuse (Lazy evaluation), c'est à dire qu'elle ne font rien à moins d'être _amenée_ à l'état `Ready`, pour cela elle doit être activement `poll`. Ce fonctionnement peut surprendre si vous êtes habitué aux promesses de javascript ou futures de java. Il est donc nécessaire de construire également un `executor` pour utiliser une **Future**.
+Une [Future](https://doc.rust-lang.org/std/future/trait.Future.html), parfois appellée _promesse_ dans d'autres langages, est un calcul asynchrone pouvant produire une valeur. Une **Future** en Rust est évaluée de manière paresseuse (Lazy evaluation), c'est à dire qu'elle ne fait rien à moins d'être _amenée_ à l'état `Ready`, pour cela elle doit être activement `poll`. Ce fonctionnement peut surprendre si vous êtes habitué aux promesses de javascript ou futures de java. Il est donc nécessaire de construire également un `executor` pour utiliser une **Future**.
 
 Si on voulait réécrire l'équivalent des thread3 et 4, en considérant que nous avons un client séparé qui envoie les requête `foo?\n`, on voudrait avoir quelque chose de ce style :
 
@@ -311,7 +311,7 @@ impl Future for SerialRead<'_> {
 
 Les **futures** Rust sont assez bas niveau, le langage fournit le contrat : le trait ; charge à nous de l'implémenter. Du coup, quelques autres concepts sont nécessaires à appréhender comme les [Waker](https://rust-lang.github.io/async-book/02_execution/03_wakeups.html) et le [Pinning](https://rust-lang.github.io/async-book/04_pinning/01_chapter.html).
 
-Il nous faut également écrire un [Executor](https://rust-lang.github.io/async-book/02_execution/05_io.html) qui va `poll` notre future jusqu'à l'atteinte d'une valeur de type `Poll::Ready<Output>` et les combinateurs `and_then`, `map_err` ou autres dont nous pourrions avoir besoin. La crates [futures](https://rust-lang-nursery.github.io/futures-api-docs/0.3.0-alpha.18/futures/) qui a servi d'incubateur aux **Futures** fournit des modules qui peuvent faciliter la tâche. Néanmoins écrire un **Executor** est une tâche fastidieuse et complexe. Heureusement pour nous, il existe [Tokio](https://tokio.rs) !
+Il nous faut également écrire un [Executor](https://rust-lang.github.io/async-book/02_execution/05_io.html) qui va `poll` notre future jusqu'à l'atteinte d'une valeur de type `Poll::Ready<Output>` et les combinateurs `and_then`, `map_err` ou autres dont nous pourrions avoir besoin. La crate [futures](https://rust-lang-nursery.github.io/futures-api-docs/0.3.0-alpha.18/futures/) qui a servi d'incubateur aux **Futures** fournit des modules qui peuvent faciliter la tâche. Néanmoins écrire un **Executor** est une tâche fastidieuse et complexe. Heureusement pour nous, il existe [Tokio](https://tokio.rs) !
 
 # Troisième version : futures ❤ Tokio
 
@@ -443,7 +443,9 @@ fn main() {
 ```
 
 Nous arrivons grâce aux futures à une version plus déclarative du code et surement plus facile à maintenir.
-Les crates **Tokio** et **futures** nous fournissent les outils pour gérer relativement simplement nos _Futures_ ce qui est appréciable. Nous l'avons peu aborder mais le fait que Tokio fournissent également des impléméntations génériques pour les [adapteurs de Streams](https://tokio.rs/docs/futures/streams/#adapters) (for_earch, fold, or_else, take, filter, ...) et pour les [Futures](https://tokio.rs/docs/futures/combinators/#adapters) (map, map_err, then, join, select, ...) nous facilite le travail.
+Les crates **Tokio** et **futures** nous fournissent les outils pour gérer relativement simplement nos _Futures_ ce qui est appréciable. Nous l'avons peu abordé mais le fait que Tokio fournissent également des impléméntations génériques pour les [adapteurs de Streams](https://tokio.rs/docs/futures/streams/#adapters) (for_earch, fold, or_else, take, filter, ...) et pour les [Futures](https://tokio.rs/docs/futures/combinators/#adapters) (map, map_err, then, join, select, ...) nous facilite le travail.
+
+# Conclusion
 
 Au final, nous sommes dans une période charnière car du côté de la librairie standard Rust la définition des `Futures` et de `async/await` se stabilisent seulement, ce qui demande un travail de boilerplate important pour créer ses propres futures et leur exécuteur, de l'autre nous avons avec `Tokio` et `futures` un environnement fonctionnel qui nous permet de nous concentrer sur nos applications. La convergence est en cours, mais il faut laisser le temps à la chronologie de se dérouler (futures est en train de s'aligner, puis se sera Tokio et les projets basé sur Tokio). Malgré cela l'usage de Tokio est un tel "game changer" que je l'utiliserai dès à présent pour mes nouveaux besoins, notamment l'évolution de notre librairie sur socket.
 
