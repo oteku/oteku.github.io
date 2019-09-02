@@ -51,9 +51,9 @@ Chose très intéressante avec Rust, la librairie standard dispose de plusieurs 
 
 - [Atomically Reference Counted](https://doc.rust-lang.org/std/sync/struct.Arc.html) : `Arc<T>` fournit un _ownership_ partagé pour une valeur de type `T`, _thread-safe_ et allouée dans la _heap_
 - [Mutex](https://doc.rust-lang.org/std/sync/struct.Mutex.html) : un mécanisme d'exclusion mutuelle pour protéger des données partagées entre plusieurs thread
-- [Canaux de communication orientés messages](https://static.rust-lang.org/doc/master/std/sync/mpsc/index.html) : le module `mspc` fournit les primitives de queue de communication _First In Fist Out_ _multi-producer, single-consumer_ qui permettent à un thread de collecter des informations issus de plusieurs autres threads.
+- [Canaux de communication orientés messages](https://static.rust-lang.org/doc/master/std/sync/mpsc/index.html) : le module `mspc` fournit les primitives de queue de communication _First In First Out_ _multi-producer, single-consumer_ qui permettent à un thread de collecter des informations issus de plusieurs autres threads.
 
-Faisons un premier programme qui écrit la requete `foo?\n` sur le port `/tmp/ttyS0` et qui pour chaque requete envoie une valuer de foo incrémentée de 1, en utilisant un **Mutex**.
+Faisons un premier programme qui écrit la requête `foo?\n` sur le port `/tmp/ttyS0` et qui pour chaque requête envoie une valuer de foo incrémentée de 1, en utilisant un **Mutex**.
 
 Le cheminement du programme peut être schématisé ainsi :
 
