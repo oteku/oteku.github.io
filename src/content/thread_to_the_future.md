@@ -53,7 +53,7 @@ Chose très intéressante avec Rust, la librairie standard dispose de plusieurs 
 - [Mutex](https://doc.rust-lang.org/std/sync/struct.Mutex.html) : un mécanisme d'exclusion mutuelle pour protéger des données partagées entre plusieurs thread
 - [Canaux de communication orientés messages](https://static.rust-lang.org/doc/master/std/sync/mpsc/index.html) : le module `mspc` fournit les primitives de queue de communication _First In First Out_ _multi-producer, single-consumer_ qui permettent à un thread de collecter des informations issus de plusieurs autres threads.
 
-Faisons un premier programme qui écrit la requête `foo?\n` sur le port `/tmp/ttyS0` et qui pour chaque requête envoie une valuer de foo incrémentée de 1, en utilisant un **Mutex**.
+Faisons un premier programme qui écrit la requête `foo?\n` sur le port `/tmp/ttyS0` et qui pour chaque requête envoie une valeur de foo incrémentée de 1, en utilisant un **Mutex**.
 
 Le cheminement du programme peut être schématisé ainsi :
 
