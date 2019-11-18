@@ -4,6 +4,7 @@ addons:
   homebrew:
     packages:
       - zola
+    update: true
 jobs:
   include:
     - stage: build

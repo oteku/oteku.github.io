@@ -1,147 +1,333 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
+    <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
-    <!-- Enable responsiveness on mobile devices-->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1"
-    />
-
-    <title>Les carnets d&#x27;Oteku</title>
-    <link rel="icon" type="image/png" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;favicon.ico" />
-    <!-- CSS -->
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;print.css" media="print" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;poole.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;hyde.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Special+Elite"
-    />
-
-     <link rel="alternate"
-    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" />   
-  </head>
-
-  <body
-    class="theme-base-0b layout-reverse"
-  >
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <div class="sidebar">
-      <div
-        class="container sidebar-sticky"
-      >
-        <div class="sidebar-about">
-          
-          <a href="https:&#x2F;&#x2F;oteku.github.io"
-            ><h1>Les carnets d&#x27;Oteku</h1></a
-          >
-          
-          <p class="lead">Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust</p>
-           
-        </div>
+    <meta name="description" content="Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust" />
+    
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>Oteku</title>
+     <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+    <meta property="og:title" content="Oteku" />
+    <meta property="og:description" content="Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr" />
+    <meta
+      property="og:img"
+      content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+    />
+    <meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Oteku" />
+    <meta property="twitter:description" content="Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust" />
+    <meta
+      property="twiter:image"
+      content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+    />
+    
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
 
-        <ul class="sidebar-nav">
-           
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-twitter"
-              ><a href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku">Twitter</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-link"
-              ><a href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku">Mastodon</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-github"
-              ><a href="https:&#x2F;&#x2F;github.com&#x2F;oteku">Github</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-beer"
-              ><a href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;">Lambda Lille</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-rss"
-              ><a href="rss.xml">Flux rss</a></i
-            >
-          </li>
-          
-          <hr />
-          <li class="sidebar-nav-item">
-            <i class="icon-gift">
-              Merci <a href="https://www.getzola.org/">Zola</a> pour ce site</i
-            >
-          </li>
-          
-        </ul>
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
       </div>
     </div>
-    
-
-    <div class="content container">
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Derniers articles</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Derniers articles</h3>
+            <ul class="">
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/thread-to-the-future/"
+                  >Thead to the Future</a
+                >
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/rust-my-node/"
+                  >Rust my Node.js</a
+                >
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/pipe-macro-rust/"
+                  >Opérateur pipe en Rust ?</a
+                >
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
       
-<div class="posts">
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;thread-to-the-future&#x2F;">
-        Thead to the Future
-      </a>
-    </h1>
-    <span class="post-date">2019-08-07</span>
-    <span class="post-date"
-      >&lt;p&gt;Je travaille actuellement sur un robot compagon nommé &lt;a href=&quot;https:&#x2F;&#x2F;www.cutii.io&#x2F;cutii&#x2F;&quot;&gt;Cutii&lt;&#x2F;a&gt; pour lequel nous avons besoins de communiquer sur port série entre le PC du robot et nos différentes cartes électronique, nous avons fait le choix il y a quelques mois d&#x27;implémenter une librairie…
-      <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;thread-to-the-future&#x2F;">
-        lire
-      </a>
-    </span>
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;thread-to-the-future&#x2F;">Thead to the Future</a>
+          </h1>
+          <p class="post-meta">
+            2019-08-07
+          </p>
+        </header>
+        <article class="post-content">
+          <div><p>Je travaille actuellement sur un robot compagon nommé <a href="https://www.cutii.io/cutii/">Cutii</a> pour lequel nous avons besoins de communiquer sur port série entre le PC du robot et nos différentes cartes électronique, nous avons fait le choix il y a quelques mois d'implémenter une librairie de communication en Rust, afin de rendre plus sûrs et plus performants nos échanges. Ce billet vise à dresser un état des lieux de la gestion de communications asynchrones en Rust.</p>
+<p>Pour illustrer les exemples, imaginons que nous ayons un protocole simplifié de communication, nous permettant de faire des <strong>GET</strong> et <strong>SET</strong> sur des valeur, en mode requête / réponse et sur port série :</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;"># requête GET pour une valeur foo
+</span><span style="color:#ffd580;">foo?</span><span style="color:#95e6cb;">\n
+</span><span style="font-style:italic;color:#5c6773;"># réponse à la requête GET
+</span><span style="color:#ffd580;">foo</span><span style="color:#ccc9c2;">=1</span><span style="color:#95e6cb;">\n
+</span><span style="font-style:italic;color:#5c6773;"># requête SET pour une valeur foo
+</span><span style="color:#ccc9c2;">foo=2</span><span style="color:#95e6cb;">\n
+</span><span style="font-style:italic;color:#5c6773;"># réponse d&#39;acquitement à la requête SET
+</span><span style="color:#ccc9c2;">foo=2</span><span style="color:#95e6cb;">\n
+</span></pre></div>
+          <div class="read-more">
+            <a class="button" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;thread-to-the-future&#x2F;">Read More</a>
+          </div>
+        </article>
+      </div>
+      
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rust-my-node&#x2F;">Rust my Node.js</a>
+          </h1>
+          <p class="post-meta">
+            2019-06-20
+          </p>
+        </header>
+        <article class="post-content">
+          <div><p>Si vous êtes développeur Node.js, vous vous confronterez tôt ou tard au développement d'addons natifs ... et à tout un lot de nouveaux problèmes : le langage C++ en lui même, mais également API V8, build system ou dépendance aux versions de V8. Pourtant dès que vous avez besoins de multi-threading, d'accès aux ressources machine ou même simplement pour réutiliser des librairies existantes vous n'y coupez pas. Ce billet vise à vous faire découvrir comment le langage Rust permet de rendre vos modules natifs &quot;fast &amp; safe&quot;.</p>
+</div>
+          <div class="read-more">
+            <a class="button" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rust-my-node&#x2F;">Read More</a>
+          </div>
+        </article>
+      </div>
+      
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;pipe-macro-rust&#x2F;">Opérateur pipe en Rust ?</a>
+          </h1>
+          <p class="post-meta">
+            2019-03-29
+          </p>
+        </header>
+        <article class="post-content">
+          <div><p>L'absence d'opérateur de composition, similaire au <code>.</code> de Haskell, ou de pipeline similaire au <code>|&gt;</code> de ReasonML et OCaml, est assez frustrante lors qu'on essaie de faire du code Rust déclaratif.</p>
+<p>Il est possible d'envisager la <em>dot notation</em> mais, d'une part ce n'est pas totalement satisfaisant et, d'autre part cela nécessite d'implémenter des traits pour chacun des types de données qui composent le flux de traitement.</p>
+</div>
+          <div class="read-more">
+            <a class="button" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;pipe-macro-rust&#x2F;">Read More</a>
+          </div>
+        </article>
+      </div>
+      
+    </div>
   </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rust-my-node&#x2F;">
-        Rust my Node.js
-      </a>
-    </h1>
-    <span class="post-date">2019-06-20</span>
-    <span class="post-date"
-      >&lt;p&gt;Si vous êtes développeur Node.js, vous vous confronterez tôt ou tard au développement d&#x27;addons natifs ... et à tout un lot de nouveaux problèmes : le langage C++ en lui même, mais également API V8, build system ou dépendance aux versions de V8. Pourtant dès que vous avez besoins de multi-threadin…
-      <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rust-my-node&#x2F;">
-        lire
-      </a>
-    </span>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;pipe-macro-rust&#x2F;">
-        Opérateur pipe en Rust ?
-      </a>
-    </h1>
-    <span class="post-date">2019-03-29</span>
-    <span class="post-date"
-      >&lt;p&gt;L&#x27;absence d&#x27;opérateur de composition, similaire au &lt;code&gt;.&lt;&#x2F;code&gt; de Haskell, ou de pipeline similaire au &lt;code&gt;|&amp;gt;&lt;&#x2F;code&gt; de ReasonML et OCaml, est assez frustrante lors qu&#x27;on essaie de faire du code Rust déclaratif.&lt;&#x2F;p&gt;
-&lt;p&gt;Il est possible d&#x27;envisager la &lt;em&gt;dot notation&lt;&#x2F;em&gt; mais, d&#x27;une part …
-      <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;pipe-macro-rust&#x2F;">
-        lire
-      </a>
-    </span>
-  </div>
-  
 </div>
 
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
     </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
   </body>
 </html>

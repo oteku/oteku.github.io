@@ -1,0 +1,80 @@
+{% extends "index.html" %} {% block title %}{{ page.title }}{% endblock title %}
+{% block description %}
+<meta name="description" content="{{ page.description }}" />{% endblock
+description %} {% block extra_head %}
+<meta property="og:title" content="{{ page.title }}" />
+<meta property="og:description" content="{{ page.description }}" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="{{ config.default_language }}" />
+<meta property="og:img" content="{{ config.base_url }}/img/hacker_mind.svg" />
+<meta property="og:url" content="{{ page.permalink }}" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content="{{ page.title }}" />
+<meta property="twitter:url" content="{{ page.permalink }}" />
+<meta property="twitter:description" content="{{ page.description }}" />
+<meta
+  property="twiter:image"
+  content="{{ config.base_url }}/img/hacker_mind.svg"
+/>
+{% endblock extra_head %} {% block content %}
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Chapitres</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Chapitres</h3>
+            <ul class="">
+              {% for h1 in toc %}
+              <li class="navListItem">
+                <a class="navItem" href="{{h1.permalink | safe}}"
+                  >{{ h1.title }}</a
+                >
+                {% if h1.children %}
+                <ul>
+                  {% for h2 in h1.children %}
+                  <li>
+                    <a href="{{h2.permalink | safe}}">{{ h2.title }}</a>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="{{ page.permalink }}">{{ page.title }}</a>
+          </h1>
+          <p class="post-meta">
+            {{ page.date | date(format="%Y-%m-%d") }}
+          </p>
+        </header>
+        <article class="post-content">
+          <div>{{ page.content | safe }}</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
