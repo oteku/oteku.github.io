@@ -43,8 +43,11 @@
             <a class="navItem" href="{{ page.permalink }}">{{ page.title }}</a>
           </h1>
           <p class="post-meta">
-            {{ page.date | date(format="%Y-%m-%d") }}
+            {{ page.date | date(format="%Y-%m-%d") }} | Temps de lecture {{
+            page.reading_time }} minutes
           </p>
+          {% for tag in page.taxonomies.tags | reverse %}
+          <a href="/tags/{{ tag }}"> #{{ tag }} </a>{% endfor %}
         </header>
         <article class="post-content">
           <div>{{ page.summary | safe }}</div>
