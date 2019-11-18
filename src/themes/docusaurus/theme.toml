@@ -1,0 +1,17 @@
+name = "docusaurus"
+description = "A docusaurus classic theme"
+license = "BEERWARE"
+homepage = "https://github.com/oteku/zola-docusaurus"
+min_version = "0.5.0"
+demo = "https://oteku.github.io"
+
+[extra]
+
+[author]
+name = "Thomas Haessle"
+homepage = "https://oteku.github.io"
+
+[original]
+author =  "facebook"
+homepage = "https://docusaurus.io"
+repo = "https://github.com/facebook/docusaurus"

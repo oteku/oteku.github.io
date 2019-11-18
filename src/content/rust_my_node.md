@@ -2,10 +2,12 @@
 title = "Rust my Node.js" 
 date = 2019-06-20
 [taxonomies]
-tags = ["rust"]
+tags = ["Rust"]
 +++
 
 Si vous êtes développeur Node.js, vous vous confronterez tôt ou tard au développement d'addons natifs ... et à tout un lot de nouveaux problèmes : le langage C++ en lui même, mais également API V8, build system ou dépendance aux versions de V8. Pourtant dès que vous avez besoins de multi-threading, d'accès aux ressources machine ou même simplement pour réutiliser des librairies existantes vous n'y coupez pas. Ce billet vise à vous faire découvrir comment le langage Rust permet de rendre vos modules natifs "fast & safe".
+
+<!-- more -->
 
 ## Une histoire de Node
 

@@ -1,102 +1,217 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
+    <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
-    <!-- Enable responsiveness on mobile devices-->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1"
-    />
-
-    <title>Les carnets d&#x27;Oteku</title>
-    <link rel="icon" type="image/png" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;favicon.ico" />
-    <!-- CSS -->
-    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;print.css" media="print" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;poole.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;hyde.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Special+Elite"
-    />
-
-     <link rel="alternate"
-    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" />   
-  </head>
-
-  <body
-    class="theme-base-0b layout-reverse"
-  >
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <div class="sidebar">
-      <div
-        class="container sidebar-sticky"
-      >
-        <div class="sidebar-about">
-          
-          <a href="https:&#x2F;&#x2F;oteku.github.io"
-            ><h1>Les carnets d&#x27;Oteku</h1></a
-          >
-          
-          <p class="lead">Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust</p>
-           
-        </div>
+<meta name="description" content="page not found" />
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>404 Page not found on Oteku</title>
+     <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+    <meta property="og:title" content="Oteku" />
+    <meta property="og:description" content="Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr" />
+    <meta
+      property="og:img"
+      content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+    />
+    <meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Oteku" />
+    <meta property="twitter:description" content="Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust" />
+    <meta
+      property="twiter:image"
+      content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+    />
+    
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
 
-        <ul class="sidebar-nav">
-           
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-twitter"
-              ><a href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku">Twitter</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-link"
-              ><a href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku">Mastodon</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-github"
-              ><a href="https:&#x2F;&#x2F;github.com&#x2F;oteku">Github</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-beer"
-              ><a href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;">Lambda Lille</a></i
-            >
-          </li>
-          
-          <li class="sidebar-nav-item">
-            <i
-              class="icon-rss"
-              ><a href="rss.xml">Flux rss</a></i
-            >
-          </li>
-          
-          <hr />
-          <li class="sidebar-nav-item">
-            <i class="icon-gift">
-              Merci <a href="https://www.getzola.org/">Zola</a> pour ce site</i
-            >
-          </li>
-          
-        </ul>
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
       </div>
     </div>
-    
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<img class="logo" src="/img/404.svg" alt="Page not found" />
 
-    <div class="content container">
-      
-<div class="post">
-  <h1 class="post-title">404: Page not found</h1>
-  Sorry, we've misplaced that URL or it's pointing to something that doesn't exist. <a href=https:&#x2F;&#x2F;oteku.github.io>Head back home</a> to try finding it again.</p>
-</div>
-
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
     </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
   </body>
 </html>

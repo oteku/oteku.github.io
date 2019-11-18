@@ -12,7 +12,7 @@ highlight_code = true
 build_search_index = false
 
 # Used in RSS by default
-title = "Les carnets d'Oteku"
+title = "Oteku"
 description = "Je m'appelle Thomas Haesslé, j'écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust"
 
 # The default language, used in RSS
@@ -21,7 +21,7 @@ default_language = "fr"
 # Which theme to use for the code highlighting.
 # See below for list of accepted values
 highlight_theme = "ayu-mirage"
-theme = "hyde"
+theme = "docusaurus"
 # Whether to generate a RSS feed automatically
 generate_rss = true
 
@@ -29,16 +29,20 @@ taxonomies = [
        {name = "tags", rss = true} # each tag will have its own RSS feed
 ]
 
-tags = ["rust", "reasonml", "ocaml", "tooling"]
 
 [extra]
 # Put all your custom variables here
-hyde_theme = "theme-base-0b"
-hyde_reverse = true
-hyde_links = [
+repo_website = {url = "https://github.com/oteku/oteku.github.io", name="Github"}
+tags = ["Rust", "ReasonML", "OCaml", "Tooling"]
+social = [
     {url = "https://twitter.com/oteku", name = "Twitter", icon = "icon-twitter"},
     {url = "https://mastodon.social/@oteku", name = "Mastodon"},
-    {url = "https://github.com/oteku", name = "Github", icon = "icon-github"},
+]
+community = [
     {url = "https://www.meetup.com/fr-FR/LambdaLille/", name = "Lambda Lille", icon = "icon-beer"},
+    {url = "https://reactbeerlille.org/", name = "React Beer Lille", icon = "icon-beer"},
+]
+hack = [
     {url = "rss.xml", name = "Flux rss", icon = "icon-rss"},
 ]
+github="https://github.com/oteku"

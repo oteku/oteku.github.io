@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="{{ config.default_language }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% block description %}
+    <meta name="description" content="{{config.description}}" />
+    {% endblock description %}
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="{{ get_url(path="main.css",
+    trailing_slash=false) }}" /> <link rel="stylesheet" href="{{
+    get_url(path="fontawsome.css", trailing_slash=false) }}" />
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    {% if config.generate_rss %} <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml",
+    trailing_slash=false) }}" /> {% endif %}
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    {% block extra_head %}
+    <meta property="og:title" content="{{ config.title }}" />
+    <meta property="og:description" content="{{ config.description }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="{{ config.default_language }}" />
+    <meta
+      property="og:img"
+      content="{{ config.base_url }}/img/hacker_mind.svg"
+    />
+    <meta property="og:url" content="{{ config.base_url }}" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="{{ config.title }}" />
+    <meta property="twitter:description" content="{{ config.description }}" />
+    <meta
+      property="twiter:image"
+      content="{{ config.base_url }}/img/hacker_mind.svg"
+    />
+    {% endblock extra_head %}
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
+
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="{{ config.base_url }}"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">{{ config.title }}</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                {% block nav %} {% set categories = get_taxonomy(kind="tags") %}
+                {% for t in categories.items %}
+                <li class="">
+                  <a href="{{ t.permalink }}" target="_self">{{ t.name }}</a>
+                </li>
+                {% endfor %} {% endblock nav %} {% if config.extra.repo_website
+                %}
+                <li class="">
+                  <a href="{{ config.extra.repo_website.url }}" target="_self"
+                    >{{ config.extra.repo_website.name }}</a
+                  >
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+    </div>
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        {% block content %}
+        <div id="docsNav" class="docsNavContainer">
+          <nav class="toc">
+            <div class="toggleNav">
+              <section class="navWrapper wrapper">
+                <div class="navBreadcrumb wrapper">
+                  <div class="navToggle" id="navToggler">
+                    <div class="hamburger-menu">
+                      <div class="line1"></div>
+                      <div class="line2"></div>
+                      <div class="line3"></div>
+                    </div>
+                  </div>
+                  <h2><i>›</i><span>Derniers articles</span></h2>
+                </div>
+                <div class="navGroups">
+                  <div class="navGroup">
+                    <h3 class="navGroupCategoryTitle">Derniers articles</h3>
+                    <ul class="">
+                      {% for page in section.pages | filter(attribute="draft",
+                      value=false) | sort(attribute="date") | reverse |
+                      slice(end=5) %}
+                      <li class="navListItem">
+                        <a class="navItem" href="{{ page.permalink }}"
+                          >{{ page.title }}</a
+                        >
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </nav>
+        </div>
+        <div class="container mainContainer postContainer blogContainer">
+          <div class="wrapper">
+            <div class="posts">
+              {% for page in section.pages | filter(attribute="draft",
+              value=false) | sort(attribute="date") | reverse %}
+              <div class="post">
+                <header class="postHeader">
+                  <h1 class="postHeaderTitle">
+                    <a class="navItem" href="{{ page.permalink }}"
+                      >{{ page.title }}</a
+                    >
+                  </h1>
+                  <p class="post-meta">
+                    {{ page.date | date(format="%Y-%m-%d") }}
+                  </p>
+                  {% for tag in page.taxonomies.tags | reverse %}
+                  <a href="tags/{{ tag }}"> #{{ tag }} </a>{% endfor %}
+                </header>
+                <article class="post-content">
+                  <div>{{ page.summary | safe }}</div>
+                  <div class="read-more">
+                    <a class="button" href="{{ page.permalink }}">Read More</a>
+                  </div>
+                </article>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endblock content %}
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            {% for link in config.extra.social %}
+            <a
+              href="{{ link.url }}"
+              class="{% if link.icon %}{{
+                      link.icon
+                    }}{% else %}icon-link{% endif %}"
+              >{{ link.name }}</a
+            >
+            {% endfor %}
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            {% for link in config.extra.community %}
+            <a
+              href="{{ link.url }}"
+              class="{% if link.icon %}{{
+                      link.icon
+                    }}{% else %}icon-link{% endif %}"
+              >{{ link.name }}</a
+            >
+            {% endfor %}
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            {% for link in config.extra.hack %}
+            <a
+              href="{{ link.url }}"
+              class="{% if link.icon %}{{
+                      link.icon
+                    }}{% else %}icon-link{% endif %}"
+              >{{ link.name }}</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            {% endfor %}
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
+    </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
+  </body>
+</html>

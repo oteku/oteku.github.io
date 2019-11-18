@@ -1,0 +1,60 @@
+{% extends "index.html" %} {% block content %}
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Derniers articles</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Derniers articles</h3>
+            <ul class="">
+              {% for page in term.pages | filter(attribute="draft", value=false)
+              | sort(attribute="date") | reverse | slice(end=5) %}
+              <li class="navListItem">
+                <a class="navItem" href="{{page.permalink | safe}}"
+                  >{{ page.title }}</a
+                >
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      {% for page in term.pages | filter(attribute="draft", value=false) |
+      sort(attribute="date") | reverse %}
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="{{ page.permalink }}">{{ page.title }}</a>
+          </h1>
+          <p class="post-meta">
+            {{ page.date | date(format="%Y-%m-%d") }}
+          </p>
+        </header>
+        <article class="post-content">
+          <div>{{ page.summary | safe }}</div>
+          <div class="read-more">
+            <a class="button" href="{{ page.permalink }}">Read More</a>
+          </div>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

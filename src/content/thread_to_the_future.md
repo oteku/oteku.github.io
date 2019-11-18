@@ -1,9 +1,10 @@
 +++
 title = "Thead to the Future" 
 date = 2019-08-07
+description = "Essais sur les Futures Rust, à partir d'un protocole simple, exploration des Mutex, Canaux de communication orientés messages et Futures sans et avec Tokio"
 draft = false
 [taxonomies]
-tags = ["rust"]
+tags = ["Rust"]
 +++
 
 Je travaille actuellement sur un robot compagon nommé [Cutii](https://www.cutii.io/cutii/) pour lequel nous avons besoins de communiquer sur port série entre le PC du robot et nos différentes cartes électronique, nous avons fait le choix il y a quelques mois d'implémenter une librairie de communication en Rust, afin de rendre plus sûrs et plus performants nos échanges. Ce billet vise à dresser un état des lieux de la gestion de communications asynchrones en Rust.
@@ -20,6 +21,8 @@ foo=2\n
 # réponse d'acquitement à la requête SET
 foo=2\n
 ```
+
+<!-- more -->
 
 Nous considérons que les messages sont toujours traité dans l'ordre des requêtes émises et que leur réponse est immédiate.
 
