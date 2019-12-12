@@ -18,7 +18,7 @@ On distingue principalement 4 types d'ADT issus de la théorie des catégories :
 
 ## Les types produits
 
-Pour représenter un point dans un référentiel à 3 dimensions, on a tendance à utiliser un triplet `(x, y, z)`. Un point 3D peut donc se définir comme le _produit cartésien_ des ensembles dans lesquels il est représenté dans \\( \mathbb{R}^3 = \mathbb{R} \times \mathbb{R} \times \mathbb{R} \\) , c'est pourquoi on parle de type **produit**
+Pour représenter un point dans un référentiel à 3 dimensions, on a tendance à utiliser un truple `(x, y, z)`. Un point 3D peut donc se définir comme le _produit cartésien_ des ensembles dans lesquels il est représenté dans \\( \mathbb{R}^3 = \mathbb{R} \times \mathbb{R} \times \mathbb{R} \\) , c'est pourquoi on parle de type **produit**
 
 En ReasonML, on peut définir ce type ainsi :
 
@@ -137,7 +137,7 @@ Les variants peuvent également servir à restreindre les valeurs possibles au s
 
 Dans 7ème mer, une caractéristique se voit toujours associée une valeur de 0 à 5.
 
-Les `int` comme leur alias `traitScore` sont représentés sur 32 bits en reasonML, c'est beaucoup plus que nécessaire pour représenter les entiers de 0 à 5.
+Les `int` comme leur alias `traitScore` sont représenté sur 32 bits en reasonML, c'est beaucoup plus que nécessaire pour représenter les entiers de 0 à 5.
 
 De plus, 31 bits servent à représenter l'entier. Nous avons donc \\( 2^{31} \\) valeurs possibles pour seulement 6 valeurs autorisées.
 
