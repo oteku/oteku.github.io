@@ -6,7 +6,7 @@ draft = false
 tags = ["ReasonML"]
 +++
 
-Les **types de données algébriques**, aussi appelés **algebraic data types** ou **ADT**, sont une classe de types de données composites, c'est à dire de nouveaux types créé dans un langage de programmation à partir de primitives de type.
+Les **types de données algébriques**, aussi appelés **algebraic data types** ou **ADT**, sont une classe de types de données composites, c'est à dire de nouveaux types créés dans un langage de programmation à partir de primitives de types.
 
 On distingue principalement 4 types d'ADT issus de la théorie des catégories : les types sommes, les types produits, les types exponentiels et les type récursifs. ReasonML permet de définir de nouveaux types permettat de modéliser les ADT, nous allons voir comment et leur intérêt.
 
@@ -291,9 +291,9 @@ A ce stade nous avons :
 
 ## La correspondance de motifs
 
-Une fonctionnalité très intéressante des système de type ML est leur capacité à démonter les structures de données et à effectuer du filtrage (pattern matching) sur les données directement sans avoir à créer des getter comme on le voit dans les systèmes à base de classes.
+Une fonctionnalité très intéressante des systèmes de types ML est leur capacité à démonter les structures de données et à effectuer du filtrage (pattern matching) sur les données directement, sans avoir à créer des getter comme on le voit dans les systèmes à base de classes.
 
-Par exemple si on veut récupérer les traits de elAgilCamello et la nation de theToughCamel, on peut faire :
+Par exemple, si on veut récupérer les traits de elAgilCamello et la nation de theToughCamel, on peut faire :
 
 ```reason
   let {traits , _ } = elAgilCamello;
@@ -325,7 +325,7 @@ Le pattern matching devient vraiment très puissant avec les types sommes :
   };
 ```
 
-Le compilateur est capable de détecteur que le pattern matching n'est pas exhaustif et vous remonte un warning
+Le compilateur est capable de détecter que le pattern matching n'est pas exhaustif et vous remonte un warning
 
 ```sh
     Warning number 8
@@ -333,6 +333,8 @@ Le compilateur est capable de détecteur que le pattern matching n'est pas exhau
     You forgot to handle a possible case here, for example:
     Four
 ```
+
+Après correction :
 
 ```reason
   let toInt : traitScoreToInt = (ts) => switch(ts){
