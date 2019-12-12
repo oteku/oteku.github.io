@@ -18,7 +18,7 @@ On distingue principalement 4 types d'ADT issus de la théorie des catégories :
 
 ## Les types produits
 
-Pour représenter un point dans un référentiel à 3 dimensions, on a tendance à utiliser un truple `(x, y, z)`. Un point 3D peut donc se définir comme le _produit cartésien_ des ensembles dans lesquels il est représenté dans \\( \mathbb{R}^3 = \mathbb{R} \times \mathbb{R} \times \mathbb{R} \\) , c'est pourquoi on parle de type **produit**
+Pour représenter un point dans un référentiel à 3 dimensions, on a tendance à utiliser un triplet `(x, y, z)`. Un point 3D peut donc se définir comme le _produit cartésien_ des ensembles dans lesquels il est représenté dans \\( \mathbb{R}^3 = \mathbb{R} \times \mathbb{R} \times \mathbb{R} \\) , c'est pourquoi on parle de type **produit**
 
 En ReasonML, on peut définir ce type ainsi :
 
@@ -78,7 +78,7 @@ Dans 7ème mer, il existe 5 caractéristiques (traits) : la force (brawn), la fi
 
 ## Les types alias
 
-Pour faciliter la lecture du code, on peut souhaiter introduire du typage sémantique. Dans notre exemple, à quoi sert le `int` passer en paramètre des constructeurs ? ReasonML offre cette possibilité à travers les type alias aussi appelés abréviations.
+Pour faciliter la lecture du code, on peut souhaiter introduire du typage sémantique. Dans notre exemple, à quoi sert le `int` passé en paramètre des constructeurs ? ReasonML offre cette possibilité à travers les type alias aussi appelés abréviations.
 
 ```reason
   type traitScore = int;
@@ -133,11 +133,11 @@ En réutilisant les concepts précédents nous pouvons également définir les n
   ;
 ```
 
-Les variants peuvent également servir à restraindre les valeurs possibles au sein d'un type, c'est un moyen de s'assurer de ne représenter que des valeurs ayant un sens dans le système, et au passage de restreindre la mémoire nécessaire pour les représenter.
+Les variants peuvent également servir à restreindre les valeurs possibles au sein d'un type, c'est un moyen de s'assurer de ne représenter que des valeurs ayant un sens dans le système, et au passage de restreindre la mémoire nécessaire pour les représenter.
 
 Dans 7ème mer, une caractéristique se voit toujours associée une valeur de 0 à 5.
 
-Les `int` comme leur alias `traitScore` sont représenté sur 32 bits en reasonML, c'est beaucoup plus que nécessaire pour représenter les entiers de 0 à 5.
+Les `int` comme leur alias `traitScore` sont représentés sur 32 bits en reasonML, c'est beaucoup plus que nécessaire pour représenter les entiers de 0 à 5.
 
 De plus, 31 bits servent à représenter l'entier. Nous avons donc \\( 2^{31} \\) valeurs possibles pour seulement 6 valeurs autorisées.
 
