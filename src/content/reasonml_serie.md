@@ -48,7 +48,7 @@ Il est possible de définir des alias de type afin de rendre le code plus lisibl
  let myScore : scoreType = 7;
 ```
 
-Les fonctions sont des valeurs comme les autres et peuvent être exprimées dans le système de type
+Les fonctions sont des valeurs comme les autres et peuvent être exprimées dans le système de types
 
 ```reason
  let concatStr : (string, string) => string = (a, b) => a ++ b ;
@@ -66,7 +66,7 @@ ReasonML est capable d'inférer le type de vos expressions, ce qui permet d'écr
  let aListOfInt = [1, 2, 5]; /* val aListOfInt : list(int) */
 ```
 
-Les types peuvent recevoir des paramètre, à l'image de génériques dans d'autres langages. Les paramètres de types commencent toujours par `'`.
+Les types peuvent recevoir des paramètres, à l'image de génériques dans d'autres langages. Les paramètres de types commencent toujours par `'`.
 
 ```reason
  type coordinate('a) = ('a, 'a, 'a);
