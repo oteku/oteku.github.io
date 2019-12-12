@@ -14,6 +14,20 @@
         </url>
     
         <url>
+            <loc>https%3A//oteku.github.io/reasonml-adt/</loc>
+            
+                <lastmod>2019-12-12</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>https%3A//oteku.github.io/reasonml-serie/</loc>
+            
+                <lastmod>2019-12-11</lastmod>
+            
+        </url>
+    
+        <url>
             <loc>https%3A//oteku.github.io/rust-my-node/</loc>
             
                 <lastmod>2019-06-20</lastmod>
@@ -22,6 +36,11 @@
     
         <url>
             <loc>https%3A//oteku.github.io/tags/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https%3A//oteku.github.io/tags/reasonml/</loc>
             
         </url>
     

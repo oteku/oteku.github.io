@@ -1,7 +1,7 @@
 +++
 title = "ReasonML : la série" 
-date = 2019-11-27
-draft = true
+date = 2019-12-11
+draft = false
 [taxonomies]
 tags = ["ReasonML"]
 +++
@@ -51,7 +51,7 @@ Il est possible de définir des alias de type afin de rendre le code plus lisibl
 Les fonctions sont des valeurs comme les autres et peuvent être exprimées dans le système de type
 
 ```reason
- let concat_str : (string, string) => string = (a, b) => a ++ b ;
+ let concatStr : (string, string) => string = (a, b) => a ++ b ;
  /* ++ est l'opérateur de concaténation de 2 string */
 ```
 
@@ -80,18 +80,22 @@ Les types peuvent recevoir des paramètre, à l'image de génériques dans d'aut
  let intToFloatCoodinate: intToFloatTransfert = ((x, y, z)) => (float_of_int(x), float_of_int(y), float_of_int(z));
 ```
 
+# React to the future
+
+Les motivations qui ont animé la création de ReasonML (en anglais) :
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5fG_lyNuEAw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 # Un programme Reason-able
 
 Dans cette série de découverte, nous aborderons ensemble prochainement :
 
-- Types de données algébriques
-- Outillage d'un projet Reason natif
+- [Types de données algébriques](../reasonml-adt)
+- Les modules ReasonML
+- Outillage d'un projet ReasonML
 - Tests de propriétés
 - Compilation vers Javascript
-- UI avec Revery
+- GUI avec Revery
 
-# React to the future
-
-Les motivations qui ont animé la création de ReasonML par Jordan :
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/5fG_lyNuEAw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+Pour illustrer le propos, nous allons développer un générateur de personnage pour le jeu de rôle [Les secrets de la 7eme mer](http://www.legrog.org/jeux/secrets-de-la-7eme-mer) seconde édition.
+![Vodacce banner](../img/theah.jpg)
