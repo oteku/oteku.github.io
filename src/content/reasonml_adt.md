@@ -78,7 +78,7 @@ Dans 7ème mer, il existe 5 caractéristiques (traits) : la force (brawn), la fi
 
 ## Les types alias
 
-Pour faciliter la lecture du code, on peut souhaiter introduire du typage sémantique. Dans notre exemple, à quoi sert le `int` passer en paramètre des constructeurs ? ReasonML offre cette possibilité à travers les type alias aussi appelés abréviations.
+Pour faciliter la lecture du code, on peut souhaiter introduire du typage sémantique. Dans notre exemple, à quoi sert le `int` passé en paramètre des constructeurs ? ReasonML offre cette possibilité à travers les type alias aussi appelés abréviations.
 
 ```reason
   type traitScore = int;
@@ -133,7 +133,7 @@ En réutilisant les concepts précédents nous pouvons également définir les n
   ;
 ```
 
-Les variants peuvent également servir à restraindre les valeurs possibles au sein d'un type, c'est un moyen de s'assurer de ne représenter que des valeurs ayant un sens dans le système, et au passage de restreindre la mémoire nécessaire pour les représenter.
+Les variants peuvent également servir à restreindre les valeurs possibles au sein d'un type, c'est un moyen de s'assurer de ne représenter que des valeurs ayant un sens dans le système, et au passage de restreindre la mémoire nécessaire pour les représenter.
 
 Dans 7ème mer, une caractéristique se voit toujours associée une valeur de 0 à 5.
 
