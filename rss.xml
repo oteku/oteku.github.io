@@ -7,7 +7,27 @@
         <generator>Zola</generator>
         <language>fr</language>
         <atom:link href="https%3A//oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Wed, 07 Aug 2019 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Thu, 12 Dec 2019 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>ReasonML : types de données algébriques</title>
+                <pubDate>Thu, 12 Dec 2019 00:00:00 +0000</pubDate>
+                <link>https%3A//oteku.github.io/reasonml-adt/</link>
+                <guid>https%3A//oteku.github.io/reasonml-adt/</guid>
+                <description>&lt;p&gt;Les &lt;strong&gt;types de données algébriques&lt;&#x2F;strong&gt;, aussi appelés &lt;strong&gt;algebraic data types&lt;&#x2F;strong&gt; ou &lt;strong&gt;ADT&lt;&#x2F;strong&gt;, sont une classe de types de données composites, c&#x27;est à dire de nouveaux types créé dans un langage de programmation à partir de primitives de type.&lt;&#x2F;p&gt;
+&lt;p&gt;On distingue principalement 4 types d&#x27;ADT issus de la théorie des catégories : les types sommes, les types produits, les types exponentiels et les type récursifs. ReasonML permet de définir de nouveaux types permettat de modéliser les ADT, nous allons voir comment et leur intérêt.&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+            <item>
+                <title>ReasonML : la série</title>
+                <pubDate>Wed, 11 Dec 2019 00:00:00 +0000</pubDate>
+                <link>https%3A//oteku.github.io/reasonml-serie/</link>
+                <guid>https%3A//oteku.github.io/reasonml-serie/</guid>
+                <description>&lt;p&gt;Je me lance dans l&#x27;exercice de la série d&#x27;article. Pour commencer, je souhaite partager avec vous un langage et un ecosytème qui me passionne depuis 3 ans &lt;strong&gt;ReasonML&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Si vous ne connaissez pas encore ce langage, il s&#x27;agit d&#x27;une syntaxe de &lt;strong&gt;OCaml&lt;&#x2F;strong&gt; développée au sein de Facebook par &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;jordwalke&quot;&gt;Jordan Walke&lt;&#x2F;a&gt;, le &lt;em&gt;papa&lt;&#x2F;em&gt; de ReactJS. Facebook n&#x27;en est pas à ses début avec l&#x27;écosystème OCaml puisque ce dernier a notament servi à réaliser le prototype de react avant de passer sur Javascript pour des raisons &lt;em&gt;marketing&lt;&#x2F;em&gt;, à réaliser la machine virtuelle PHP&#x2F;Hack &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;facebook&#x2F;hhvm&#x2F;tree&#x2F;master&#x2F;hphp&#x2F;hack&quot;&gt;HHVM&lt;&#x2F;a&gt; ou encore à réaliser le typechecker javascript &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;facebook&#x2F;flow&quot;&gt;Flow&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>Thead to the Future</title>

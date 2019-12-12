@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta name="description" content="" />
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>ReasonML : la série</title>
+     <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+<meta property="og:title" content="ReasonML : la série" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr" />
+<meta property="og:img" content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg" />
+<meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-serie&#x2F;" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content="ReasonML : la série" />
+<meta property="twitter:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-serie&#x2F;" />
+<meta property="twitter:description" content="" />
+<meta
+  property="twiter:image"
+  content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+  crossorigin="anonymous"
+/>
+
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
+
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;reasonml&#x2F;" target="_self">ReasonML</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+    </div>
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Chapitres</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Chapitres</h3>
+            <ul class="">
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-serie/#a-reason-why"
+                  >A Reason why</a
+                >
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-serie/#tour-d-o-reason"
+                  >Tour d&#x27;O-Reason</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-serie/#declaration-de-valeurs-let-bindings">Déclaration de valeurs (let bindings)</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-serie/#inference-de-type">Inférence de type</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-serie/#react-to-the-future"
+                  >React to the future</a
+                >
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-serie/#un-programme-reason-able"
+                  >Un programme Reason-able</a
+                >
+                
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-serie&#x2F;">ReasonML : la série</a>
+          </h1>
+          <p class="post-meta">
+            2019-12-11 | Temps de lecture 4 minutes
+          </p>
+          
+          <a href="/tags/ReasonML"> #ReasonML </a>
+        </header>
+        <article class="post-content">
+          <div><p>Je me lance dans l'exercice de la série d'article. Pour commencer, je souhaite partager avec vous un langage et un ecosytème qui me passionne depuis 3 ans <strong>ReasonML</strong></p>
+<p>Si vous ne connaissez pas encore ce langage, il s'agit d'une syntaxe de <strong>OCaml</strong> développée au sein de Facebook par <a href="https://twitter.com/jordwalke">Jordan Walke</a>, le <em>papa</em> de ReactJS. Facebook n'en est pas à ses début avec l'écosystème OCaml puisque ce dernier a notament servi à réaliser le prototype de react avant de passer sur Javascript pour des raisons <em>marketing</em>, à réaliser la machine virtuelle PHP/Hack <a href="https://github.com/facebook/hhvm/tree/master/hphp/hack">HHVM</a> ou encore à réaliser le typechecker javascript <a href="https://github.com/facebook/flow">Flow</a></p>
+<p id="zola-continue-reading"><a name="continue-reading"></a></p>
+<h1 id="a-reason-why">A Reason why</h1>
+<p>L'intention derrière le projet <a href="https://reasonml.github.io/">ReasonML</a> tiens dans cette promesse</p>
+<blockquote>
+<p>Reason lets you write simple, fast and quality type safe code while leveraging both the JavaScript &amp; OCaml ecosystems.</p>
+</blockquote>
+<p>Dis autrement, partant du postulat que la syntaxe est un problème à l'accès au merveilleux écosystème OCaml, <strong>ReasonML</strong> propose d'introduire une syntaxe le plus proche possible de celle de Javascript au dessus du modèle de type d'OCaml. Dès le départ, il y a clairement une intention de faciliter le <em>Javascript as a bytecode</em>, nous aurons l'occasion d'en reparler, mais pas que. A l'inverse, des langages tels que le populaire Typescript ou le plus confidentiel Purescript, en passant par Clojurescript ou Elm, la volonté n'est pas de créer un nouveau langage dédié à la compilation vers js, mais un langage complet dont la compilation vers js n'est qu'une des possibilité. Dès lors, s'appuyer sur un ecosystème riche de plus de 20 ans d'expérience est un gage de confiance.</p>
+<h1 id="tour-d-o-reason">Tour d'O-Reason</h1>
+<p>Avant de poursuivre, je souhaite donner quelques éléments de syntaxe :</p>
+<h2 id="declaration-de-valeurs-let-bindings">Déclaration de valeurs (let bindings)</h2>
+<p>Si vous avez déjà utilisé Flow, vous ne devriez pas être surpris. Sinon le mot clé <code>let</code> sert à lié une valeur à un nom, ici <code>greeting</code>, suivi de la déclaration de type, <code>: string</code> puis de la valeur <code>= &quot;hello&quot;</code>.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;"> </span><span style="font-style:italic;color:#5c6773;">/* Ceci est un commentaire */
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> greeting </span><span style="color:#ffa759;">: string </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;hello&quot;</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Les valeurs sont immutables par défaut en ReasonML. C'est plutôt une excellente nouvelle, néanmoins il est possible de simuler des variables en utilisant des références ; dans la plupart des situations, vous ne devriez pas en avoir besoin.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> score </span><span style="color:#ffa759;">: int </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10</span><span style="color:#f29e74;">;
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> scoreMutable </span><span style="color:#ffa759;">: ref(int) </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">ref</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;</span><span style="color:#ccc9c2;">
+ scoreMutable </span><span style="color:#f29e74;">:= </span><span style="color:#ffcc66;">5</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Il est possible de définir des alias de type afin de rendre le code plus lisible, ce qui est toujours appréciable dans une démarche <a href="http://blog.infosaurus.fr/public/docs/DDDViteFait.pdf">DDD</a>.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> scoreType </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* type alias */
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> myScore </span><span style="color:#ffa759;">: scoreType </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">7</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Les fonctions sont des valeurs comme les autres et peuvent être exprimées dans le système de type</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> concatStr </span><span style="color:#ffa759;">: (string, string) </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> string </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(a</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> b) </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> a </span><span style="color:#f29e74;">++</span><span style="color:#ccc9c2;"> b </span><span style="color:#f29e74;">;
+ </span><span style="font-style:italic;color:#5c6773;">/* ++ est l&#39;opérateur de concaténation de 2 string */
+</span></pre><h2 id="inference-de-type">Inférence de type</h2>
+<p>ReasonML est capable d'inférer le type de vos expressions, ce qui permet d'écrire du code très proche de ce que vous feriez en Javascript.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> twelve </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">12</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* val twelve : int */
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> addInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(a</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> b) </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> a </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> b</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* val addInt : (int, int) =&gt; int */
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> addFloat </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(a</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> b) </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> a </span><span style="color:#f29e74;">+.</span><span style="color:#ccc9c2;"> b</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* val addInt : (float, float) =&gt; float */
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> aListOfInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">1</span><span style="color:#f29e74;">, </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">, </span><span style="color:#ffcc66;">5</span><span style="color:#ccc9c2;">]</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* val aListOfInt : list(int) */
+</span></pre>
+<p>Les types peuvent recevoir des paramètre, à l'image de génériques dans d'autres langages. Les paramètres de types commencent toujours par <code>'</code>.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">type </span><span style="color:#f28779;">coordinate</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+ </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> intCoordinate </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">coordinate</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> int3DPoint</span><span style="color:#ffa759;">: intCoordinate </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#f29e74;">, </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">, </span><span style="color:#ffcc66;">10</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+ </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> floatCoordinate </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">coordinate</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">float</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> float3DPoint</span><span style="color:#ffa759;">: floatCoordinate </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#f29e74;">., </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">., </span><span style="color:#ffcc66;">10</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+
+ </span><span style="color:#ffa759;">type </span><span style="color:#f28779;">transfert</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">coordinate</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">coordinate</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+ </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> intToFloatTransfert </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">transfert</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">float</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+ </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> intToFloatCoodinate</span><span style="color:#ffa759;">: intToFloatTransfert </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">((x</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> y</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> z)) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">float_of_int</span><span style="color:#ccc9c2;">(x)</span><span style="color:#f29e74;">, </span><span style="color:#f28779;">float_of_int</span><span style="color:#ccc9c2;">(y)</span><span style="color:#f29e74;">, </span><span style="color:#f28779;">float_of_int</span><span style="color:#ccc9c2;">(z))</span><span style="color:#f29e74;">;
+</span></pre><h1 id="react-to-the-future">React to the future</h1>
+<p>Les motivations qui ont animé la création de ReasonML (en anglais) :</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5fG_lyNuEAw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h1 id="un-programme-reason-able">Un programme Reason-able</h1>
+<p>Dans cette série de découverte, nous aborderons ensemble prochainement :</p>
+<ul>
+<li><a href="../reasonml-adt">Types de données algébriques</a></li>
+<li>Les modules ReasonML</li>
+<li>Outillage d'un projet ReasonML</li>
+<li>Tests de propriétés</li>
+<li>Compilation vers Javascript</li>
+<li>GUI avec Revery</li>
+</ul>
+<p>Pour illustrer le propos, nous allons développer un générateur de personnage pour le jeu de rôle <a href="http://www.legrog.org/jeux/secrets-de-la-7eme-mer">Les secrets de la 7eme mer</a> seconde édition.
+<img src="../img/theah.jpg" alt="Vodacce banner" /></p>
+</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
+    </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
+    
+<!-- The loading of KaTeX is deferred to speed up page rendering -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz"
+  crossorigin="anonymous"
+></script>
+
+<!-- To automatically render math in text elements, include the auto-render extension: -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+  crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"
+></script>
+
+  </body>
+</html>

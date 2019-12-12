@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta name="description" content="" />
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>ReasonML : types de données algébriques</title>
+     <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+<meta property="og:title" content="ReasonML : types de données algébriques" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr" />
+<meta property="og:img" content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg" />
+<meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-adt&#x2F;" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content="ReasonML : types de données algébriques" />
+<meta property="twitter:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-adt&#x2F;" />
+<meta property="twitter:description" content="" />
+<meta
+  property="twiter:image"
+  content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+  crossorigin="anonymous"
+/>
+
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
+
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;reasonml&#x2F;" target="_self">ReasonML</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+    </div>
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Chapitres</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Chapitres</h3>
+            <ul class="">
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-adt/#heros-de-theah"
+                  >Heros de Théah</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#les-types-produits">Les types produits</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#les-types-alias">Les types alias</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#les-types-sommes">Les types sommes</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#les-types-recursifs">Les types récursifs</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#les-types-exponentiels">Les types exponentiels</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#les-types-polymorphes">Les types polymorphes</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-adt/#construire-un-hero"
+                  >Construire un héro</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#la-correspondance-de-motifs">La correspondance de motifs</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-adt/#annexes"
+                  >Annexes</a
+                >
+                
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-adt&#x2F;">ReasonML : types de données algébriques</a>
+          </h1>
+          <p class="post-meta">
+            2019-12-12 | Temps de lecture 9 minutes
+          </p>
+          
+          <a href="/tags/ReasonML"> #ReasonML </a>
+        </header>
+        <article class="post-content">
+          <div><p>Les <strong>types de données algébriques</strong>, aussi appelés <strong>algebraic data types</strong> ou <strong>ADT</strong>, sont une classe de types de données composites, c'est à dire de nouveaux types créé dans un langage de programmation à partir de primitives de type.</p>
+<p>On distingue principalement 4 types d'ADT issus de la théorie des catégories : les types sommes, les types produits, les types exponentiels et les type récursifs. ReasonML permet de définir de nouveaux types permettat de modéliser les ADT, nous allons voir comment et leur intérêt.</p>
+<p id="zola-continue-reading"><a name="continue-reading"></a></p>
+<blockquote>
+<p>Ce billet est le premier de la série d'articles <a href="../reasonml-serie/#un-programme-reason-able">ReasonML : la série</a></p>
+</blockquote>
+<h1 id="heros-de-theah">Heros de Théah</h1>
+<h2 id="les-types-produits">Les types produits</h2>
+<p>Pour représenter un point dans un référentiel à 3 dimensions, on a tendance à utiliser un truple <code>(x, y, z)</code>. Un point 3D peut donc se définir comme le <em>produit cartésien</em> des ensembles dans lesquels il est représenté dans \( \mathbb{R}^3 = \mathbb{R} \times \mathbb{R} \times \mathbb{R} \) , c'est pourquoi on parle de type <strong>produit</strong></p>
+<p>En ReasonML, on peut définir ce type ainsi :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> point3D </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">float</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">float</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">float</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> somePoint </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">3</span><span style="color:#f29e74;">.</span><span style="color:#ffcc66;">0</span><span style="color:#f29e74;">, -</span><span style="color:#ffcc66;">6</span><span style="color:#f29e74;">.</span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">, </span><span style="color:#ffcc66;">7</span><span style="color:#f29e74;">.</span><span style="color:#ffcc66;">9</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Chaque personnage du monde de Théah est défini par ses compétences (traits), sa nation, ses historiques (backgrounds), ses compétences (skills), ses avantages (advantages), ses arcanes (arcanas) et ses histoires (stories). A ce stade, sans même définir le type de chacune de ses données, on peut imaginer le type <code>hero</code> comme le n-upplet de ces données.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">type </span><span style="color:#f28779;">hero</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">c</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">d</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">e</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">f</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">g</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">c</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">d</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">e</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">f</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">g</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></pre>
+<blockquote>
+<p>ici le type héro est paramétré par les type 'a, 'b, 'c, 'd, 'e, 'f, 'g : il n'est pas nécessaire de comprendre cela à ce stade nous en reparlerons</p>
+</blockquote>
+<p>On se rend bien compte qu'en augmentant le nombre de données servant à définir un type produit, le n-upplet n'est plus très parlant. C'est pourquoi on préfèrera utiliser un type enregistement ou record. Un record est un n-uplet pour lequel on fournit un label à chacune de ses données :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">type </span><span style="color:#f28779;">hero</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">c</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">d</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">e</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">f</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">g</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        traits </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        nation </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        backgrounds </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">c</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        skills </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">d</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        advantages </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">e</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        arcanas </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">f</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        stories</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">g
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Nous aurions également pu définir notre point 3D ainsi :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> point3D </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      x </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">float</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      y </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">float</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      z </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">float
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> somePoint </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      x </span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">3</span><span style="color:#f29e74;">.</span><span style="color:#ffcc66;">0</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      y </span><span style="color:#f29e74;">: -</span><span style="color:#ffcc66;">6</span><span style="color:#f29e74;">.</span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      z </span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">7</span><span style="color:#f29e74;">.</span><span style="color:#ffcc66;">9
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Dans 7ème mer, il existe 5 caractéristiques (traits) : la force (brawn), la finesse, la résolution (resolve), l'astuce (wits) et le panache. Un héro possède toujours les 5 caractéristiques avec une valeur associée.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traits </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      brawn </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      finesse </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      resolve </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      wits </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      panache </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre><h2 id="les-types-alias">Les types alias</h2>
+<p>Pour faciliter la lecture du code, on peut souhaiter introduire du typage sémantique. Dans notre exemple, à quoi sert le <code>int</code> passer en paramètre des constructeurs ? ReasonML offre cette possibilité à travers les type alias aussi appelés abréviations.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScore </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traits </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      brawn </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      finesse </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      resolve </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      wits </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      panache </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore
+  }</span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> myHeroTraits </span><span style="color:#ffa759;">: traits </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      brawn </span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      finesse </span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">3</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      resolve </span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">5</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      wits </span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      panache </span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">4</span><span style="color:#f29e74;">,
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre><h2 id="les-types-sommes">Les types sommes</h2>
+<p>Il est parfoit utile de pouvoir décrire un type comme pouvant prendre un nombre limité de valeurs, c'est le but des <strong>types sommes</strong>, parfois appelés <strong>types énumérés</strong> ou <strong>variants</strong>. On parle de <em>somme</em> en référence à la somme logique où \(A + B \) signifie <strong>A ou B</strong> (également noté \(A \lor B \) ).</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type trait </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Brawn
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Finesse
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Resolve
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Wits
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Panache
+  </span><span style="color:#f29e74;">;
+</span></pre>
+<p>Les noms <code>Brawn</code>, <code>Finesse</code>, <code>Resolve</code>, <code>Wits</code>, <code>Panache</code> sont des constructeurs du type <code>trait</code>. Les constructeurs peuvent également se voir associer une valeur.</p>
+<p>En réutilisant les concepts précédents nous pouvons également définir les nations des règles de base, en tenant en compte que le choix d'une nation donne un bonus sur une compétence, on peut paramétrer ses constructeurs par le type <code>trait</code>.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> nation </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Avalon(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Inismore(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">TheHighlandMarches(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Castille(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Eisen(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Montaigne(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Sarmatia(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Ussura(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vesten(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vodacce(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+  </span><span style="color:#f29e74;">;
+</span></pre>
+<p>Les variants peuvent également servir à restraindre les valeurs possibles au sein d'un type, c'est un moyen de s'assurer de ne représenter que des valeurs ayant un sens dans le système, et au passage de restreindre la mémoire nécessaire pour les représenter.</p>
+<p>Dans 7ème mer, une caractéristique se voit toujours associée une valeur de 0 à 5.</p>
+<p>Les <code>int</code> comme leur alias <code>traitScore</code> sont représenté sur 32 bits en reasonML, c'est beaucoup plus que nécessaire pour représenter les entiers de 0 à 5.</p>
+<p>De plus, 31 bits servent à représenter l'entier. Nous avons donc \( 2^{31} \) valeurs possibles pour seulement 6 valeurs autorisées.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScore </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Zero
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">One
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five
+  </span><span style="color:#f29e74;">;
+</span></pre>
+<p>On ne peut plus à ce stade que représenté des caractéristiques de 0 à 5 : c'est à la fois explicite pour qui lit ce code mais également une sécurité suppélmentaire dans notre développement.</p>
+<p>En réalité, pour un héro les valeurs possibles vont de 2 à 5, soit 4 valeurs autorisées, nous pouvons donc encore restreindre ce type.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScore </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Two
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five
+  </span><span style="color:#f29e74;">;
+</span></pre><h2 id="les-types-recursifs">Les types récursifs</h2>
+<p>Un <strong>type récursif</strong> est simplement un type dont la définition fait appel à lui-même de manière récursive. Pour être légitime, un type récursif doit être un type somme avec au moins un constructeur de type non récursif et au moins un constructeur récursif.</p>
+<p>Un usage courant est l'utilisation de l'<a href="https://fr.wikipedia.org/wiki/Axiomes_de_Peano">axiome de Peano</a> pour représenter les entiers naturels :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> natPeano </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Zero
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Succ(natPeano)
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> nat0 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Zero</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> nat4 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Succ(Succ(Succ(Succ(Zero))))</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Nous pourrions utiliser un type récursif, couplé à d'autres techniques disponibles en ReasonML, pour représenter les entiers de 2 à 5, cependant c'est un peu lourd pour 4 valeurs possibles. A ce stade nous conserverons notre variant.</p>
+<h2 id="les-types-exponentiels">Les types exponentiels</h2>
+<p>Il existe également des types exponentiels. Le type noté \( A^{B} \) détermine l'ensemble des transformations possibles d'un ensemble B vers un ensemble A. Ce type est en réalité le type de la fonction qui pour un paramètre dans B retourne une valeur dans A. ReasonML permet de définir des types de fonction et donc :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type </span><span style="color:#f28779;">betaToAlpha</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">;
+</span></pre>
+<p>par exemple le type \( int^{traitScore} \)</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScoreToInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> traitScore </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+</span></pre><h2 id="les-types-polymorphes">Les types polymorphes</h2>
+<p>Cela fait deux fois que nous voyons des déclarations de types avec des paramètres <code>'a</code> et <code>'b</code> , à la manière de ce qui existe avec les génériques dans d'autres langages, ces paramètres servent à retourner un nouveau type à partir d'arguments fournis au type initial. Les paramètres de types commences toujours par <code>'</code>.
+Nous aurions donc pu définir notre dernier type ainsi :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScoreToInt </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">betaToAlpha</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> traitScore)</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Les types sommes ou produits peuvent également être polymorphes</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type </span><span style="color:#f28779;">point3D</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+    x</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+    y</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+    z</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">,
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">type </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">None
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Some(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></pre><h1 id="construire-un-hero">Construire un héro</h1>
+<p>A ce stade nous avons :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScore </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Two
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five
+  </span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">type trait </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Brawn
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Finesse
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Resolve
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Wits
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Panache
+  </span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traits </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      brawn </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      finesse </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      resolve </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      wits </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      panache </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traitScore
+  }</span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> nation </span><span style="color:#f29e74;">=
+      | </span><span style="color:#ccc9c2;">Avalon(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Inismore(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">TheHighlandMarches(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Castille(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Eisen(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Montaigne(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Sarmatia(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Ussura(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vesten(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+      </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vodacce(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+  </span><span style="color:#f29e74;">;
+
+  </span><span style="font-style:italic;color:#5c6773;">/* On limite le héro à ses compétences et nation pour le moment */
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> hero </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      traits </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> traits</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      nation </span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> nation</span><span style="color:#f29e74;">,
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> elAgilCamello </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      traits </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">{
+        brawn </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Two</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        finesse </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Four</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        resolve </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Two</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        wits </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Two</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        panache </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Three
+      }</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      nation </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Castille(Finesse)
+  }</span><span style="color:#f29e74;">;
+
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> theToughCamel </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+      traits </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">{
+        brawn </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Three</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        finesse </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Two</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        resolve </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Four</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        wits </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Two</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        panache </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Two
+      }</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+      nation </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Avalon(Resolve)
+  }</span><span style="color:#f29e74;">;
+
+</span></pre><h2 id="la-correspondance-de-motifs">La correspondance de motifs</h2>
+<p>Une fonctionnalité très intéressante des système de type ML est leur capacité à démonter les structures de données et à effectuer du filtrage (pattern matching) sur les données directement sans avoir à créer des getter comme on le voit dans les systèmes à base de classes.</p>
+<p>Par exemple si on veut récupérer les traits de elAgilCamello et la nation de theToughCamel, on peut faire :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">{traits </span><span style="color:#f29e74;">, </span><span style="color:#f28779;">_ </span><span style="color:#ccc9c2;">} </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elAgilCamello</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">{ </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> nation} </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> theToughCamel</span><span style="color:#f29e74;">;
+  </span><span style="font-style:italic;color:#5c6773;">/* bien sûr la notation pointée est possible */
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toughNation </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> theToughCamel</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">nation</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Le <code>_</code> signifie simplement qu'on ne souhiate pas garder de nom vers la donnée, mais on pourrait récupérer toutes les données par destructuration, et même les renommer :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">{traits </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> agilTraits</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> nation </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> agilNation } </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elAgilCamello</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Il est possible de faire la même chose sur les n-upplets :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> a </span><span style="color:#ffa759;">: point3D </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">3</span><span style="color:#f29e74;">.,</span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">.,</span><span style="color:#ffcc66;">1</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(fst</span><span style="color:#f29e74;">, </span><span style="color:#f28779;">_</span><span style="color:#f29e74;">, </span><span style="color:#f28779;">_</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> a</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Le pattern matching devient vraiment très puissant avec les types sommes :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#ffa759;">: traitScoreToInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(ts) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">switch</span><span style="color:#ccc9c2;">(ts){
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">2
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">3
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">5
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Le compilateur est capable de détecteur que le pattern matching n'est pas exhaustif et vous remonte un warning</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">Warning</span><span style="color:#ccc9c2;"> number 8
+
+    </span><span style="color:#ffd580;">You</span><span style="color:#ccc9c2;"> forgot to handle a possible case here, for example:
+    </span><span style="color:#ffd580;">Four
+</span></pre><pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#ffa759;">: traitScoreToInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(ts) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">switch</span><span style="color:#ccc9c2;">(ts){
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">2
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">3
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">4
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">5
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Pour créer un traitScore depuis un int, nous devons tenir compte du fait que nous n'avons que 4 valeurs légales :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#ffa759;">: int </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(traitScore) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(score) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">switch</span><span style="color:#ccc9c2;">(score){
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">2 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Two)
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">3 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Three)
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">4 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Four)
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">5 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Five)
+    </span><span style="color:#f29e74;">| </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None
+  }</span><span style="color:#f29e74;">;
+</span></pre>
+<p>le pattern <code>_</code> permet de définir <strong>tous les autres cas</strong>. Si nous ne sommes pas entre 2 et 5, nous ne pouvons pas convertir le type <code>int</code>. Le constructeur <code>None</code> du type <code>option('a)</code> permet de représenter l'absence de valeur.</p>
+<p>Dans le prochain billet, nous verrons comment le système de modules de ReasonML nous permet de structurer notre code.</p>
+<h1 id="annexes">Annexes</h1>
+<p><img src="../img/charlie-creber-vodacce-banner.jpg" alt="Vodacce banner" /> © <a href="https://tanzenkat.artstation.com/">Charlie Fox</a></p>
+<ul>
+<li><a href="http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-setting-20170110.pdf">7th Basic Rules</a></li>
+<li><a href="http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-characters-20170110.pdf">7th Basic Rules Characters</a></li>
+<li><a href="http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-playing-the-game-20170110.pdf">7th Basic Rules Playing the game</a></li>
+<li><a href="https://agate-rpg.blogspot.com/search/label/7th%20Sea">Blog du studio Agate</a></li>
+</ul>
+</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
+    </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
+    
+<!-- The loading of KaTeX is deferred to speed up page rendering -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz"
+  crossorigin="anonymous"
+></script>
+
+<!-- To automatically render math in text elements, include the auto-render extension: -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+  crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"
+></script>
+
+  </body>
+</html>
