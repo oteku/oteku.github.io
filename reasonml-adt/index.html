@@ -236,7 +236,7 @@
           <a href="/tags/ReasonML"> #ReasonML </a>
         </header>
         <article class="post-content">
-          <div><p>Les <strong>types de données algébriques</strong>, aussi appelés <strong>algebraic data types</strong> ou <strong>ADT</strong>, sont une classe de types de données composites, c'est à dire de nouveaux types créé dans un langage de programmation à partir de primitives de type.</p>
+          <div><p>Les <strong>types de données algébriques</strong>, aussi appelés <strong>algebraic data types</strong> ou <strong>ADT</strong>, sont une classe de types de données composites, c'est à dire de nouveaux types créés dans un langage de programmation à partir de primitives de types.</p>
 <p>On distingue principalement 4 types d'ADT issus de la théorie des catégories : les types sommes, les types produits, les types exponentiels et les type récursifs. ReasonML permet de définir de nouveaux types permettat de modéliser les ADT, nous allons voir comment et leur intérêt.</p>
 <p id="zola-continue-reading"><a name="continue-reading"></a></p>
 <blockquote>
@@ -244,7 +244,7 @@
 </blockquote>
 <h1 id="heros-de-theah">Heros de Théah</h1>
 <h2 id="les-types-produits">Les types produits</h2>
-<p>Pour représenter un point dans un référentiel à 3 dimensions, on a tendance à utiliser un truple <code>(x, y, z)</code>. Un point 3D peut donc se définir comme le <em>produit cartésien</em> des ensembles dans lesquels il est représenté dans \( \mathbb{R}^3 = \mathbb{R} \times \mathbb{R} \times \mathbb{R} \) , c'est pourquoi on parle de type <strong>produit</strong></p>
+<p>Pour représenter un point dans un référentiel à 3 dimensions, on a tendance à utiliser un triplet <code>(x, y, z)</code>. Un point 3D peut donc se définir comme le <em>produit cartésien</em> des ensembles dans lesquels il est représenté dans \( \mathbb{R}^3 = \mathbb{R} \times \mathbb{R} \times \mathbb{R} \) , c'est pourquoi on parle de type <strong>produit</strong></p>
 <p>En ReasonML, on peut définir ce type ainsi :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> point3D </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">float</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">float</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">float</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
@@ -292,7 +292,7 @@
       panache </span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int
   </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
 </span></pre><h2 id="les-types-alias">Les types alias</h2>
-<p>Pour faciliter la lecture du code, on peut souhaiter introduire du typage sémantique. Dans notre exemple, à quoi sert le <code>int</code> passer en paramètre des constructeurs ? ReasonML offre cette possibilité à travers les type alias aussi appelés abréviations.</p>
+<p>Pour faciliter la lecture du code, on peut souhaiter introduire du typage sémantique. Dans notre exemple, à quoi sert le <code>int</code> passé en paramètre des constructeurs ? ReasonML offre cette possibilité à travers les type alias aussi appelés abréviations.</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScore </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
 
@@ -338,9 +338,9 @@
       </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vodacce(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
   </span><span style="color:#f29e74;">;
 </span></pre>
-<p>Les variants peuvent également servir à restraindre les valeurs possibles au sein d'un type, c'est un moyen de s'assurer de ne représenter que des valeurs ayant un sens dans le système, et au passage de restreindre la mémoire nécessaire pour les représenter.</p>
+<p>Les variants peuvent également servir à restreindre les valeurs possibles au sein d'un type, c'est un moyen de s'assurer de ne représenter que des valeurs ayant un sens dans le système, et au passage de restreindre la mémoire nécessaire pour les représenter.</p>
 <p>Dans 7ème mer, une caractéristique se voit toujours associée une valeur de 0 à 5.</p>
-<p>Les <code>int</code> comme leur alias <code>traitScore</code> sont représenté sur 32 bits en reasonML, c'est beaucoup plus que nécessaire pour représenter les entiers de 0 à 5.</p>
+<p>Les <code>int</code> comme leur alias <code>traitScore</code> sont représentés sur 32 bits en reasonML, c'est beaucoup plus que nécessaire pour représenter les entiers de 0 à 5.</p>
 <p>De plus, 31 bits servent à représenter l'entier. Nous avons donc \( 2^{31} \) valeurs possibles pour seulement 6 valeurs autorisées.</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> traitScore </span><span style="color:#f29e74;">=
@@ -465,8 +465,8 @@ Nous aurions donc pu définir notre dernier type ainsi :</p>
   }</span><span style="color:#f29e74;">;
 
 </span></pre><h2 id="la-correspondance-de-motifs">La correspondance de motifs</h2>
-<p>Une fonctionnalité très intéressante des système de type ML est leur capacité à démonter les structures de données et à effectuer du filtrage (pattern matching) sur les données directement sans avoir à créer des getter comme on le voit dans les systèmes à base de classes.</p>
-<p>Par exemple si on veut récupérer les traits de elAgilCamello et la nation de theToughCamel, on peut faire :</p>
+<p>Une fonctionnalité très intéressante des systèmes de types ML est leur capacité à démonter les structures de données et à effectuer du filtrage (pattern matching) sur les données directement, sans avoir à créer des getter comme on le voit dans les systèmes à base de classes.</p>
+<p>Par exemple, si on veut récupérer les traits de elAgilCamello et la nation de theToughCamel, on peut faire :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">{traits </span><span style="color:#f29e74;">, </span><span style="color:#f28779;">_ </span><span style="color:#ccc9c2;">} </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elAgilCamello</span><span style="color:#f29e74;">;
   </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">{ </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> nation} </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> theToughCamel</span><span style="color:#f29e74;">;
@@ -490,13 +490,15 @@ Nous aurions donc pu définir notre dernier type ainsi :</p>
     </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">5
   </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
 </span></pre>
-<p>Le compilateur est capable de détecteur que le pattern matching n'est pas exhaustif et vous remonte un warning</p>
+<p>Le compilateur est capable de détecter que le pattern matching n'est pas exhaustif et vous remonte un warning</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">Warning</span><span style="color:#ccc9c2;"> number 8
 
     </span><span style="color:#ffd580;">You</span><span style="color:#ccc9c2;"> forgot to handle a possible case here, for example:
     </span><span style="color:#ffd580;">Four
-</span></pre><pre style="background-color:#212733;">
+</span></pre>
+<p>Après correction :</p>
+<pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#ffa759;">: traitScoreToInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(ts) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">switch</span><span style="color:#ccc9c2;">(ts){
     </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">2
     </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">3
