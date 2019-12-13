@@ -6,7 +6,7 @@ draft = false
 tags = ["ReasonML"]
 +++
 
-Les **types de données algébriques**, aussi appelés **algebraic data types** ou **ADT**, sont une classe de types de données composites, c'est à dire de nouveaux types créés dans un langage de programmation à partir de primitives de types.
+Les **types de données algébriques**, en anglais **algebraic data types** ou **ADT**, sont une classe de types de données composites, c'est à dire de nouveaux types créés dans un langage de programmation à partir de primitives de types.
 
 On distingue principalement 4 types d'ADT issus de la théorie des catégories : les types sommes, les types produits, les types exponentiels et les type récursifs. ReasonML permet de définir de nouveaux types permettat de modéliser les ADT, nous allons voir comment et leur intérêt.
 
@@ -363,9 +363,29 @@ Dans le prochain billet, nous verrons comment le système de modules de ReasonML
 
 # Annexes
 
+## La bibliothèque Vodacce
+
 ![Vodacce banner](../img/charlie-creber-vodacce-banner.jpg) © [Charlie Fox](https://tanzenkat.artstation.com/)
 
 - [7th Basic Rules](http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-setting-20170110.pdf)
 - [7th Basic Rules Characters](http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-characters-20170110.pdf)
 - [7th Basic Rules Playing the game](http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-playing-the-game-20170110.pdf)
 - [Blog du studio Agate](https://agate-rpg.blogspot.com/search/label/7th%20Sea)
+
+## Erratum
+
+Mon ami [Xavier](https://xvw.github.io/) me suggère une définition plus formelle d'un ADT :
+
+> Un type de données composite qui intègre une logique dans sa composition.
+
+D'où le **algébrique** de **types de données algébriques**. On appelle produit, somme et exponentiels comme ça, car on peut calculer leur cardinalité via :
+
+- des produits `(x * y)` qui a une cardinalité égale à `cardinalité de x * cardinalité de y`
+- des sommes `type t = Foo(x) | Bar(y)` qui a une cardinalité égale à `cardinalité de x + cardinalité de y`
+- des exponentiels `x => y` qui a une cardinalité égale à de `(cardinalité de y) ^ (cardinalité de x)`.
+
+## Categories for the working Hackers (anglais)
+
+Si vous voulez une découverte plus formelle des ADT je vous conseille ce talk Philippe Wadler
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gui_SE8rJUM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

@@ -212,6 +212,22 @@
                   >Annexes</a
                 >
                 
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#la-bibliotheque-vodacce">La bibliothèque Vodacce</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#erratum">Erratum</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-adt/#categories-for-the-working-hackers-anglais">Categories for the working Hackers (anglais)</a>
+                  </li>
+                  
+                </ul>
+                
               </li>
               
             </ul>
@@ -236,7 +252,7 @@
           <a href="/tags/ReasonML"> #ReasonML </a>
         </header>
         <article class="post-content">
-          <div><p>Les <strong>types de données algébriques</strong>, aussi appelés <strong>algebraic data types</strong> ou <strong>ADT</strong>, sont une classe de types de données composites, c'est à dire de nouveaux types créés dans un langage de programmation à partir de primitives de types.</p>
+          <div><p>Les <strong>types de données algébriques</strong>, en anglais <strong>algebraic data types</strong> ou <strong>ADT</strong>, sont une classe de types de données composites, c'est à dire de nouveaux types créés dans un langage de programmation à partir de primitives de types.</p>
 <p>On distingue principalement 4 types d'ADT issus de la théorie des catégories : les types sommes, les types produits, les types exponentiels et les type récursifs. ReasonML permet de définir de nouveaux types permettat de modéliser les ADT, nous allons voir comment et leur intérêt.</p>
 <p id="zola-continue-reading"><a name="continue-reading"></a></p>
 <blockquote>
@@ -519,6 +535,7 @@ Nous aurions donc pu définir notre dernier type ainsi :</p>
 <p>le pattern <code>_</code> permet de définir <strong>tous les autres cas</strong>. Si nous ne sommes pas entre 2 et 5, nous ne pouvons pas convertir le type <code>int</code>. Le constructeur <code>None</code> du type <code>option('a)</code> permet de représenter l'absence de valeur.</p>
 <p>Dans le prochain billet, nous verrons comment le système de modules de ReasonML nous permet de structurer notre code.</p>
 <h1 id="annexes">Annexes</h1>
+<h2 id="la-bibliotheque-vodacce">La bibliothèque Vodacce</h2>
 <p><img src="../img/charlie-creber-vodacce-banner.jpg" alt="Vodacce banner" /> © <a href="https://tanzenkat.artstation.com/">Charlie Fox</a></p>
 <ul>
 <li><a href="http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-setting-20170110.pdf">7th Basic Rules</a></li>
@@ -526,6 +543,20 @@ Nous aurions donc pu définir notre dernier type ainsi :</p>
 <li><a href="http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-playing-the-game-20170110.pdf">7th Basic Rules Playing the game</a></li>
 <li><a href="https://agate-rpg.blogspot.com/search/label/7th%20Sea">Blog du studio Agate</a></li>
 </ul>
+<h2 id="erratum">Erratum</h2>
+<p>Mon ami <a href="https://xvw.github.io/">Xavier</a> me suggère une définition plus formelle d'un ADT :</p>
+<blockquote>
+<p>Un type de données composite qui intègre une logique dans sa composition.</p>
+</blockquote>
+<p>D'où le <strong>algébrique</strong> de <strong>types de données algébriques</strong>. On appelle produit, somme et exponentiels comme ça, car on peut calculer leur cardinalité via :</p>
+<ul>
+<li>des produits <code>(x * y)</code> qui a une cardinalité égale à <code>cardinalité de x * cardinalité de y</code></li>
+<li>des sommes <code>type t = Foo(x) | Bar(y)</code> qui a une cardinalité égale à <code>cardinalité de x + cardinalité de y</code></li>
+<li>des exponentiels <code>x =&gt; y</code> qui a une cardinalité égale à de <code>(cardinalité de y) ^ (cardinalité de x)</code>.</li>
+</ul>
+<h2 id="categories-for-the-working-hackers-anglais">Categories for the working Hackers (anglais)</h2>
+<p>Si vous voulez une découverte plus formelle des ADT je vous conseille ce talk Philippe Wadler</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gui_SE8rJUM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
         </article>
       </div>
