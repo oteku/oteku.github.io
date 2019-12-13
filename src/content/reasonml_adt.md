@@ -197,7 +197,7 @@ par exemple le type \\( int^{traitScore} \\)
 
 ## Les types polymorphes
 
-Cela fait deux fois que nous voyons des déclarations de types avec des paramètres `'a` et `'b` , à la manière de ce qui existe avec les génériques dans d'autres langages, ces paramètres servent à retourner un nouveau type à partir d'arguments fournis au type initial. Les paramètres de types commences toujours par `'`.
+Cela fait deux fois que nous voyons des déclarations de types avec des paramètres `'a` et `'b` . À la manière de ce qui existe avec les génériques dans d'autres langages, ces paramètres servent à retourner un nouveau type à partir d'arguments fournis au type initial. Les paramètres de types commencent toujours par `'`.
 Nous aurions donc pu définir notre dernier type ainsi :
 
 ```reason
