@@ -29,30 +29,30 @@ Avant de poursuivre, je souhaite donner quelques éléments de syntaxe :
 Si vous avez déjà utilisé Flow, vous ne devriez pas être surpris. Sinon le mot clé `let` sert à lié une valeur à un nom, ici `greeting`, suivi de la déclaration de type, `: string` puis de la valeur `= "hello"`.
 
 ```reason
- /* Ceci est un commentaire */
- let greeting : string = "hello";
+    /* Ceci est un commentaire */
+    let greeting : string = "hello";
 ```
 
 Les valeurs sont immutables par défaut en ReasonML. C'est plutôt une excellente nouvelle, néanmoins il est possible de simuler des variables en utilisant des références ; dans la plupart des situations, vous ne devriez pas en avoir besoin.
 
 ```reason
- let score : int = 10;
- let scoreMutable : ref(int) = ref(0);
- scoreMutable := 5;
+    let score : int = 10;
+    let scoreMutable : ref(int) = ref(0);
+    scoreMutable := 5;
 ```
 
 Il est possible de définir des alias de type afin de rendre le code plus lisible, ce qui est toujours appréciable dans une démarche [DDD](http://blog.infosaurus.fr/public/docs/DDDViteFait.pdf).
 
 ```reason
- type scoreType = int; /* type alias */
- let myScore : scoreType = 7;
+    type scoreType = int; /* type alias */
+    let myScore : scoreType = 7;
 ```
 
 Les fonctions sont des valeurs comme les autres et peuvent être exprimées dans le système de types
 
 ```reason
- let concatStr : (string, string) => string = (a, b) => a ++ b ;
- /* ++ est l'opérateur de concaténation de 2 string */
+    let concatStr : (string, string) => string = (a, b) => a ++ b ;
+    /* ++ est l'opérateur de concaténation de 2 string */
 ```
 
 ## Inférence de type
@@ -60,24 +60,50 @@ Les fonctions sont des valeurs comme les autres et peuvent être exprimées dans
 ReasonML est capable d'inférer le type de vos expressions, ce qui permet d'écrire du code très proche de ce que vous feriez en Javascript.
 
 ```reason
- let twelve = 12; /* val twelve : int */
- let addInt = (a, b) => a + b; /* val addInt : (int, int) => int */
- let addFloat = (a, b) => a +. b; /* val addInt : (float, float) => float */
- let aListOfInt = [1, 2, 5]; /* val aListOfInt : list(int) */
+    let twelve = 12; /* val twelve : int */
+    let addInt = (a, b) => a + b; /* val addInt : (int, int) => int */
+    let addFloat = (a, b) => a +. b; /* val addInt : (float, float) => float */
+    let aListOfInt = [1, 2, 5]; /* val aListOfInt : list(int) */
 ```
 
 Les types peuvent recevoir des paramètres, à l'image de génériques dans d'autres langages. Les paramètres de types commencent toujours par `'`.
 
 ```reason
- type coordinate('a) = ('a, 'a, 'a);
- type intCoordinate = coordinate(int);
- let int3DPoint: intCoordinate = (1, 2, 10);
- type floatCoordinate = coordinate(float);
- let float3DPoint: floatCoordinate = (1., 2., 10.);
+    type coordinate('a) = ('a, 'a, 'a);
+    type intCoordinate = coordinate(int);
+    let int3DPoint: intCoordinate = (1, 2, 10);
+    type floatCoordinate = coordinate(float);
+    let float3DPoint: floatCoordinate = (1., 2., 10.);
 
- type transfert('a, 'b) = coordinate('a) => coordinate('b);
- type intToFloatTransfert = transfert(int, float);
- let intToFloatCoodinate: intToFloatTransfert = ((x, y, z)) => (float_of_int(x), float_of_int(y), float_of_int(z));
+    type transfert('a, 'b) = coordinate('a) => coordinate('b);
+    type intToFloatTransfert = transfert(int, float);
+    let intToFloatCoodinate: intToFloatTransfert = ((x, y, z)) => (float_of_int(x), float_of_int(y), float_of_int(z));
+```
+
+## Opérateur de chaînage
+
+ReasonML fournit un opérateur de chaînage (pipe operator) `|>` qui fonctionne à l'image du pipe `|` unix, c'est à dire que la valeur à gauche est fournit comme paramètre à droite de l'expression à droite de l'opérteur :
+
+```reason
+    let compose = (f, g, x) => g(f(x));
+    /* === */
+    let compose2 = (f, g, x) => f(x) |> g;
+
+    let foo = (f,g) => compose(f,g, 5);
+    /* === */
+    let bar = (f,g) => 5 |> compose(f,g);
+```
+
+## Application partielle
+
+Les fonctions ReasonML sont curryfié c'est à dire que la fonction de type `('a,'b) => 'c` est juste du sucre syntaxique pour la fontion de type `'a => 'b => 'c`
+
+```reason
+    let add = (x, y) => x + y; /* === let add = x => y => x + y */
+    let add5 = add(5); /* === let add5 = y => add(5,y) */
+
+    let sub = (x, y) => x - y; /* === let sub = x => y => x - y */
+    let sub2 = 2 |> sub; /* === let sub2 = x => sub(x, 2) */
 ```
 
 # React to the future
@@ -91,7 +117,7 @@ Les motivations qui ont animé la création de ReasonML (en anglais) :
 Dans cette série de découverte, nous aborderons ensemble prochainement :
 
 - [Types de données algébriques](../reasonml-adt)
-- Les modules ReasonML
+- [Les modules ReasonML](../reasonml-modules)
 - Outillage d'un projet ReasonML
 - Tests de propriétés
 - Compilation vers Javascript

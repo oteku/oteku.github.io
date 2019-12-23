@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta name="description" content="" />
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>ReasonML : les modules</title>
+     <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+<meta property="og:title" content="ReasonML : les modules" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr" />
+<meta property="og:img" content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg" />
+<meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-modules&#x2F;" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content="ReasonML : les modules" />
+<meta property="twitter:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-modules&#x2F;" />
+<meta property="twitter:description" content="" />
+<meta
+  property="twiter:image"
+  content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+  crossorigin="anonymous"
+/>
+
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
+
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;reasonml&#x2F;" target="_self">ReasonML</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+    </div>
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Chapitres</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Chapitres</h3>
+            <ul class="">
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-modules/#dechirer-le-voile"
+                  >Déchirer le voile</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#relation-a-ocaml">Relation à OCaml</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#sketche-ton-reasonml">Sketche ton ReasonML</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#regles-de-nommage">Règles de nommage</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#open-modules">Open modules</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#namespaces">Namespaces</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-modules/#franchir-le-portail"
+                  >Franchir le portail</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#modules-imbriques">Modules imbriqués</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#signtures">Signtures</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#abstraction">Abstraction</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/reasonml-modules/#le-mal-du-passage"
+                  >Le mal du passage</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#module-d-ordre-superieur">Module d&#x27;ordre supérieur</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#les-foncteurs">Les Foncteurs</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/reasonml-modules/#continuer-l-exploration">Continuer l&#x27;exploration</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;reasonml-modules&#x2F;">ReasonML : les modules</a>
+          </h1>
+          <p class="post-meta">
+            2019-12-23 | Temps de lecture 10 minutes
+          </p>
+          
+          <a href="/tags/ReasonML"> #ReasonML </a>
+        </header>
+        <article class="post-content">
+          <div><p>ReasonML intègre un système de <strong>programmation modulaire</strong>. Les modules offrent un mécanisme d'encapsulation et permettent d'organiser le code en unités logiques, en fournissant des espaces de noms (namespaces) utiles lors de leur utilisation. ReasonML propose un système de modules récursifs et paramétrables très puissant qui permet de fournir une grande généricité au code.</p>
+<p>En ReasonML, tout le code est encapsulé dans des modules. Si nous plaçons l'ensemble du code du <a href="../reasonml-adt">premier billet</a> dans un fichier <code>Hero.re</code>, cela définit automatiquement un module <code>Hero</code>.</p>
+<p id="zola-continue-reading"><a name="continue-reading"></a></p>
+<blockquote>
+<p>Ce billet est le second de la série d'articles <a href="../reasonml-serie/#un-programme-reason-able">ReasonML : la série</a></p>
+</blockquote>
+<p><em>Le nom d'un module commence toujours par une majuscule, la convention veut que l'on nomme les fichiers ReasonML en commençant également par une majuscule mais ce n'est pas une obligation : le fichier <code>hero.re</code> aurait également définit le module <code>Hero</code></em></p>
+<h1 id="dechirer-le-voile">Déchirer le voile</h1>
+<h2 id="relation-a-ocaml">Relation à OCaml</h2>
+<p>ReasonML est une syntaxe de OCaml : à ce titre il est souvent possible de transposer du OCaml en ReasonML et vice-versa. Si dans votre apprentissage vous pensez manquer de ressource en ReasonML n'hésitez pas à explorer les ressources OCaml. Ce sera probablement le cas si vous cherchez à approfondir le système de modules.</p>
+<p>Au moment où j'écris ce billet les écarts sont minimes :</p>
+<ul>
+<li>ReasonML intègre JSX directement dans sa syntaxe, ceci n'est pas prévu d'êrte intégré dans OCaml</li>
+<li>OCaml dispose de <a href="http://caml.inria.fr/pub/docs/manual-ocaml/manual046.html">binding operators</a> pour le code monadique qui devraient à terme être implémentés en ReasonML</li>
+</ul>
+<p>Au démarrage, l'outil <a href="https://reasonml.github.io/en/try">Try</a> permet de visualiser transposer le code OCaml en ReasonML ou ReasonML en OCaml, ainsi que le code JS généré par Buckelscript. C'est très utile.</p>
+<h2 id="sketche-ton-reasonml">Sketche ton ReasonML</h2>
+<p>Cet article est disponible sous forme de <a href="https://sketch.sh/s/hADE8AVnCq6LSQZVmTHf4D/">sketchbook</a> interactif.</p>
+<h2 id="regles-de-nommage">Règles de nommage</h2>
+<ul>
+<li>Le nom des types et des bindings commencent obligatoirement par une minuscule.</li>
+<li>Le nom des modules et des types de modules commencent obligatoirement par une majuscule.</li>
+</ul>
+<p>Il n'y a pas de convention sur le nommages entre <code>camelCase</code> et <code>snake_case</code> : il est courant de voir les deux dans un projet ReasonML car la librairie standard est issue de OCaml où la norme est le <code>snake_case</code> alors que <code>Buckelscript</code> et d'autres librairies issues de la communauté javascript utilise le <code>camelCase</code> par homogénéité avec les pratiques JS.</p>
+<p>Il n'y a pas de bon choix entre les deux, je vous recommande donc d'en faire un et de vous y tenir pour votre code, sachant que vous utiliserez forcéménet à un moment une librairie qui aura fait un choix différent.</p>
+<h2 id="open-modules">Open modules</h2>
+<p>Pour accèder au contenu d'un module, il est possible de l'ouvrir. Plutôt que d'écrire :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilNation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">nation</span><span style="color:#f29e74;">;
+</span></pre>
+<p>On peut écrire :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">;
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilNation </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">nation</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Le contenu du module est visible dans le <em>scope</em>. Ci dessus dans l'ensemble du fichier mais il est possible d'avoir un scope par expression :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilBrawnInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">traits</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">brawn </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> toInt)</span><span style="color:#f29e74;">;
+</span></pre>
+<p>ou de créer un scrope limité :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="font-style:italic;color:#5c6773;">/* module non ouvert ici */
+    </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">;
+      </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilBrawnInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">traits</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">brawn </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}
+    </span><span style="font-style:italic;color:#5c6773;">/* module non ouvert ici */
+</span></pre><h2 id="namespaces">Namespaces</h2>
+<p>La dimension espaces de nom des modules ReasonML est assez limitée : vous n'avez pas de possibilité de les regrouper dans des packages et vous ne pouvez pas compiler un programme qui contient deux modules du même nom. Cela peut devenir contraignant quand vous travaillez sur des grands projets.</p>
+<p>De la même manière que nous avons vu qu'il était possible de faire des alias de types, il est également possible de faire des alias de modules. Un technique courante est de faire de <a href="https://blog.janestreet.com/better-namespaces-through-module-aliases/">packed modules</a>, c'est à dire un module regroupant des alias de module:</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">/* Supposant que nous sommes dans Core_kernel.re */
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">List </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Core_kernel_list</span><span style="color:#f29e74;">;
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Array </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Core_kernel_array</span><span style="color:#f29e74;">;
+</span></pre>
+<p>et dans un autre fichier on peut faire</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Core_kernel</span><span style="color:#f29e74;">;
+    </span><span style="font-style:italic;color:#5c6773;">/* List.filter ci-dessous se réfère au module Core_kernel.List et non au module List fournit par le compilateur, issu du module Pervasives */
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> dropZeros </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> l </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">List</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">filter</span><span style="color:#ccc9c2;">(l</span><span style="color:#f29e74;">, ~</span><span style="color:#ccc9c2;">f</span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;">x </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> x </span><span style="color:#f29e74;">!= </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></pre><h1 id="franchir-le-portail">Franchir le portail</h1>
+<h2 id="modules-imbriques">Modules imbriqués</h2>
+<p>Les modules peuvent s'imbriquer : nous avons vu que chaque fichier crée un module, mais il est également possible de déclarer des sous-modules :</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">/* Ceci est le fichier Hero.re */
+    /* On déclare un sous-module Hero.Nation */
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Nation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type trait </span><span style="color:#f29e74;">=
+            | </span><span style="color:#ccc9c2;">Brawn
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Finesse
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Resolve
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Wits
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Panache</span><span style="color:#f29e74;">;
+
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+            | </span><span style="color:#ccc9c2;">Avalon(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Inismore(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">TheHighlandMarches(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Castille(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Eisen(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Montaigne(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Sarmatia(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Ussura(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vesten(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vodacce(</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="font-style:italic;color:#5c6773;">/* On déclare un sous-module Hero.Traits */
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Traits </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="font-style:italic;color:#5c6773;">/* On déclare un sous-module Hero.Traits.Score */
+        </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Score </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+            </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+            | </span><span style="color:#ccc9c2;">Two
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five</span><span style="color:#f29e74;">;
+
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ts </span><span style="color:#f29e74;">=&gt;
+                </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(ts) {
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">2
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">3
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">4
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">5
+                </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+            </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt;
+                </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(score) {
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">2 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Two)
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">3 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Three)
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">4 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Four)
+                    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">5 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Five)
+                    </span><span style="color:#f29e74;">| </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None
+                }</span><span style="color:#f29e74;">;
+        </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+            brawn</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            finesse</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            resolve</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            wits</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            panache</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
+        </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+    traits</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Traits</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+    nation</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Nation</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Vous remarquerez le nommmage des types <code>t</code> : il s'agit d'une convention largement utilisée dans les écosystèmes ReasonML / OCaml, où le type nommé <code>t</code> désigne le type principal habitant le module. On utilise <code>Nation.t</code> plutôt que <code>Nation.nation</code> bien que ce ne soit pas une obligation.</p>
+<h2 id="signtures">Signtures</h2>
+<p>Les modules sont eux même statiquement typés statiquement. Il est donc possible de spécifier des types de modules. Pour notre exemple, nous décidons de créer un module <code>Traits</code> dans un fichier <code>Traits.re</code> :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+            | </span><span style="color:#ccc9c2;">Two
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#ffa759;">: int </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(t)</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+            | </span><span style="color:#ccc9c2;">Two
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ts </span><span style="color:#f29e74;">=&gt;
+            </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(ts) {
+                </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">2
+                </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">3
+                </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">4
+                </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">5
+            </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt;
+            </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(score) {
+                </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">2 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Two)
+                </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">3 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Three)
+                </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">4 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Four)
+                </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">5 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Five)
+                </span><span style="color:#f29e74;">| </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None
+            }</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> return</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> value</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>On parle en général de signature ou d'interface car le <code>module type</code> est en réalité le <em>contrat public</em> que doit remplir un module de ce type. Seul les types et bindings déclarés dans la signature sont accessibles quand on ouvre le module. Dans notre exemple <code>Score.t</code>, <code>toInt</code> et <code>fromInt</code>. En revanche <code>return</code> n'est accessible que dans la scope de la déclaration du module, même si <code>Score</code> était ouvert.</p>
+<p>Il est possible également d'isoler la signature d'un module via un fichier <code>.rei</code></p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">/* Traits.rei */
+</span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+    | </span><span style="color:#ccc9c2;">Two
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#ffa759;">: int </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(t)</span><span style="color:#f29e74;">;
+</span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+  brawn</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  finesse</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  resolve</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  wits</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  panache</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
+</span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre><pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">/* Traits.re */
+</span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Score </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+    | </span><span style="color:#ccc9c2;">Two
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ts </span><span style="color:#f29e74;">=&gt;
+    </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(ts) {
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">2
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">3
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">4
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">5
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt;
+    </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(score) {
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">2 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Two)
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">3 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Three)
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">4 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Four)
+    </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">5 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Five)
+    </span><span style="color:#f29e74;">| </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None
+    }</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> return</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> value</span><span style="color:#f29e74;">;
+</span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+  brawn</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  finesse</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  resolve</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  wits</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+  panache</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
+</span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre><h2 id="abstraction">Abstraction</h2>
+<p>Il est possible d'abstraire les types contenus dans un <code>module type</code> :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#ffa759;">: int </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(t)</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Ici <code>t</code> est abstrait, un module de type <code>ScoreType</code> devra fournir un type concret pour <code>t</code>.</p>
+<p>Dans une approche de <em>programmation par contrat</em> (interface based programming), il peut être intéressant de ne pas définir de type concret dans le contrat. Cela permet de retarder au moment de l'implémentation du contrat le choix à faire.</p>
+<p>Souvenez-vous, nous nous étions posé des questions sur la manière de concevoir le type <code>Score.t</code> qui correspond aux entiers de 2 à 5. Mais au final, au moment de la définition du contrat nous n'avons à nous poser que question de savoir quelles sont les interactions possible entre ce type et le monde extérieur :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">;
+        </span><span style="font-style:italic;color:#5c6773;">/* Quelques soit le choix on se doute qu&#39;on devra intéragir avec des int */
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#ffa759;">: int </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(t)</span><span style="color:#f29e74;">;
+        </span><span style="font-style:italic;color:#5c6773;">/* on souhaite avoir une arithmétique basique sans convertir en int à l&#39;extéieur */
+        </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">(t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(t)</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">(t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(t)</span><span style="color:#f29e74;">;
+        </span><span style="font-style:italic;color:#5c6773;">/* on souhaite avoir une arithmétique basique sans convertir en int à l&#39;extéieur */
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> print </span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Nous laissans plus tard le choix de l'implémentation avec un variant :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScoreVariant</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+            | </span><span style="color:#ccc9c2;">Two
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ts </span><span style="color:#f29e74;">=&gt;
+            </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(ts) {
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Two </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">2
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">3
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Four </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">4
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Five </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffcc66;">5
+            </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt;
+            </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(score) {
+            </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">2 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Two)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">3 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Three)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">4 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Four)
+            </span><span style="color:#f29e74;">| </span><span style="color:#ffcc66;">5 </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Five)
+            </span><span style="color:#f29e74;">| </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None
+            }</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(score1</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> score2) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score1) </span><span style="color:#f29e74;">+ </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score2) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(score1</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> score2) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score1) </span><span style="color:#f29e74;">- </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score2) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> print </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> string_of_int</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>ou avec int :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScoreInt</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ts </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> ts</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt;
+            </span><span style="color:#ffa759;">if </span><span style="color:#ccc9c2;">(score </span><span style="color:#f29e74;">&gt;= </span><span style="color:#ffcc66;">2 </span><span style="color:#f29e74;">&amp;&amp;</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">&lt;= </span><span style="color:#ffcc66;">5</span><span style="color:#ccc9c2;">) {
+            Some(score)</span><span style="color:#f29e74;">;
+            </span><span style="color:#ccc9c2;">} </span><span style="color:#ffa759;">else </span><span style="color:#ccc9c2;">{
+            None</span><span style="color:#f29e74;">;
+            </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(score1</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> score2) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score1) </span><span style="color:#f29e74;">+ </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score2) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(score1</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> score2) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score1) </span><span style="color:#f29e74;">- </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score2) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> print </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> string_of_int</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>L'abstraction a pour intérêt également d'obfusquer le type de <code>t</code> à l'extérieur de l'implémentation du module et donc <code>ScoreInt.t</code> est différent de <code>int</code>, par exemple il n'est pas possible d'écrire :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> printScore</span><span style="color:#ffa759;">: ScoreInt.t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> string </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> aScore </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">ScoreInt</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(aScore))</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#f28779;">printScore</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">4</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* ne compile pas */
+</span></pre>
+<p>qui produira une erreur de compilation</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">printScore</span><span style="color:#ccc9c2;">(4)</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffd580;">This</span><span style="color:#ccc9c2;"> type doesn</span><span style="color:#bae67e;">&#39;t match what is expected.
+
+    This type: int
+    Expecting: ScoreInt.t
+</span></pre>
+<p>Au final, l'abstraction nous fournit une solution plus simple et aussi sûre que le variant pour nous permettre de représenter un sous-ensemble parmis les entiers.</p>
+<p>Dans le prochain article nous initialiserons notre projet.</p>
+<h1 id="le-mal-du-passage">Le mal du passage</h1>
+<p><img src="../img/charlie-creber-montaigne-banner.jpg" alt="Porte banner" /> © <a href="https://tanzenkat.artstation.com/">Charlie Creber</a></p>
+<p>Jusqu'ici nous avons vu l'intérêt des modules pour structurer le code et sa conception.</p>
+<h2 id="module-d-ordre-superieur">Module d'ordre supérieur</h2>
+<p>Il existe une stratification entre le langage principal (les valeurs et les types) et le langage de module (les modules et les type de modules), ce qui fait qu'on ne peut pas directement utiliser un module dans une variable ou un paramètre de fonction. Pour cela ReasonML fournit une syntaxe spécifique pour pouvoir bénéficier de module d'ordre supérieur (First-Class Module) :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">Scalar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value</span><span style="color:#ffa759;">: t;
+    };
+
+    let scalar5: module Scalar with type t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int </span><span style="color:#f29e74;">=
+    </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module
+    </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">5</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">})</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScalarY</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">char </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">char</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&#39;Y&#39;</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> scalarY</span><span style="color:#ffa759;">: module Scalar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScalarY)</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> getValue </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> m </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">M </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(val m</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+        </span><span style="color:#ccc9c2;">M</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">value</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre><h2 id="les-foncteurs">Les Foncteurs</h2>
+<p>ReasonML dispose aussi de modules fonctionnels, appelé foncteurs (functors). Il s'agit simplement de module paramétrés par d'autres modules :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IncrementChar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(X</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">char</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">X</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Char</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">code</span><span style="color:#ccc9c2;">(X</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">value) </span><span style="color:#f29e74;">+ </span><span style="color:#ffcc66;">1 </span><span style="color:#f29e74;">|&gt; </span><span style="color:#ccc9c2;">Char</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">chr</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScalarZ </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">IncrementChar(ScalarY)</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IncrementInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(X</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">X</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">;
+        </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">X</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">value </span><span style="color:#f29e74;">+ </span><span style="color:#ffcc66;">1</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Scalar6 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">IncrementInt((val scalar5</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">))</span><span style="color:#f29e74;">;
+
+</span></pre>
+<blockquote>
+<p>Ces foncteurs ne sont ni les <a href="https://wiki.haskell.org/Functor">foncteurs Haskell</a> (Functor typeclass), ni les <a href="https://en.cppreference.com/w/cpp/utility/functional">foncteurs C++</a> (function Objects)</p>
+</blockquote>
+<p><strong>Pourquoi les appeler foncteurs alors ?</strong> Dans la théorie des catégories, une catégorie contient des morphismes, qui sont une généralisation des fonctions telles que nous les connaissons, et un foncteur est mappé entre les catégories. De même, les modules ReasonML contiennent des fonctions et les foncteurs ReasonML sont mappés de modules en modules.</p>
+<h2 id="continuer-l-exploration">Continuer l'exploration</h2>
+<p>Les concepts avancés tels que les First-Class module et Functors sont abordés à titre d'ouverture, mais je vous recommande vivement ces lectures pour approfondir :</p>
+<ul>
+<li>Chapitre <a href="http://caml.inria.fr/pub/docs/manual-ocaml/moduleexamples.html">The module System</a> du Manuel OCaml</li>
+<li>Chapitre <a href="http://dev.realworldocaml.org/functors.html">Functors</a> de Real World OCaml</li>
+<li>Chapitre <a href="http://dev.realworldocaml.org/first-class-modules.html">First-Class Modules</a> de Real World OCaml</li>
+</ul>
+</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
+    </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
+    
+<!-- The loading of KaTeX is deferred to speed up page rendering -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz"
+  crossorigin="anonymous"
+></script>
+
+<!-- To automatically render math in text elements, include the auto-render extension: -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+  crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"
+></script>
+
+  </body>
+</html>
