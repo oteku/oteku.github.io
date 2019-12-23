@@ -20,18 +20,18 @@ _Le nom d'un module commence toujours par une majuscule, la convention veut que 
 
 ## Relation à OCaml
 
-ReasonML est une syntaxe de OCaml : à ce titre il est souvent possible de transposer du OCaml en ReasonML et vice-versa. Si dans votre apprentissage vous pensez manquer de ressource en ReasonML n'hésitez pas à explorer les ressources OCaml. Ce sera probablement le cas si vous cherchez à approfondir le système de modules.
+ReasonML est une syntaxe de OCaml : à ce titre il est souvent possible de transposer du OCaml en ReasonML et vice-versa. Si dans votre apprentissage vous pensez manquer de ressource en ReasonML, n'hésitez pas à explorer les ressources OCaml. Ce sera probablement le cas si vous cherchez à approfondir le système de modules.
 
 Au moment où j'écris ce billet les écarts sont minimes :
 
 - ReasonML intègre JSX directement dans sa syntaxe, ceci n'est pas prévu d'êrte intégré dans OCaml
 - OCaml dispose de [binding operators](http://caml.inria.fr/pub/docs/manual-ocaml/manual046.html) pour le code monadique qui devraient à terme être implémentés en ReasonML
 
-Au démarrage, l'outil [Try](https://reasonml.github.io/en/try) permet de visualiser transposer le code OCaml en ReasonML ou ReasonML en OCaml, ainsi que le code JS généré par Buckelscript. C'est très utile.
+Au démarrage, l'outil [Try](https://reasonml.github.io/en/try) permet de transposer le code OCaml en ReasonML ou ReasonML en OCaml, ainsi que le code JS généré par Buckelscript. C'est très utile.
 
 ## Sketche ton ReasonML
 
-Cet article est disponible sous forme de [sketchbook](https://sketch.sh/s/hADE8AVnCq6LSQZVmTHf4D/) interactif.
+Cet article est disponible sous forme de [sketchbook](https://sketch.sh/s/hADE8AVnCq6LSQZVmTHf4D/).
 
 ## Règles de nommage
 
@@ -408,9 +408,11 @@ Il existe une stratification entre le langage principal (les valeurs et les type
     };
 ```
 
+L'opérateur `with` permet d'ajouter des contraintes dans l'équiation de type du `module type`. Pratiquement cela nous permet ici de lever l'abstraction pour obtenir par exemple `ScarlarY.t = char`. Cela peut également permettre d'exprimer des contraintes entre plusieurs modules.
+
 ## Les Foncteurs
 
-ReasonML dispose aussi de modules fonctionnels, appelé foncteurs (functors). Il s'agit simplement de module paramétrés par d'autres modules :
+ReasonML dispose aussi de modules fonctionnels, appelé foncteurs (functors). Il s'agit simplement de modules paramétrés par d'autres modules :
 
 ```reason
     module IncrementChar = (X: Scalar with type t = char) => {
