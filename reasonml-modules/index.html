@@ -265,15 +265,15 @@
 <p><em>Le nom d'un module commence toujours par une majuscule, la convention veut que l'on nomme les fichiers ReasonML en commençant également par une majuscule mais ce n'est pas une obligation : le fichier <code>hero.re</code> aurait également définit le module <code>Hero</code></em></p>
 <h1 id="dechirer-le-voile">Déchirer le voile</h1>
 <h2 id="relation-a-ocaml">Relation à OCaml</h2>
-<p>ReasonML est une syntaxe de OCaml : à ce titre il est souvent possible de transposer du OCaml en ReasonML et vice-versa. Si dans votre apprentissage vous pensez manquer de ressource en ReasonML n'hésitez pas à explorer les ressources OCaml. Ce sera probablement le cas si vous cherchez à approfondir le système de modules.</p>
+<p>ReasonML est une syntaxe de OCaml : à ce titre il est souvent possible de transposer du OCaml en ReasonML et vice-versa. Si dans votre apprentissage vous pensez manquer de ressource en ReasonML, n'hésitez pas à explorer les ressources OCaml. Ce sera probablement le cas si vous cherchez à approfondir le système de modules.</p>
 <p>Au moment où j'écris ce billet les écarts sont minimes :</p>
 <ul>
 <li>ReasonML intègre JSX directement dans sa syntaxe, ceci n'est pas prévu d'êrte intégré dans OCaml</li>
 <li>OCaml dispose de <a href="http://caml.inria.fr/pub/docs/manual-ocaml/manual046.html">binding operators</a> pour le code monadique qui devraient à terme être implémentés en ReasonML</li>
 </ul>
-<p>Au démarrage, l'outil <a href="https://reasonml.github.io/en/try">Try</a> permet de visualiser transposer le code OCaml en ReasonML ou ReasonML en OCaml, ainsi que le code JS généré par Buckelscript. C'est très utile.</p>
+<p>Au démarrage, l'outil <a href="https://reasonml.github.io/en/try">Try</a> permet de transposer le code OCaml en ReasonML ou ReasonML en OCaml, ainsi que le code JS généré par Buckelscript. C'est très utile.</p>
 <h2 id="sketche-ton-reasonml">Sketche ton ReasonML</h2>
-<p>Cet article est disponible sous forme de <a href="https://sketch.sh/s/hADE8AVnCq6LSQZVmTHf4D/">sketchbook</a> interactif.</p>
+<p>Cet article est disponible sous forme de <a href="https://sketch.sh/s/hADE8AVnCq6LSQZVmTHf4D/">sketchbook</a>.</p>
 <h2 id="regles-de-nommage">Règles de nommage</h2>
 <ul>
 <li>Le nom des types et des bindings commencent obligatoirement par une minuscule.</li>
@@ -592,8 +592,10 @@
         </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">M </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(val m</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
         </span><span style="color:#ccc9c2;">M</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">value</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre><h2 id="les-foncteurs">Les Foncteurs</h2>
-<p>ReasonML dispose aussi de modules fonctionnels, appelé foncteurs (functors). Il s'agit simplement de module paramétrés par d'autres modules :</p>
+</span></pre>
+<p>L'opérateur <code>with</code> permet d'ajouter des contraintes dans l'équiation de type du <code>module type</code>. Pratiquement cela nous permet ici de lever l'abstraction pour obtenir par exemple <code>ScarlarY.t = char</code>. Cela peut également permettre d'exprimer des contraintes entre plusieurs modules.</p>
+<h2 id="les-foncteurs">Les Foncteurs</h2>
+<p>ReasonML dispose aussi de modules fonctionnels, appelé foncteurs (functors). Il s'agit simplement de modules paramétrés par d'autres modules :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IncrementChar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(X</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">char</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">X</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">;
