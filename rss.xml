@@ -7,7 +7,17 @@
         <generator>Zola</generator>
         <language>fr</language>
         <atom:link href="https%3A//oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Thu, 12 Dec 2019 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Mon, 23 Dec 2019 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>ReasonML : les modules</title>
+                <pubDate>Mon, 23 Dec 2019 00:00:00 +0000</pubDate>
+                <link>https%3A//oteku.github.io/reasonml-modules/</link>
+                <guid>https%3A//oteku.github.io/reasonml-modules/</guid>
+                <description>&lt;p&gt;ReasonML intègre un système de &lt;strong&gt;programmation modulaire&lt;&#x2F;strong&gt;. Les modules offrent un mécanisme d&#x27;encapsulation et permettent d&#x27;organiser le code en unités logiques, en fournissant des espaces de noms (namespaces) utiles lors de leur utilisation. ReasonML propose un système de modules récursifs et paramétrables très puissant qui permet de fournir une grande généricité au code.&lt;&#x2F;p&gt;
+&lt;p&gt;En ReasonML, tout le code est encapsulé dans des modules. Si nous plaçons l&#x27;ensemble du code du &lt;a href=&quot;..&#x2F;reasonml-adt&quot;&gt;premier billet&lt;&#x2F;a&gt; dans un fichier &lt;code&gt;Hero.re&lt;&#x2F;code&gt;, cela définit automatiquement un module &lt;code&gt;Hero&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>ReasonML : types de données algébriques</title>

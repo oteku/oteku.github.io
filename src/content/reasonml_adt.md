@@ -365,7 +365,7 @@ Dans le prochain billet, nous verrons comment le système de modules de ReasonML
 
 ## La bibliothèque Vodacce
 
-![Vodacce banner](../img/charlie-creber-vodacce-banner.jpg) © [Charlie Fox](https://tanzenkat.artstation.com/)
+![Vodacce banner](../img/charlie-creber-vodacce-banner.jpg) © [Charlie Creber](https://tanzenkat.artstation.com/)
 
 - [7th Basic Rules](http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-setting-20170110.pdf)
 - [7th Basic Rules Characters](http://johnwickpresents.com/wp-content/uploads/2017/02/basic-rules-characters-20170110.pdf)
