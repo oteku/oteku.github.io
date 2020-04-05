@@ -7,6 +7,13 @@
         </url>
     
         <url>
+            <loc>https%3A//oteku.github.io/esy-reasonml/</loc>
+            
+                <lastmod>2020-03-23</lastmod>
+            
+        </url>
+    
+        <url>
             <loc>https%3A//oteku.github.io/pipe-macro-rust/</loc>
             
                 <lastmod>2019-03-29</lastmod>
@@ -53,6 +60,11 @@
     
         <url>
             <loc>https%3A//oteku.github.io/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https%3A//oteku.github.io/tags/tooling/</loc>
             
         </url>
     

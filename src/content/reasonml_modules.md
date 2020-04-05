@@ -40,7 +40,7 @@ Cet article est disponible sous forme de [sketchbook](https://sketch.sh/s/hADE8A
 
 Il n'y a pas de convention sur le nommages entre `camelCase` et `snake_case` : il est courant de voir les deux dans un projet ReasonML car la librairie standard est issue de OCaml où la norme est le `snake_case` alors que `Buckelscript` et d'autres librairies issues de la communauté javascript utilise le `camelCase` par homogénéité avec les pratiques JS.
 
-Il n'y a pas de bon choix entre les deux, je vous recommande donc d'en faire un et de vous y tenir pour votre code, sachant que vous utiliserez forcéménet à un moment une librairie qui aura fait un choix différent.
+Il n'y a pas de bon choix entre les deux, je vous recommande donc d'en faire un et de vous y tenir pour votre code, sachant que vous utiliserez forcément à un moment une librairie qui aura fait un choix différent.
 
 ## Open modules
 
@@ -169,7 +169,7 @@ Les modules peuvent s'imbriquer : nous avons vu que chaque fichier crée un modu
 
 Vous remarquerez le nommmage des types `t` : il s'agit d'une convention largement utilisée dans les écosystèmes ReasonML / OCaml, où le type nommé `t` désigne le type principal habitant le module. On utilise `Nation.t` plutôt que `Nation.nation` bien que ce ne soit pas une obligation.
 
-## Signtures
+## Signatures
 
 Les modules sont eux même statiquement typés statiquement. Il est donc possible de spécifier des types de modules. Pour notre exemple, nous décidons de créer un module `Traits` dans un fichier `Traits.re` :
 
@@ -408,7 +408,7 @@ Il existe une stratification entre le langage principal (les valeurs et les type
     };
 ```
 
-L'opérateur `with` permet d'ajouter des contraintes dans l'équiation de type du `module type`. Pratiquement cela nous permet ici de lever l'abstraction pour obtenir par exemple `ScarlarY.t = char`. Cela peut également permettre d'exprimer des contraintes entre plusieurs modules.
+L'opérateur `with` permet d'ajouter des contraintes dans l'équation de type du `module type`. Pratiquement cela nous permet ici de lever l'abstraction pour obtenir par exemple `ScarlarY.t = char`. Cela peut également permettre d'exprimer des contraintes entre plusieurs modules.
 
 ## Les Foncteurs
 

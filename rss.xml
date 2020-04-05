@@ -7,7 +7,16 @@
         <generator>Zola</generator>
         <language>fr</language>
         <atom:link href="https%3A//oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Mon, 23 Dec 2019 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>ReasonML : Outillage d&#x27;un projet</title>
+                <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+                <link>https%3A//oteku.github.io/esy-reasonml/</link>
+                <guid>https%3A//oteku.github.io/esy-reasonml/</guid>
+                <description>&lt;p&gt;ReasonML natif dispose d&#x27;un outillage exceptionnel, grâce à l&#x27;ecosystème OCaml. Dans ce billet, je vous propose de créer depuis 0 un projet ReasonML natif. Nous parcourerons l&#x27;outillage de gestion de dépendance, de construction logicielle, de travail dans un bac à sable par projet.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>ReasonML : les modules</title>

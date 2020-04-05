@@ -118,7 +118,7 @@ Dans cette série de découverte, nous aborderons ensemble prochainement :
 
 - [Types de données algébriques](../reasonml-adt)
 - [Les modules ReasonML](../reasonml-modules)
-- Outillage d'un projet ReasonML
+- [Outillage d'un projet ReasonML](../esy-reasonml)
 - Tests de propriétés
 - Compilation vers Javascript
 - GUI avec Revery
