@@ -186,7 +186,7 @@ Bien que beaucoup de [configurations soient disponibles](https://github.com/esy/
 
 > A partir de la version 0.5, actuellement en alpha, pesy permet également de démarrer un projet à partir d'un template, vous pouvez utiliser le mien : `pesy --template=github:oteku/reason-native-template`
 
-![Sterga sorte](../img/sorte.jpg)
+![Strega sorte](../img/sorte.jpg)
 
 # Changer le chemin
 
