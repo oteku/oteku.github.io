@@ -41,7 +41,7 @@ description %} {% block extra_head %}
           <div class="navGroup">
             <h3 class="navGroupCategoryTitle">Chapitres</h3>
             <ul class="">
-              {% for h1 in toc %}
+              {% for h1 in page.toc %}
               <li class="navListItem">
                 <a class="navItem" href="{{h1.permalink | safe}}"
                   >{{ h1.title }}</a

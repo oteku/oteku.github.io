@@ -16,8 +16,8 @@ jobs:
       script: skip # usually you do not want to rerun any tests
       deploy:
         provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_PAT # Set in the settings page of your repository, as a secure variable
+        cleanup: true
+        token: $GITHUB_PAT # Set in the settings page of your repository, as a secure variable
         keep_history: true
         target_branch: master
         on:
