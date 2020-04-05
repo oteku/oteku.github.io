@@ -2,18 +2,18 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Oteku</title>
-        <link>https%3A//oteku.github.io</link>
+        <link>https://oteku.github.io</link>
         <description>Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust</description>
         <generator>Zola</generator>
         <language>fr</language>
-        <atom:link href="https%3A//oteku.github.io/tags/rust/rss.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="https://oteku.github.io/tags/rust/rss.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Wed, 07 Aug 2019 00:00:00 +0000</lastBuildDate>
         
             <item>
                 <title>Thead to the Future</title>
                 <pubDate>Wed, 07 Aug 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/thread-to-the-future/</link>
-                <guid>https%3A//oteku.github.io/thread-to-the-future/</guid>
+                <link>https://oteku.github.io/thread-to-the-future/</link>
+                <guid>https://oteku.github.io/thread-to-the-future/</guid>
                 <description>&lt;p&gt;Je travaille actuellement sur un robot compagon nommé &lt;a href=&quot;https:&#x2F;&#x2F;www.cutii.io&#x2F;cutii&#x2F;&quot;&gt;Cutii&lt;&#x2F;a&gt; pour lequel nous avons besoins de communiquer sur port série entre le PC du robot et nos différentes cartes électronique, nous avons fait le choix il y a quelques mois d&#x27;implémenter une librairie de communication en Rust, afin de rendre plus sûrs et plus performants nos échanges. Ce billet vise à dresser un état des lieux de la gestion de communications asynchrones en Rust.&lt;&#x2F;p&gt;
 &lt;p&gt;Pour illustrer les exemples, imaginons que nous ayons un protocole simplifié de communication, nous permettant de faire des &lt;strong&gt;GET&lt;&#x2F;strong&gt; et &lt;strong&gt;SET&lt;&#x2F;strong&gt; sur des valeur, en mode requête &#x2F; réponse et sur port série :&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#212733;&quot;&gt;
@@ -31,8 +31,8 @@
             <item>
                 <title>Rust my Node.js</title>
                 <pubDate>Thu, 20 Jun 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/rust-my-node/</link>
-                <guid>https%3A//oteku.github.io/rust-my-node/</guid>
+                <link>https://oteku.github.io/rust-my-node/</link>
+                <guid>https://oteku.github.io/rust-my-node/</guid>
                 <description>&lt;p&gt;Si vous êtes développeur Node.js, vous vous confronterez tôt ou tard au développement d&#x27;addons natifs ... et à tout un lot de nouveaux problèmes : le langage C++ en lui même, mais également API V8, build system ou dépendance aux versions de V8. Pourtant dès que vous avez besoins de multi-threading, d&#x27;accès aux ressources machine ou même simplement pour réutiliser des librairies existantes vous n&#x27;y coupez pas. Ce billet vise à vous faire découvrir comment le langage Rust permet de rendre vos modules natifs &amp;quot;fast &amp;amp; safe&amp;quot;.&lt;&#x2F;p&gt;
 </description>
             </item>
@@ -40,8 +40,8 @@
             <item>
                 <title>Opérateur pipe en Rust ?</title>
                 <pubDate>Fri, 29 Mar 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/pipe-macro-rust/</link>
-                <guid>https%3A//oteku.github.io/pipe-macro-rust/</guid>
+                <link>https://oteku.github.io/pipe-macro-rust/</link>
+                <guid>https://oteku.github.io/pipe-macro-rust/</guid>
                 <description>&lt;p&gt;L&#x27;absence d&#x27;opérateur de composition, similaire au &lt;code&gt;.&lt;&#x2F;code&gt; de Haskell, ou de pipeline similaire au &lt;code&gt;|&amp;gt;&lt;&#x2F;code&gt; de ReasonML et OCaml, est assez frustrante lors qu&#x27;on essaie de faire du code Rust déclaratif.&lt;&#x2F;p&gt;
 &lt;p&gt;Il est possible d&#x27;envisager la &lt;em&gt;dot notation&lt;&#x2F;em&gt; mais, d&#x27;une part ce n&#x27;est pas totalement satisfaisant et, d&#x27;autre part cela nécessite d&#x27;implémenter des traits pour chacun des types de données qui composent le flux de traitement.&lt;&#x2F;p&gt;
 </description>

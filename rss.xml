@@ -2,18 +2,27 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Oteku</title>
-        <link>https%3A//oteku.github.io</link>
+        <link>https://oteku.github.io</link>
         <description>Je m&#x27;appelle Thomas Haesslé, j&#x27;écris quelques essais dans ce carnet sur #ReasonML #OCaml #Rust</description>
         <generator>Zola</generator>
         <language>fr</language>
-        <atom:link href="https%3A//oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Mon, 23 Dec 2019 00:00:00 +0000</lastBuildDate>
+        <atom:link href="https://oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>ReasonML : Outillage d&#x27;un projet</title>
+                <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+                <link>https://oteku.github.io/esy-reasonml/</link>
+                <guid>https://oteku.github.io/esy-reasonml/</guid>
+                <description>&lt;p&gt;ReasonML natif dispose d&#x27;un outillage exceptionnel, grâce à l&#x27;ecosystème OCaml. Dans ce billet, je vous propose de créer depuis 0 un projet ReasonML natif. Nous parcourerons l&#x27;outillage de gestion de dépendance, de construction logicielle, de travail dans un bac à sable par projet.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>ReasonML : les modules</title>
                 <pubDate>Mon, 23 Dec 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/reasonml-modules/</link>
-                <guid>https%3A//oteku.github.io/reasonml-modules/</guid>
+                <link>https://oteku.github.io/reasonml-modules/</link>
+                <guid>https://oteku.github.io/reasonml-modules/</guid>
                 <description>&lt;p&gt;ReasonML intègre un système de &lt;strong&gt;programmation modulaire&lt;&#x2F;strong&gt;. Les modules offrent un mécanisme d&#x27;encapsulation et permettent d&#x27;organiser le code en unités logiques, en fournissant des espaces de noms (namespaces) utiles lors de leur utilisation. ReasonML propose un système de modules récursifs et paramétrables très puissant qui permet de fournir une grande généricité au code.&lt;&#x2F;p&gt;
 &lt;p&gt;En ReasonML, tout le code est encapsulé dans des modules. Si nous plaçons l&#x27;ensemble du code du &lt;a href=&quot;..&#x2F;reasonml-adt&quot;&gt;premier billet&lt;&#x2F;a&gt; dans un fichier &lt;code&gt;Hero.re&lt;&#x2F;code&gt;, cela définit automatiquement un module &lt;code&gt;Hero&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
 </description>
@@ -22,8 +31,8 @@
             <item>
                 <title>ReasonML : types de données algébriques</title>
                 <pubDate>Thu, 12 Dec 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/reasonml-adt/</link>
-                <guid>https%3A//oteku.github.io/reasonml-adt/</guid>
+                <link>https://oteku.github.io/reasonml-adt/</link>
+                <guid>https://oteku.github.io/reasonml-adt/</guid>
                 <description>&lt;p&gt;Les &lt;strong&gt;types de données algébriques&lt;&#x2F;strong&gt;, en anglais &lt;strong&gt;algebraic data types&lt;&#x2F;strong&gt; ou &lt;strong&gt;ADT&lt;&#x2F;strong&gt;, sont une classe de types de données composites, c&#x27;est à dire de nouveaux types créés dans un langage de programmation à partir de primitives de types.&lt;&#x2F;p&gt;
 &lt;p&gt;On distingue principalement 4 types d&#x27;ADT issus de la théorie des catégories : les types sommes, les types produits, les types exponentiels et les type récursifs. ReasonML permet de définir de nouveaux types permettat de modéliser les ADT, nous allons voir comment et leur intérêt.&lt;&#x2F;p&gt;
 </description>
@@ -32,8 +41,8 @@
             <item>
                 <title>ReasonML : la série</title>
                 <pubDate>Wed, 11 Dec 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/reasonml-serie/</link>
-                <guid>https%3A//oteku.github.io/reasonml-serie/</guid>
+                <link>https://oteku.github.io/reasonml-serie/</link>
+                <guid>https://oteku.github.io/reasonml-serie/</guid>
                 <description>&lt;p&gt;Je me lance dans l&#x27;exercice de la série d&#x27;article. Pour commencer, je souhaite partager avec vous un langage et un ecosytème qui me passionne depuis 3 ans &lt;strong&gt;ReasonML&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Si vous ne connaissez pas encore ce langage, il s&#x27;agit d&#x27;une syntaxe de &lt;strong&gt;OCaml&lt;&#x2F;strong&gt; développée au sein de Facebook par &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;jordwalke&quot;&gt;Jordan Walke&lt;&#x2F;a&gt;, le &lt;em&gt;papa&lt;&#x2F;em&gt; de ReactJS. Facebook n&#x27;en est pas à ses début avec l&#x27;écosystème OCaml puisque ce dernier a notament servi à réaliser le prototype de react avant de passer sur Javascript pour des raisons &lt;em&gt;marketing&lt;&#x2F;em&gt;, à réaliser la machine virtuelle PHP&#x2F;Hack &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;facebook&#x2F;hhvm&#x2F;tree&#x2F;master&#x2F;hphp&#x2F;hack&quot;&gt;HHVM&lt;&#x2F;a&gt; ou encore à réaliser le typechecker javascript &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;facebook&#x2F;flow&quot;&gt;Flow&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
 </description>
@@ -42,8 +51,8 @@
             <item>
                 <title>Thead to the Future</title>
                 <pubDate>Wed, 07 Aug 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/thread-to-the-future/</link>
-                <guid>https%3A//oteku.github.io/thread-to-the-future/</guid>
+                <link>https://oteku.github.io/thread-to-the-future/</link>
+                <guid>https://oteku.github.io/thread-to-the-future/</guid>
                 <description>&lt;p&gt;Je travaille actuellement sur un robot compagon nommé &lt;a href=&quot;https:&#x2F;&#x2F;www.cutii.io&#x2F;cutii&#x2F;&quot;&gt;Cutii&lt;&#x2F;a&gt; pour lequel nous avons besoins de communiquer sur port série entre le PC du robot et nos différentes cartes électronique, nous avons fait le choix il y a quelques mois d&#x27;implémenter une librairie de communication en Rust, afin de rendre plus sûrs et plus performants nos échanges. Ce billet vise à dresser un état des lieux de la gestion de communications asynchrones en Rust.&lt;&#x2F;p&gt;
 &lt;p&gt;Pour illustrer les exemples, imaginons que nous ayons un protocole simplifié de communication, nous permettant de faire des &lt;strong&gt;GET&lt;&#x2F;strong&gt; et &lt;strong&gt;SET&lt;&#x2F;strong&gt; sur des valeur, en mode requête &#x2F; réponse et sur port série :&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#212733;&quot;&gt;
@@ -61,8 +70,8 @@
             <item>
                 <title>Rust my Node.js</title>
                 <pubDate>Thu, 20 Jun 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/rust-my-node/</link>
-                <guid>https%3A//oteku.github.io/rust-my-node/</guid>
+                <link>https://oteku.github.io/rust-my-node/</link>
+                <guid>https://oteku.github.io/rust-my-node/</guid>
                 <description>&lt;p&gt;Si vous êtes développeur Node.js, vous vous confronterez tôt ou tard au développement d&#x27;addons natifs ... et à tout un lot de nouveaux problèmes : le langage C++ en lui même, mais également API V8, build system ou dépendance aux versions de V8. Pourtant dès que vous avez besoins de multi-threading, d&#x27;accès aux ressources machine ou même simplement pour réutiliser des librairies existantes vous n&#x27;y coupez pas. Ce billet vise à vous faire découvrir comment le langage Rust permet de rendre vos modules natifs &amp;quot;fast &amp;amp; safe&amp;quot;.&lt;&#x2F;p&gt;
 </description>
             </item>
@@ -70,8 +79,8 @@
             <item>
                 <title>Opérateur pipe en Rust ?</title>
                 <pubDate>Fri, 29 Mar 2019 00:00:00 +0000</pubDate>
-                <link>https%3A//oteku.github.io/pipe-macro-rust/</link>
-                <guid>https%3A//oteku.github.io/pipe-macro-rust/</guid>
+                <link>https://oteku.github.io/pipe-macro-rust/</link>
+                <guid>https://oteku.github.io/pipe-macro-rust/</guid>
                 <description>&lt;p&gt;L&#x27;absence d&#x27;opérateur de composition, similaire au &lt;code&gt;.&lt;&#x2F;code&gt; de Haskell, ou de pipeline similaire au &lt;code&gt;|&amp;gt;&lt;&#x2F;code&gt; de ReasonML et OCaml, est assez frustrante lors qu&#x27;on essaie de faire du code Rust déclaratif.&lt;&#x2F;p&gt;
 &lt;p&gt;Il est possible d&#x27;envisager la &lt;em&gt;dot notation&lt;&#x2F;em&gt; mais, d&#x27;une part ce n&#x27;est pas totalement satisfaisant et, d&#x27;autre part cela nécessite d&#x27;implémenter des traits pour chacun des types de données qui composent le flux de traitement.&lt;&#x2F;p&gt;
 </description>

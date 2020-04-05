@@ -122,6 +122,10 @@
                 <li class="">
                   <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
                 </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;tooling&#x2F;" target="_self">Tooling</a>
+                </li>
                   
                 <li class="">
                   <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
@@ -200,7 +204,7 @@
                   </li>
                   
                   <li>
-                    <a href="https://oteku.github.io/reasonml-modules/#signtures">Signtures</a>
+                    <a href="https://oteku.github.io/reasonml-modules/#signatures">Signatures</a>
                   </li>
                   
                   <li>
@@ -258,7 +262,7 @@
         <article class="post-content">
           <div><p>ReasonML intègre un système de <strong>programmation modulaire</strong>. Les modules offrent un mécanisme d'encapsulation et permettent d'organiser le code en unités logiques, en fournissant des espaces de noms (namespaces) utiles lors de leur utilisation. ReasonML propose un système de modules récursifs et paramétrables très puissant qui permet de fournir une grande généricité au code.</p>
 <p>En ReasonML, tout le code est encapsulé dans des modules. Si nous plaçons l'ensemble du code du <a href="../reasonml-adt">premier billet</a> dans un fichier <code>Hero.re</code>, cela définit automatiquement un module <code>Hero</code>.</p>
-<p id="zola-continue-reading"><a name="continue-reading"></a></p>
+<span id="continue-reading"></span>
 <blockquote>
 <p>Ce billet est le second de la série d'articles <a href="../reasonml-serie/#un-programme-reason-able">ReasonML : la série</a></p>
 </blockquote>
@@ -280,7 +284,7 @@
 <li>Le nom des modules et des types de modules commencent obligatoirement par une majuscule.</li>
 </ul>
 <p>Il n'y a pas de convention sur le nommages entre <code>camelCase</code> et <code>snake_case</code> : il est courant de voir les deux dans un projet ReasonML car la librairie standard est issue de OCaml où la norme est le <code>snake_case</code> alors que <code>Buckelscript</code> et d'autres librairies issues de la communauté javascript utilise le <code>camelCase</code> par homogénéité avec les pratiques JS.</p>
-<p>Il n'y a pas de bon choix entre les deux, je vous recommande donc d'en faire un et de vous y tenir pour votre code, sachant que vous utiliserez forcéménet à un moment une librairie qui aura fait un choix différent.</p>
+<p>Il n'y a pas de bon choix entre les deux, je vous recommande donc d'en faire un et de vous y tenir pour votre code, sachant que vous utiliserez forcément à un moment une librairie qui aura fait un choix différent.</p>
 <h2 id="open-modules">Open modules</h2>
 <p>Pour accèder au contenu d'un module, il est possible de l'ouvrir. Plutôt que d'écrire :</p>
 <pre style="background-color:#212733;">
@@ -386,7 +390,7 @@
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
 </span></pre>
 <p>Vous remarquerez le nommmage des types <code>t</code> : il s'agit d'une convention largement utilisée dans les écosystèmes ReasonML / OCaml, où le type nommé <code>t</code> désigne le type principal habitant le module. On utilise <code>Nation.t</code> plutôt que <code>Nation.nation</code> bien que ce ne soit pas une obligation.</p>
-<h2 id="signtures">Signtures</h2>
+<h2 id="signatures">Signatures</h2>
 <p>Les modules sont eux même statiquement typés statiquement. Il est donc possible de spécifier des types de modules. Pour notre exemple, nous décidons de créer un module <code>Traits</code> dans un fichier <code>Traits.re</code> :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
@@ -593,7 +597,7 @@
         </span><span style="color:#ccc9c2;">M</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">value</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
 </span></pre>
-<p>L'opérateur <code>with</code> permet d'ajouter des contraintes dans l'équiation de type du <code>module type</code>. Pratiquement cela nous permet ici de lever l'abstraction pour obtenir par exemple <code>ScarlarY.t = char</code>. Cela peut également permettre d'exprimer des contraintes entre plusieurs modules.</p>
+<p>L'opérateur <code>with</code> permet d'ajouter des contraintes dans l'équation de type du <code>module type</code>. Pratiquement cela nous permet ici de lever l'abstraction pour obtenir par exemple <code>ScarlarY.t = char</code>. Cela peut également permettre d'exprimer des contraintes entre plusieurs modules.</p>
 <h2 id="les-foncteurs">Les Foncteurs</h2>
 <p>ReasonML dispose aussi de modules fonctionnels, appelé foncteurs (functors). Il s'agit simplement de modules paramétrés par d'autres modules :</p>
 <pre style="background-color:#212733;">

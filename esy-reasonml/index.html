@@ -9,7 +9,7 @@
     <meta name="generator" content="Zola" />
     <link rel="shortcut icon" href="/img/hacker_mind.svg" />
     <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
-    <title>Take it esy</title>
+    <title>ReasonML : Outillage d&#x27;un projet</title>
      <link rel="alternate"
     type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
     <script
@@ -18,14 +18,14 @@
     ></script>
     <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
     
-<meta property="og:title" content="Take it esy" />
+<meta property="og:title" content="ReasonML : Outillage d&#x27;un projet" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="fr" />
 <meta property="og:img" content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg" />
 <meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;esy-reasonml&#x2F;" />
 <meta property="twitter:card" content="summary" />
-<meta property="twitter:title" content="Take it esy" />
+<meta property="twitter:title" content="ReasonML : Outillage d&#x27;un projet" />
 <meta property="twitter:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;esy-reasonml&#x2F;" />
 <meta property="twitter:description" content="" />
 <meta
@@ -122,6 +122,10 @@
                 <li class="">
                   <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
                 </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;tooling&#x2F;" target="_self">Tooling</a>
+                </li>
                   
                 <li class="">
                   <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
@@ -157,6 +161,52 @@
             <h3 class="navGroupCategoryTitle">Chapitres</h3>
             <ul class="">
               
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/esy-reasonml/#tirer-le-fil-du-destin"
+                  >Tirer le fil du destin</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/esy-reasonml/#take-it-esy">Take it Esy</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/esy-reasonml/#initialisation">Initialisation</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/esy-reasonml/#gestion-des-dependances">Gestion des dépendances</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/esy-reasonml/#pesy">Pesy</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/esy-reasonml/#changer-le-chemin"
+                  >Changer le chemin</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/esy-reasonml/#opam">Opam</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/esy-reasonml/#dune">Dune</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
             </ul>
           </div>
         </div>
@@ -170,17 +220,169 @@
       <div class="post">
         <header class="postHeader">
           <h1 class="postHeaderTitle">
-            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;esy-reasonml&#x2F;">Take it esy</a>
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;esy-reasonml&#x2F;">ReasonML : Outillage d&#x27;un projet</a>
           </h1>
           <p class="post-meta">
-            2019-06-17 | Temps de lecture 1 minutes
+            2020-03-23 | Temps de lecture 7 minutes
           </p>
           
           <a href="/tags/Tooling"> #Tooling </a>
           <a href="/tags/ReasonML"> #ReasonML </a>
         </header>
         <article class="post-content">
-          <div><p>Pour démarrer un projet ReasonML natif,</p>
+          <div><p>ReasonML natif dispose d'un outillage exceptionnel, grâce à l'ecosystème OCaml. Dans ce billet, je vous propose de créer depuis 0 un projet ReasonML natif. Nous parcourerons l'outillage de gestion de dépendance, de construction logicielle, de travail dans un bac à sable par projet.</p>
+<span id="continue-reading"></span>
+<blockquote>
+<p>Ce billet est le troisième de la série d'articles <a href="../reasonml-serie/#un-programme-reason-able">ReasonML : la série</a></p>
+</blockquote>
+<h1 id="tirer-le-fil-du-destin">Tirer le fil du destin</h1>
+<h2 id="take-it-esy">Take it Esy</h2>
+<p>Nous allons créer un projet nommé <code>sorte</code> (il s'agit du nom de la magie divinatoire pratiquée par les Strega de Vodacce).</p>
+<p>Nous allons utiliser <a href="https://esy.sh/">esy.sh</a>, pour l'installer avec npm <code>npm i -g esy</code>.</p>
+<p>Esy est une toolchain pour ReasonML et OCaml, inspirée du workflow de npm, et basée sur <a href="http://opam.ocaml.org">Opam</a> et <a href="https://dune.build/">Dune</a> dont nous parlerons ensuite.</p>
+<p><strong>Esy</strong> présente plusieurs intérêt :</p>
+<ul>
+<li>Un CLI unique pour plusieurs outils</li>
+<li>Le sandboxing des dépendances au niveau du projet</li>
+<li>Le fait de pouvoir coupler des dépenses issues de OPAM, NPM, GIT, REASON-NATIVE</li>
+<li>La simplification de la configuration Dune</li>
+</ul>
+<h2 id="initialisation">Initialisation</h2>
+<p>Dans notre répertoire projet, nous commençons par créer les fichiers nécessaire :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#f28779;">echo </span><span style="color:#bae67e;">&#39;(lang dune 1.11)\n (name sorte)&#39; </span><span style="color:#f29e74;">&gt;&gt;</span><span style="color:#ccc9c2;"> dune-project
+    </span><span style="color:#f28779;">echo </span><span style="color:#bae67e;">&#39;(dirs (:standard \ node_modules \ _esy))&#39; </span><span style="color:#f29e74;">&gt;&gt;</span><span style="color:#ccc9c2;"> dune
+    </span><span style="color:#ffd580;">touch</span><span style="color:#ccc9c2;"> package.json
+    </span><span style="color:#ffd580;">touch</span><span style="color:#ccc9c2;"> sorte.opam
+</span></pre>
+<ul>
+<li>Le fichier <a href="https://dune.readthedocs.io/en/latest/dune-files.html#dune-project">dune-project</a> se place à la racine du projet et sert à définir les informations communes, à minima la version de <strong>Dune</strong> utilisée.</li>
+</ul>
+<blockquote>
+<p>Au moment où j'écris ce billet, j'utilise la version 1.11, bien que la dernière version soit la 2.4 en raison de limite de esy avec la version 2</p>
+</blockquote>
+<ul>
+<li>Le fichier <a href="https://dune.readthedocs.io/en/latest/dune-files.html#dune">dune</a> se place à la racine et dans chaque répertoire qui correspond à une unité de compilation, c'est à dire une librairie ou un exécutable.</li>
+<li>Le fichier <a href="https://esy.sh/docs/en/concepts.html#manifest">package.json</a> est le manifeste du projet <strong>esy</strong>.</li>
+<li>Le fichier <code>sorte.opam</code> défini une librairie <strong>opam</strong>.</li>
+</ul>
+<h2 id="gestion-des-dependances">Gestion des dépendances</h2>
+<p>Commençons par éditer une première version du manifeste <code>package.json</code> :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">{
+  </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;version&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;0.0.1&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;description&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Sorte is a 7th characters builder written in ReasonML&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;license&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;MPL-2.0&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;scripts&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#5ccfe6;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;bash -c &#39;env PESY_MODE=update pesy&#39;&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;start&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;esy x SorteApp.exe&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;test&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;esy x TestSorte.exe&quot;
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;dependencies&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#5ccfe6;">&quot;@opam/dune&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;&gt;=1.11&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;@esy-ocaml/reason&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;ocaml&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;~4.8.1000&quot;
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;devDependencies&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#5ccfe6;">&quot;ocaml&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;~4.8.1000&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;refmterr&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;@opam/merlin&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;@reason-native/rely&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;
+  </span><span style="color:#ccc9c2;">}</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;esy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#5ccfe6;">&quot;build&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;dune build -p &lt;PACKAGE_NAME&gt;&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;buildDev&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;release&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#5ccfe6;">&quot;releasedBinaries&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;SorteApp.exe&quot;</span><span style="color:#ccc9c2;">]
+    }
+  }</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#5ccfe6;">&quot;buildDirs&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#5ccfe6;">&quot;lib&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#5ccfe6;">&quot;namespace&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Lib&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[]
+    }</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;bin&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#5ccfe6;">&quot;main&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;SorteApp&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;SorteApp.exe&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2;">]
+    }</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;test&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#5ccfe6;">&quot;namespace&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Test&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte.test&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;ocamloptFlags&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;-linkall&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#bae67e;">&quot;-g&quot;</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#bae67e;">&quot;rely.lib&quot;</span><span style="color:#ccc9c2;">]
+    }</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#5ccfe6;">&quot;test-runner&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#5ccfe6;">&quot;main&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;TestSorte&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;TestSorte.exe&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.test&quot;</span><span style="color:#ccc9c2;">]
+    }
+  }
+}
+</span></pre>
+<p>Comme vous le constatez, ce fichier mime le <a href="https://docs.npmjs.com/files/package.json">package.json de npmjs</a> avec quelques <a href="https://esy.sh/docs/en/configuration.html">spécificités propres à esy</a>.</p>
+<h3 id="scripts">Scripts</h3>
+<p>Les <code>scripts</code> fonctionnent comme pour npm, à la différence qu'ils se lancent avec la commande <code>esy [NOM_DU_SCRIPT]</code>.</p>
+<p>Pour installer les dépendances, il suffit d'exécuter la commande <code>esy install</code>. C'est là que Esy commmence à montrer son intérêt : à la différence de NPM, les dépendances sont installées dans votre <code>$HOME/.esy</code> et linkées dans le répertoire <code>node_modules</code> de votre projet. C'est à dire que, d'une part, elles sont sandboxées pour votre projet, et d'autre part, qu'elles ne sont installées qu'une seule fois pour tous les projets utilisant la même version de la dépendance : <strong>une sacrée optimisation pour votre disque dur</strong>.</p>
+<h3 id="dependencies">Dependencies</h3>
+<p>Vous constatez que certaines dépendances sont préfixées par un namespace :</p>
+<ul>
+<li><code>@opam/</code> : signifie que la librairie sur cherchée sur opam, par exemple <a href="http://opam.ocaml.org/packages/dune/">@opam/dune</a></li>
+<li><code>@reason-native/</code> : signifie que la librairie sur cherchée dans le projet <a href="https://reason-native.com/">reason-native.com</a> , par exemple <a href="https://github.com/facebookexperimental/reason-native/tree/master/src/rely">@reason-native/rely</a></li>
+</ul>
+<p>Il est également possible d'avoir des résolutions sur npm, préfixées par <code>@npm/</code>, utiles pour les projet <a href="https://ocsigen.org/js_of_ocaml/3.5.1/manual/overview">js_of_ocaml</a> ou depuis n'importe quelle origine en utilisant des <a href="https://esy.sh/docs/en/linking-workflow.html">resolutions</a></p>
+<p>Vous pouvez mainteant exécuter le commande :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> install
+</span></pre><h3 id="ajouter-des-dependances">Ajouter des dépendances</h3>
+<p>Il est bien sûr possible d'ajouter les dépendences directement en utilisant le CLI.
+Dans le cas de ce projet je souhaite utliser <a href="https://irmin.io">Irmin</a> dont je parlerai prochainement.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> add @opam/irmin @opam/irmin-unix @opam/irmin-git
+</span></pre><h2 id="pesy">Pesy</h2>
+<p>Devoir gérer un fichier Dune dans chaque répertoire est assez rébarbatif et rend difficile une vue d'ensemble sur des projets complexes. De plus, si vous n'êtes pas issu.e de l'écosystème <strong>OCaml</strong>, l'utilisation de <a href="https://en.wikipedia.org/wiki/S-expression">S-Expressions</a> vous est peut-être étrangère.</p>
+<p>Pour faciliter cela, <a href="https://github.com/esy/pesy">pesy</a> est très pratique. Cet sous-projet de <strong>esy</strong> vous permet de générer les répertoires de vos projets ainsi que les fichiers Dune, grâce à la définition d'un noeud <code>buildDirs</code> dans votre manifeste.</p>
+<h3 id="generation-de-configuration">Génération de configuration</h3>
+<p>Je vous propose une arborescence assez classique :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">        </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">-</span><span style="color:#ccc9c2;"> bin </span><span style="font-style:italic;color:#5c6773;">#contient l&#39;executable principal de notre projet
+        </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">-</span><span style="color:#ccc9c2;"> lib </span><span style="font-style:italic;color:#5c6773;">#contient le métier de notre projet
+        </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">-</span><span style="color:#ccc9c2;"> test </span><span style="font-style:italic;color:#5c6773;">#contient les tests de notre lib
+        </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">_</span><span style="color:#ccc9c2;"> test-runner </span><span style="font-style:italic;color:#5c6773;">#contient l&#39;execution de nos tests
+</span></pre>
+<p>Vous pouvez mainteant exécuter le commande suivante, qui correspond au script de votre manifeste :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> pesy
+</span></pre>
+<p>N'hésitez pas à consulter les fichiers Dune générer dans chaque répertoire, pour appréhender cet outtil.</p>
+<blockquote>
+<p>Si vous êtes déjà familier de Dune, vous remarquerez que l'attribut <strong>name</strong> correspond à l'attribut <strong>public_name</strong> de Dune alors que l'attribut <strong>namespace</strong> correspond à l'attribut <strong>name</strong> de Dune</p>
+</blockquote>
+<p>Vous pouvez ensuite compiler et executer le programme issu de cette génération.</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> build </span><span style="font-style:italic;color:#5c6773;"># compile le projet
+</span><span style="color:#ccc9c2;">    esy x SorteApp.exe </span><span style="font-style:italic;color:#5c6773;"># exécute l&#39;exécutable
+</span></pre>
+<p>ou le script que nous avons déclaré dans notre manifeste</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> start
+</span></pre>
+<p>Vous venez de réalisez votre premier <code>Hello world</code> en initialisant votre projet.</p>
+<p>Bien que beaucoup de <a href="https://github.com/esy/pesy/blob/master/site/docs/supported-config.md">configurations soient disponibles</a> via <strong>pesy</strong>, vous pouvez rencontrer des limitations. Dans ce cas, il vous suffit de supprimer le noeud <code>buildDirs</code> de votre manifeste et de continuer à gérer manuellement vos fichiers Dune.</p>
+<blockquote>
+<p>A partir de la version 0.5, actuellement en alpha, pesy permet également de démarrer un projet à partir d'un template, vous pouvez utiliser le mien : <code>pesy --template=github:oteku/reason-native-template</code></p>
+</blockquote>
+<p><img src="../img/sorte.jpg" alt="Sterga sorte" /></p>
+<h1 id="changer-le-chemin">Changer le chemin</h1>
+<p>L'outillage esy / pesy facilite grandement le démarrage d'un projet et apporte de nouveaux avantages, vu précedemment. Plus votre projet se complexifie, plus vous aurez besoin de néanmoins connaitre les outils sous-jacents que sont <strong>Opam</strong> et <strong>Dune</strong></p>
+<h2 id="opam">Opam</h2>
+<p>Il s'agit du gestionnaire de dépendances et du repository principal de package pour OCaml / ReasonML. Si vous souhaitez publier vos package ReasonML natifs, vous devrez vous y plonger. Rassurez vous, l'outillage est assez simple à prendre en main et <a href="http://opam.ocaml.org/doc/Packaging.html#Publishing">opam-publish</a> vous facilite le travail</p>
+<h2 id="dune">Dune</h2>
+<p>Dune est une chaine de compilation pour OCaml, ReasonML et Coq. Nous avons vu une configuration relativement simple à comprendre et assez commune, néanmoins les possibilités offerte par Dune sont nombreuses (profil de tests, génération de documentation, cross-compilation, ...).</p>
+<p>Un apport notable, si vous y avez prété attention dans notre exemple, est l'ajout de la notion de package. Nous avions vu avec les <a href="../esy-reasonml">modules ReasonML</a> leur côté pervasif et le fait qu'il n'était pas possible de regrouper plusieurs modules contenus dans des fichiers différents sous un même namespace. Dune introduit la notion de package au moment de la compilation qui permet d'aggrégé plusieurs fichiers sous un même package, qui est un module d'aggrégat au vu du code qui l'utilise, cela vient enrichir les possibilités offertes en terme d'espace de nommage au sein d'une même base de code.</p>
 </div>
         </article>
       </div>
