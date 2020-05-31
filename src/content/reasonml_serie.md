@@ -119,8 +119,8 @@ Dans cette série de découverte, nous aborderons ensemble prochainement :
 - [Types de données algébriques](../reasonml-adt)
 - [Les modules ReasonML](../reasonml-modules)
 - [Outillage d'un projet ReasonML](../esy-reasonml)
+- [Découverte d'Irmin](../irmin-database-reasonml)
 - Tests de propriétés
-- Compilation vers Javascript
 - GUI avec Revery
 
 Pour illustrer le propos, nous allons développer un générateur de personnage pour le jeu de rôle [Les secrets de la 7eme mer](http://www.legrog.org/jeux/secrets-de-la-7eme-mer) seconde édition.
