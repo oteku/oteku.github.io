@@ -14,7 +14,7 @@
                 <pubDate>Sun, 31 May 2020 00:00:00 +0000</pubDate>
                 <link>https://oteku.github.io/irmin-database-reasonml/</link>
                 <guid>https://oteku.github.io/irmin-database-reasonml/</guid>
-                <description>&lt;p&gt;Irmin est une base de données clé &#x2F; valeur, créée pour pouvoir être distribuée facilement et qui suit les principes de Git et codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.&lt;&#x2F;p&gt;
+                <description>&lt;p&gt;Irmin est une base de données clé &#x2F; valeur, créée pour pouvoir être distribuée facilement. Elle suit les principes de Git et est codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.&lt;&#x2F;p&gt;
 </description>
             </item>
         
