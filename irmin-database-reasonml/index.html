@@ -185,8 +185,8 @@
               </li>
               
               <li class="navListItem">
-                <a class="navItem" href="https://oteku.github.io/irmin-database-reasonml/#utilisation-avec-reasonml-ou-ocaml"
-                  >Utilisation avec ReasonML (ou OCaml)</a
+                <a class="navItem" href="https://oteku.github.io/irmin-database-reasonml/#utilisation-avec-reasonml"
+                  >Utilisation avec ReasonML</a
                 >
                 
                 <ul>
@@ -225,7 +225,7 @@
           <a href="/tags/ReasonML"> #ReasonML </a>
         </header>
         <article class="post-content">
-          <div><p>Irmin est une base de données clé / valeur, créée pour pouvoir être distribuée facilement et qui suit les principes de Git et codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.</p>
+          <div><p>Irmin est une base de données clé / valeur, créée pour pouvoir être distribuée facilement. Elle suit les principes de Git et est codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.</p>
 <span id="continue-reading"></span>
 <blockquote>
 <p>Bien que pouvant être lu indépendemment, ce billet est le quatrième de la série d'articles <a href="../reasonml-serie/#un-programme-reason-able">ReasonML : la série</a></p>
@@ -233,12 +233,12 @@
 <h1 id="yet-another-key-value-datastore">Yet another Key Value datastore ?</h1>
 <p>Il y a eu beaucoup de <em>hype</em> ces dernières années sur les bases de données clé / valeur, avec des produits comme <strong>Redis</strong>, Google <strong>LevelDB</strong>, Facebook <strong>rocksDB</strong>, Basho <strong>riak-kv</strong> ou encore Amazon <strong>DynamoDB</strong>. Alors est-ce que Irmin apporte quelque chose de nouveau ?</p>
 <h2 id="qu-est-ce-qu-une-base-cle-valeur">Qu'est-ce qu'une base clé / valeur ?</h2>
-<p>Une base de donnée clé / valeur est une base NoSQL qui stocke les données sous forme de paire clé-valeur, où la sert d'identifiant unique. On parle parfois également de <em>dictionnaire</em> ou de <em>table de hash</em>.</p>
+<p>Une base de donnée clé / valeur est une base NoSQL qui stocke les données sous forme de paire clé-valeur, où la clé sert d'identifiant unique. On parle parfois également de <em>dictionnaire</em> ou de <em>table de hash</em>.</p>
 <p><img src="../img/keys.png" alt="kv" /></p>
-<p>Ce type de datastore sont intéressant car ils sont fortement clusterisables, ce qui offre des capacités de scalabilité horizontale intéressante, mais également la capacité de pouvoir servir de base de données dans des applications réparties en pair à pair.</p>
+<p>Ce type de datastore sont intéressant car ils sont fortement clusterisables, ce qui offre des capacités de scalabilité horizontale intéressantes, ainsi que la capacité de pouvoir servir de base de données dans des applications réparties en pair-à-pair.</p>
 <h2 id="les-principaux-usages">Les principaux usages</h2>
 <h3 id="cache-serialise">Cache serialisé</h3>
-<p>Il s'agit surement de l'usage principal, sérialiser des valeurs indexées par une clé afin de partager une information entre plusieurs instances d'une même application.</p>
+<p>Il s'agit sûrement de l'usage principal, sérialiser des valeurs indexées par une clé afin de partager une information entre plusieurs instances d'une même application.</p>
 <p>Par exemple, tracer la dernière tentative de login d'une IP pour détecter des attaques Brute force :</p>
 <pre style="background-color:#212733;">
   | Key            | Value                       |
@@ -255,7 +255,7 @@
   | clé/81989876   |   Clé à pipe 19 mmm         |
   | clé/65997463   |   Clé à griffe 17 mm        |
 </pre><h3 id="base-document">Base document</h3>
-<p>Les bases orientées documents sont en réalité une spécialisation des bases clé/valeur, donc la valeur peut être un document, en général représenté au format JSON.</p>
+<p>Les bases orientées documents sont en réalité une spécialisation des bases clé/valeur, dont la valeur peut être un document, en général représenté au format JSON.</p>
 <p>Par exemple, un suivi d'une flotte de véhicules :</p>
 <pre style="background-color:#212733;">
   | Key            | Value                          |
@@ -285,12 +285,12 @@
   | topic/A/B/D    | { &quot;user&quot; : &quot;Jaine&quot;, &quot;msg&quot; : &quot;Ohiho&quot; } |
 </pre><h2 id="qu-est-ce-qu-irmin">Qu'est-ce qu'Irmin</h2>
 <p>Irmin est une base de données clé / valeur, qui permet donc de mettre en oeuvre les différents pattern vus précédemment, créé par l'équipe <a href="https://mirage.io">Mirage</a>. La promesse de cette solution est de proposer une entrepôt de données facilement distribuable, grâce aux principes de Git : branches et merges.</p>
-<p>Un plus de cela, Irmin propose nativement :</p>
+<p>En plus de cela, Irmin propose nativement :</p>
 <ul>
 <li>Un serveur HTTP / REST et un serveur GraphQL pour exposer une API</li>
-<li>Un système de snapshot pour les sauvegarde et restauration de données</li>
+<li>Un système de snapshot pour les sauvegardes et restauration de données</li>
 <li>Plusieurs backends (en mémoire, git, système de fichiers, fichiers partitionnés, fichiers compressés, unikernel mirageOS)</li>
-<li>La possibilité de créer son propre backend (redis, postgres, ...), il suffit de la coder en respectant les contrats de types fournis</li>
+<li>La possibilité de créer son propre backend (redis, postgres, ...), il suffit de le coder en respectant les contrats de types fournis</li>
 <li>Une solution portable sur système posix (Linux, macOS, Windows WSL, ...), dans un navigateur (grâce à <a href="https://github.com/ocsigen/js_of_ocaml">js_of_ocaml</a>) ou sur un unikernel MirageOS.</li>
 </ul>
 <h3 id="utilisation-standalone">Utilisation Standalone</h3>
@@ -298,7 +298,7 @@
 <p>Vérifiez votre version de OCaml :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">$ ocaml --version
-The OCaml toplevel, version &gt;=4.05.0
+The OCaml toplevel, version 4.10.0
 </span></pre>
 <p>Installez <code>irmin-unix</code> avec <code>opam</code></p>
 <pre style="background-color:#212733;">
@@ -341,7 +341,7 @@ $ irmin tree -s git
 
 {&quot;data&quot;:{&quot;master&quot;:{&quot;tree&quot;:{&quot;get&quot;:&quot;2020-03-18T11:12:55+0000&quot;}}}}
 </span></pre>
-<p>Le serveur est configuré avec un clients <a href="https://github.com/graphql/graphiql">GraphiQL</a> exposé à cette adresse : <a href="http://localhost:5000/graphql_">http://localhost:5000/graphql_</a> qui permet d'exploré le schéma et les données.</p>
+<p>Le serveur est configuré avec un clients <a href="https://github.com/graphql/graphiql">GraphiQL</a> exposé à cette adresse : <a href="http://localhost:5000/graphql_">http://localhost:5000/graphql_</a> qui permet d'explorer le schéma et les données.</p>
 <p>Irmin fournit en complément des clients en js et go :</p>
 <ul>
 <li>Js GraphQL client https://github.com/zshipko/irmin-js</li>
@@ -360,16 +360,16 @@ a549f1538a15e9865677189d84c607b4d4777646
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">$ irmin revert a549f1538a15e9865677189d84c607b4d4777646
 </span></pre><h3 id="distribuer-son-data-store">Distribuer son data store</h3>
-<p>Irmin permet de synchroniser plusieurs stores entre eux pour obtenir une base distribuée. A ce niveau, rien de magique, Irmin tiens sa promesse d'utilisation de Git, lui même un système distribué.</p>
-<p>Pour répliquer son store il suffit de <code>push</code> :</p>
+<p>Irmin permet de synchroniser plusieurs stores entre eux pour obtenir une base distribuée. A ce niveau, rien de magique, Irmin tient sa promesse d'utilisation de Git, lui-même un système distribué.</p>
+<p>Pour répliquer son store, il suffit de <code>push</code> :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">$ irmin push $MY_GIT_RMOTE_REPOSITORY
 </span></pre>
-<p>pour initialiser depuis un autre repository :</p>
+<p>pour initialiser depuis un autre repository de <code>clone</code> :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">$ irmin clone $MY_GIT_RMOTE_REPOSITORY
 </span></pre>
-<p>ou pour synchroniser</p>
+<p>ou pour synchroniser de <code>pull</code>:</p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">$ irmin pull -s $MY_GIT_RMOTE_REPOSITORY
 </span></pre><h3 id="une-autre-base-kv-avec-un-backend-git-un-serveur-graphql">Une autre base KV ... avec un backend git &amp; un serveur GraphQL</h3>
@@ -377,12 +377,12 @@ a549f1538a15e9865677189d84c607b4d4777646
 <p>Mais nous avons également quelques faiblesses :</p>
 <ul>
 <li>Le serveur GraphQL présente un schéma très &quot;technique&quot;, en gros il propose une exploration d'un serveur Git, dans une logique conception dirigée par les domaines, <a href="https://fsharpforfunandprofit.com/books/">DDD</a>, on préfèrerait exposer des <strong>domaines</strong></li>
-<li>Le système de type de cette base est extrêmement pauvre, puisqu'il propose 3 types : <code>string</code>, <code>json</code> ou <code>json_value</code></li>
+<li>Le système de types de cette base est extrêmement pauvre, puisqu'il propose 3 types : <code>string</code>, <code>json</code> ou <code>json_value</code></li>
 </ul>
-<h1 id="utilisation-avec-reasonml-ou-ocaml">Utilisation avec ReasonML (ou OCaml)</h1>
-<p>Là où <code>irmin-unix</code> est un CLI, Irmin est également distribué sous forme d'une collection de librairies OCaml.</p>
+<h1 id="utilisation-avec-reasonml">Utilisation avec ReasonML</h1>
+<p>Irmin est également distribué sous forme d'une collection de librairies OCaml, nous pouvons donc l'utiliser directement dans nos programmes <strong>ReasonML</strong>.</p>
 <h2 id="le-domaine">Le domaine</h2>
-<p>Revenons à l'exemple des précédents articles où nous avons commencer à travailler autour d'un créateur de personnages pour le jeu de rôle 7ème Mer ; pour notre exemple nous disposerons d'une version simplifié du domaine <strong>Hero</strong></p>
+<p>Revenons à l'exemple des précédents articles, où nous avons commencé à travailler autour d'un créateur de personnages pour le jeu de rôle 7ème Mer ; pour notre exemple nous disposerons d'une version simplifiée du domaine <strong>Hero</strong></p>
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">
     </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Nation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
@@ -411,10 +411,9 @@ a549f1538a15e9865677189d84c607b4d4777646
         </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
 </span></pre>
-<p>Cela nous permet par exemple de créer ces deux célèbres héros avec ces valeurs :</p>
+<p>Cela nous permet, par exemple, de créer ces deux célèbres héros avec ces valeurs :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">
-    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> inigo_montoya </span><span style="color:#f29e74;">=
+<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> inigo_montoya </span><span style="color:#f29e74;">=
     </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">{
         id</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;567de924-cc04-41a0-acc8-431dd332ce79&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
         name</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;Inigo Montoya&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
@@ -443,7 +442,7 @@ a549f1538a15e9865677189d84c607b4d4777646
 </span></pre><h2 id="jouons-avec-irmin">Jouons avec Irmin</h2>
 <p>Pour réaliser le programme à suivre, nous avons besoin des dépendances : <code>irmin</code>, <code>irmin-unix</code>, <code>irmin-git</code>, <code>lwt</code> et <code>lwt_ssl</code>. Si vous ne savez pas comment faire, lisez le billet sur l'<a href="../esy-reasonml/#gestion-des-dependances">outillage projet</a></p>
 <h3 id="des-donnees-type-safe">Des données &quot;type safe&quot;</h3>
-<p>Un des intérêts d'utiliser un système de typage statique est d'apporter plus de sécurité dans les valeurs manipulées, c'est bien ce qu'on va chercher pour les valeurs que nous voulons stocker grâce à Irmin. On ne peut pas directement utiliser nos types, mais on nous n'avons pas non plus à gérer un mapping entre deux systèmes de types distincts, comme on le fait habituellement avec un ORM. En effet, puisqu'on partage le même langage, Irmin permet d'utiliser n'importe quelle valeur de type <code>Irmin.Type.t('a)</code> pour définir les valeurs d'un store. Nous allons donc simplement créer des types compatibles, encapsulé dans un module : cette opération est relativement simple car Irmin fournit des fonctions pour représenter les <strong>variants</strong> et les <strong>record</strong></p>
+<p>Un des intérêts d'utiliser un système de typage statique est d'apporter plus de sécurité dans les valeurs manipulées, c'est bien ce qu'on va chercher pour les valeurs que nous voulons stocker grâce à Irmin. On ne peut pas directement utiliser nos types, mais nous n'avons pas non plus à gérer un mapping entre deux systèmes de types distincts, comme on le fait habituellement avec un ORM. En effet, puisqu'on partage le même langage, Irmin permet d'utiliser n'importe quelle valeur de type <code>Irmin.Type.t('a)</code> pour définir les valeurs d'un store. Nous allons donc simplement créer des types compatibles, encapsulés dans un module : cette opération est relativement simple car Irmin fournit des fonctions pour représenter les <strong>variants</strong> et les <strong>record</strong></p>
 <pre style="background-color:#212733;">
 <span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IrminHero </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
   </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">;
@@ -493,7 +492,7 @@ a549f1538a15e9865677189d84c607b4d4777646
 </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
 </span></pre>
 <p>J'ai mis ici le code pour vous montrer qu'il n'y a rien de magique, mais il est possible d'utiliser un ppx pour réduire le code <em>boilerplate</em> : <a href="https://github.com/mirage/irmin/blob/master/README_PPX.md">https://github.com/mirage/irmin/blob/master/README_PPX.md</a></p>
-<p>Maintenant que nous avons nos types, il nous reste à définir un data store et les opérations sur ce store. Encore une fois, cela est très facile grâce aux <a href="../reasonml-modules/#les-foncteurs">Foncteurs</a> mis à disposition par Irmin :</p>
+<p>A présent que nous avons nos types, il nous reste à définir un data store et les opérations sur ce store. Cela est très facile grâce aux <a href="../reasonml-modules/#les-foncteurs">Foncteurs</a> mis à disposition par Irmin :</p>
 <pre style="background-color:#212733;">
 <span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">HeroStore </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin_unix</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Git</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">FS</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">KV(IrminHero)</span><span style="color:#f29e74;">;
 </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Sync </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Sync(HeroStore)</span><span style="color:#f29e74;">;
@@ -522,7 +521,7 @@ a549f1538a15e9865677189d84c607b4d4777646
 
 </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> main </span><span style="color:#f29e74;">=
   </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">join</span><span style="color:#ccc9c2;">([
-    HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)
+    HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(gitConfig)
     </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master
     </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
       t </span><span style="color:#f29e74;">=&gt;
@@ -538,7 +537,7 @@ a549f1538a15e9865677189d84c607b4d4777646
             </span><span style="color:#f29e74;">&gt;|= </span><span style="color:#ccc9c2;">(s </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">assert</span><span style="color:#ccc9c2;">(s </span><span style="color:#f29e74;">==</span><span style="color:#ccc9c2;"> inigo_montoya))
         )
     )</span><span style="color:#f29e74;">,
-    </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)
+    </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(gitConfig)
     </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master
     </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
       t </span><span style="color:#f29e74;">=&gt;
@@ -556,16 +555,16 @@ a549f1538a15e9865677189d84c607b4d4777646
   </span><span style="color:#ccc9c2;">])
   </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
     () </span><span style="color:#f29e74;">=&gt;
-      </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)
+      </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(gitConfig)
       </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master
-      </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Sync</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">push</span><span style="color:#ccc9c2;">(t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> git_remote))
+      </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Sync</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">push</span><span style="color:#ccc9c2;">(t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> gitRemote))
   )
   </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">print_endline</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;finished&quot;</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">|&gt; </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
 
 </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">() </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Lwt_main</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">run</span><span style="color:#ccc9c2;">(main)</span><span style="color:#f29e74;">;
 
 </span></pre>
-<p>Et voilà ! J'ai présenté Irmin lors du Lambda Remote 2 dont voici la vidéo :</p>
+<p>Et voilà ! J'ai également présenté Irmin lors du Lambda Remote 2 dont voici la vidéo :</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BT2e-DkcVQo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
         </article>

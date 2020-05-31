@@ -6,7 +6,7 @@ draft = false
 tags = ["ReasonML"]
 +++
 
-Irmin est une base de données clé / valeur, créée pour pouvoir être distribuée facilement et qui suit les principes de Git et codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.
+Irmin est une base de données clé / valeur, créée pour pouvoir être distribuée facilement. Elle suit les principes de Git et est codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.
 
 <!-- more -->
 
@@ -18,17 +18,17 @@ Il y a eu beaucoup de _hype_ ces dernières années sur les bases de données cl
 
 ## Qu'est-ce qu'une base clé / valeur ?
 
-Une base de donnée clé / valeur est une base NoSQL qui stocke les données sous forme de paire clé-valeur, où la sert d'identifiant unique. On parle parfois également de _dictionnaire_ ou de _table de hash_.
+Une base de donnée clé / valeur est une base NoSQL qui stocke les données sous forme de paire clé-valeur, où la clé sert d'identifiant unique. On parle parfois également de _dictionnaire_ ou de _table de hash_.
 
 ![kv](../img/keys.png)
 
-Ce type de datastore sont intéressant car ils sont fortement clusterisables, ce qui offre des capacités de scalabilité horizontale intéressante, mais également la capacité de pouvoir servir de base de données dans des applications réparties en pair à pair.
+Ce type de datastore sont intéressant car ils sont fortement clusterisables, ce qui offre des capacités de scalabilité horizontale intéressantes, ainsi que la capacité de pouvoir servir de base de données dans des applications réparties en pair-à-pair.
 
 ## Les principaux usages
 
 ### Cache serialisé
 
-Il s'agit surement de l'usage principal, sérialiser des valeurs indexées par une clé afin de partager une information entre plusieurs instances d'une même application.
+Il s'agit sûrement de l'usage principal, sérialiser des valeurs indexées par une clé afin de partager une information entre plusieurs instances d'une même application.
 
 Par exemple, tracer la dernière tentative de login d'une IP pour détecter des attaques Brute force :
 
@@ -51,7 +51,7 @@ Par exemple un catalogue de référeces d'outils :
 
 ### Base document
 
-Les bases orientées documents sont en réalité une spécialisation des bases clé/valeur, donc la valeur peut être un document, en général représenté au format JSON.
+Les bases orientées documents sont en réalité une spécialisation des bases clé/valeur, dont la valeur peut être un document, en général représenté au format JSON.
 
 Par exemple, un suivi d'une flotte de véhicules :
 
@@ -88,12 +88,12 @@ Par exemple, créer un système de messagerie :
 
 Irmin est une base de données clé / valeur, qui permet donc de mettre en oeuvre les différents pattern vus précédemment, créé par l'équipe [Mirage](https://mirage.io). La promesse de cette solution est de proposer une entrepôt de données facilement distribuable, grâce aux principes de Git : branches et merges.
 
-Un plus de cela, Irmin propose nativement :
+En plus de cela, Irmin propose nativement :
 
 - Un serveur HTTP / REST et un serveur GraphQL pour exposer une API
-- Un système de snapshot pour les sauvegarde et restauration de données
+- Un système de snapshot pour les sauvegardes et restauration de données
 - Plusieurs backends (en mémoire, git, système de fichiers, fichiers partitionnés, fichiers compressés, unikernel mirageOS)
-- La possibilité de créer son propre backend (redis, postgres, ...), il suffit de la coder en respectant les contrats de types fournis
+- La possibilité de créer son propre backend (redis, postgres, ...), il suffit de le coder en respectant les contrats de types fournis
 - Une solution portable sur système posix (Linux, macOS, Windows WSL, ...), dans un navigateur (grâce à [js_of_ocaml](https://github.com/ocsigen/js_of_ocaml)) ou sur un unikernel MirageOS.
 
 ### Utilisation Standalone
@@ -104,7 +104,7 @@ Vérifiez votre version de OCaml :
 
 ```shell
 $ ocaml --version
-The OCaml toplevel, version >=4.05.0
+The OCaml toplevel, version 4.10.0
 ```
 
 Installez `irmin-unix` avec `opam`
@@ -159,7 +159,7 @@ $ curl -X POST -d '{"query": "{master{tree{get(key:\"149.178.232.77\")}}}"}' \
 {"data":{"master":{"tree":{"get":"2020-03-18T11:12:55+0000"}}}}
 ```
 
-Le serveur est configuré avec un clients [GraphiQL](https://github.com/graphql/graphiql) exposé à cette adresse : [http://localhost:5000/graphql\_](http://localhost:5000/graphql_) qui permet d'exploré le schéma et les données.
+Le serveur est configuré avec un clients [GraphiQL](https://github.com/graphql/graphiql) exposé à cette adresse : [http://localhost:5000/graphql\_](http://localhost:5000/graphql_) qui permet d'explorer le schéma et les données.
 
 Irmin fournit en complément des clients en js et go :
 
@@ -185,21 +185,21 @@ $ irmin revert a549f1538a15e9865677189d84c607b4d4777646
 
 ### Distribuer son data store
 
-Irmin permet de synchroniser plusieurs stores entre eux pour obtenir une base distribuée. A ce niveau, rien de magique, Irmin tiens sa promesse d'utilisation de Git, lui même un système distribué.
+Irmin permet de synchroniser plusieurs stores entre eux pour obtenir une base distribuée. A ce niveau, rien de magique, Irmin tient sa promesse d'utilisation de Git, lui-même un système distribué.
 
-Pour répliquer son store il suffit de `push` :
+Pour répliquer son store, il suffit de `push` :
 
 ```shell
 $ irmin push $MY_GIT_RMOTE_REPOSITORY
 ```
 
-pour initialiser depuis un autre repository :
+pour initialiser depuis un autre repository de `clone` :
 
 ```shell
 $ irmin clone $MY_GIT_RMOTE_REPOSITORY
 ```
 
-ou pour synchroniser
+ou pour synchroniser de `pull`:
 
 ```shell
 $ irmin pull -s $MY_GIT_RMOTE_REPOSITORY
@@ -212,15 +212,15 @@ A ce stade, nous avons donc "simplement" une base clé / valeur traditionnelle, 
 Mais nous avons également quelques faiblesses :
 
 - Le serveur GraphQL présente un schéma très "technique", en gros il propose une exploration d'un serveur Git, dans une logique conception dirigée par les domaines, [DDD](https://fsharpforfunandprofit.com/books/), on préfèrerait exposer des **domaines**
-- Le système de type de cette base est extrêmement pauvre, puisqu'il propose 3 types : `string`, `json` ou `json_value`
+- Le système de types de cette base est extrêmement pauvre, puisqu'il propose 3 types : `string`, `json` ou `json_value`
 
-# Utilisation avec ReasonML (ou OCaml)
+# Utilisation avec ReasonML
 
-Là où `irmin-unix` est un CLI, Irmin est également distribué sous forme d'une collection de librairies OCaml.
+Irmin est également distribué sous forme d'une collection de librairies OCaml, nous pouvons donc l'utiliser directement dans nos programmes **ReasonML**.
 
 ## Le domaine
 
-Revenons à l'exemple des précédents articles où nous avons commencer à travailler autour d'un créateur de personnages pour le jeu de rôle 7ème Mer ; pour notre exemple nous disposerons d'une version simplifié du domaine **Hero**
+Revenons à l'exemple des précédents articles, où nous avons commencé à travailler autour d'un créateur de personnages pour le jeu de rôle 7ème Mer ; pour notre exemple nous disposerons d'une version simplifiée du domaine **Hero**
 
 ```reason
 
@@ -251,10 +251,9 @@ Revenons à l'exemple des précédents articles où nous avons commencer à trav
     };
 ```
 
-Cela nous permet par exemple de créer ces deux célèbres héros avec ces valeurs :
+Cela nous permet, par exemple, de créer ces deux célèbres héros avec ces valeurs :
 
 ```reason
-
     let inigo_montoya =
     Hero.{
         id: "567de924-cc04-41a0-acc8-431dd332ce79",
@@ -289,7 +288,7 @@ Pour réaliser le programme à suivre, nous avons besoin des dépendances : `irm
 
 ### Des données "type safe"
 
-Un des intérêts d'utiliser un système de typage statique est d'apporter plus de sécurité dans les valeurs manipulées, c'est bien ce qu'on va chercher pour les valeurs que nous voulons stocker grâce à Irmin. On ne peut pas directement utiliser nos types, mais on nous n'avons pas non plus à gérer un mapping entre deux systèmes de types distincts, comme on le fait habituellement avec un ORM. En effet, puisqu'on partage le même langage, Irmin permet d'utiliser n'importe quelle valeur de type `Irmin.Type.t('a)` pour définir les valeurs d'un store. Nous allons donc simplement créer des types compatibles, encapsulé dans un module : cette opération est relativement simple car Irmin fournit des fonctions pour représenter les **variants** et les **record**
+Un des intérêts d'utiliser un système de typage statique est d'apporter plus de sécurité dans les valeurs manipulées, c'est bien ce qu'on va chercher pour les valeurs que nous voulons stocker grâce à Irmin. On ne peut pas directement utiliser nos types, mais nous n'avons pas non plus à gérer un mapping entre deux systèmes de types distincts, comme on le fait habituellement avec un ORM. En effet, puisqu'on partage le même langage, Irmin permet d'utiliser n'importe quelle valeur de type `Irmin.Type.t('a)` pour définir les valeurs d'un store. Nous allons donc simplement créer des types compatibles, encapsulés dans un module : cette opération est relativement simple car Irmin fournit des fonctions pour représenter les **variants** et les **record**
 
 ```reason
 module IrminHero = {
@@ -342,7 +341,7 @@ module IrminHero = {
 
 J'ai mis ici le code pour vous montrer qu'il n'y a rien de magique, mais il est possible d'utiliser un ppx pour réduire le code _boilerplate_ : [https://github.com/mirage/irmin/blob/master/README_PPX.md](https://github.com/mirage/irmin/blob/master/README_PPX.md)
 
-Maintenant que nous avons nos types, il nous reste à définir un data store et les opérations sur ce store. Encore une fois, cela est très facile grâce aux [Foncteurs](../reasonml-modules/#les-foncteurs) mis à disposition par Irmin :
+A présent que nous avons nos types, il nous reste à définir un data store et les opérations sur ce store. Cela est très facile grâce aux [Foncteurs](../reasonml-modules/#les-foncteurs) mis à disposition par Irmin :
 
 ```reason
 module HeroStore = Irmin_unix.Git.FS.KV(IrminHero);
@@ -381,7 +380,7 @@ open Lwt.Infix;
 
 let main =
   Lwt.join([
-    HeroStore.Repo.v(git_config)
+    HeroStore.Repo.v(gitConfig)
     >>= HeroStore.master
     >>= (
       t =>
@@ -397,7 +396,7 @@ let main =
             >|= (s => assert(s == inigo_montoya))
         )
     ),
-    HeroStore.Repo.v(git_config)
+    HeroStore.Repo.v(gitConfig)
     >>= HeroStore.master
     >>= (
       t =>
@@ -415,9 +414,9 @@ let main =
   ])
   >>= (
     () =>
-      HeroStore.Repo.v(git_config)
+      HeroStore.Repo.v(gitConfig)
       >>= HeroStore.master
-      >>= (t => Sync.push(t, git_remote))
+      >>= (t => Sync.push(t, gitRemote))
   )
   >>= (_ => print_endline("finished") |> Lwt.return);
 
@@ -425,6 +424,6 @@ let () = Lwt_main.run(main);
 
 ```
 
-Et voilà ! J'ai présenté Irmin lors du Lambda Remote 2 dont voici la vidéo :
+Et voilà ! J'ai également présenté Irmin lors du Lambda Remote 2 dont voici la vidéo :
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BT2e-DkcVQo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
