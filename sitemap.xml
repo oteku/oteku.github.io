@@ -14,6 +14,13 @@
         </url>
     
         <url>
+            <loc>https://oteku.github.io/irmin-database-reasonml/</loc>
+            
+                <lastmod>2020-05-31</lastmod>
+            
+        </url>
+    
+        <url>
             <loc>https://oteku.github.io/pipe-macro-rust/</loc>
             
                 <lastmod>2019-03-29</lastmod>

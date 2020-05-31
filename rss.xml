@@ -7,7 +7,16 @@
         <generator>Zola</generator>
         <language>fr</language>
         <atom:link href="https://oteku.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sun, 31 May 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Découverte de la base de données Irmin</title>
+                <pubDate>Sun, 31 May 2020 00:00:00 +0000</pubDate>
+                <link>https://oteku.github.io/irmin-database-reasonml/</link>
+                <guid>https://oteku.github.io/irmin-database-reasonml/</guid>
+                <description>&lt;p&gt;Irmin est une base de données clé &#x2F; valeur, créée pour pouvoir être distribuée facilement et qui suit les principes de Git et codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>ReasonML : Outillage d&#x27;un projet</title>

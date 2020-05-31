@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta name="description" content="" />
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>Découverte de la base de données Irmin</title>
+     <link rel="alternate"
+    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+<meta property="og:title" content="Découverte de la base de données Irmin" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr" />
+<meta property="og:img" content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg" />
+<meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;irmin-database-reasonml&#x2F;" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content="Découverte de la base de données Irmin" />
+<meta property="twitter:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;irmin-database-reasonml&#x2F;" />
+<meta property="twitter:description" content="" />
+<meta
+  property="twiter:image"
+  content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+  crossorigin="anonymous"
+/>
+
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
+
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;reasonml&#x2F;" target="_self">ReasonML</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;tooling&#x2F;" target="_self">Tooling</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+    </div>
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Chapitres</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Chapitres</h3>
+            <ul class="">
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/irmin-database-reasonml/#yet-another-key-value-datastore"
+                  >Yet another Key Value datastore ?</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/irmin-database-reasonml/#qu-est-ce-qu-une-base-cle-valeur">Qu&#x27;est-ce qu&#x27;une base clé &#x2F; valeur ?</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/irmin-database-reasonml/#les-principaux-usages">Les principaux usages</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/irmin-database-reasonml/#qu-est-ce-qu-irmin">Qu&#x27;est-ce qu&#x27;Irmin</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/irmin-database-reasonml/#utilisation-avec-reasonml-ou-ocaml"
+                  >Utilisation avec ReasonML (ou OCaml)</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/irmin-database-reasonml/#le-domaine">Le domaine</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/irmin-database-reasonml/#jouons-avec-irmin">Jouons avec Irmin</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;irmin-database-reasonml&#x2F;">Découverte de la base de données Irmin</a>
+          </h1>
+          <p class="post-meta">
+            2020-05-31 | Temps de lecture 10 minutes
+          </p>
+          
+          <a href="/tags/ReasonML"> #ReasonML </a>
+        </header>
+        <article class="post-content">
+          <div><p>Irmin est une base de données clé / valeur, créée pour pouvoir être distribuée facilement et qui suit les principes de Git et codée en OCaml. Une promesse suffisament intéressante pour y consacrer un billet.</p>
+<span id="continue-reading"></span>
+<blockquote>
+<p>Bien que pouvant être lu indépendemment, ce billet est le quatrième de la série d'articles <a href="../reasonml-serie/#un-programme-reason-able">ReasonML : la série</a></p>
+</blockquote>
+<h1 id="yet-another-key-value-datastore">Yet another Key Value datastore ?</h1>
+<p>Il y a eu beaucoup de <em>hype</em> ces dernières années sur les bases de données clé / valeur, avec des produits comme <strong>Redis</strong>, Google <strong>LevelDB</strong>, Facebook <strong>rocksDB</strong>, Basho <strong>riak-kv</strong> ou encore Amazon <strong>DynamoDB</strong>. Alors est-ce que Irmin apporte quelque chose de nouveau ?</p>
+<h2 id="qu-est-ce-qu-une-base-cle-valeur">Qu'est-ce qu'une base clé / valeur ?</h2>
+<p>Une base de donnée clé / valeur est une base NoSQL qui stocke les données sous forme de paire clé-valeur, où la sert d'identifiant unique. On parle parfois également de <em>dictionnaire</em> ou de <em>table de hash</em>.</p>
+<p><img src="../img/keys.png" alt="kv" /></p>
+<p>Ce type de datastore sont intéressant car ils sont fortement clusterisables, ce qui offre des capacités de scalabilité horizontale intéressante, mais également la capacité de pouvoir servir de base de données dans des applications réparties en pair à pair.</p>
+<h2 id="les-principaux-usages">Les principaux usages</h2>
+<h3 id="cache-serialise">Cache serialisé</h3>
+<p>Il s'agit surement de l'usage principal, sérialiser des valeurs indexées par une clé afin de partager une information entre plusieurs instances d'une même application.</p>
+<p>Par exemple, tracer la dernière tentative de login d'une IP pour détecter des attaques Brute force :</p>
+<pre style="background-color:#212733;">
+  | Key            | Value                       |
+  | ---------------|---------------------------: |
+  | 149.178.232.77 |   2020-03-18T11:12:55+0000  |
+  | 120.32.234.80  |   2020-03-10T19:08:37+0000  |
+</pre><h3 id="directory">Directory</h3>
+<p>Les clés peuvent être organisées de manière arborescente afin de modéliser un annuaire ou un catalogue.</p>
+<p>Par exemple un catalogue de référeces d'outils :</p>
+<pre style="background-color:#212733;">
+  | Key            | Value                       |
+  | ---------------|---------------------------: |
+  | clé/60044201   |   Clé à molette 380 mm      |
+  | clé/81989876   |   Clé à pipe 19 mmm         |
+  | clé/65997463   |   Clé à griffe 17 mm        |
+</pre><h3 id="base-document">Base document</h3>
+<p>Les bases orientées documents sont en réalité une spécialisation des bases clé/valeur, donc la valeur peut être un document, en général représenté au format JSON.</p>
+<p>Par exemple, un suivi d'une flotte de véhicules :</p>
+<pre style="background-color:#212733;">
+  | Key            | Value                          |
+  | ---------------|------------------------------: |
+  | 5Y2SR67049Z45  |   {&quot;color&quot; : &quot;Black&quot;,          |
+  |                |        &quot;license&quot; : &quot;MYCAR00&quot;,  |
+  |                |        &quot;year&quot; : &quot;2012&quot;,        |
+  |                |        &quot;make_and_model&quot; :      |
+  |                |         [&quot;Honda&quot;, &quot;Civic&quot;],    |
+  |                |        &quot;owner&quot; : &quot;Mike Jones&quot;} |
+  | ---------------|------------------------------: |
+  | 7B1QK0987X976  |   {&quot;color&quot; : &quot;Kaki&quot;,           |
+  |                |        &quot;license&quot; : &quot;ABCDSZ&quot;,   |
+  |                |        &quot;year&quot; : &quot;2007&quot;,        |
+  |                |        &quot;make_and_model&quot; :      |
+  |                |         [&quot;Renault&quot;, &quot;Twingo&quot;], |
+  |                |        &quot;owner&quot; :&quot;Danny Boon&quot;}  |
+  | ---------------|------------------------------: |
+</pre><h3 id="middelware-de-pub-sub">Middelware de PUB/SUB</h3>
+<p>Publish-Subscribe est un pattern de messagerie où les éditeurs de messages catégorisent les messages publiés sans connaitre les abonnés qui les consommeront. Il est courant d'utiliser une base KV pour gérer le pipeline de messages. Cela demande en général du code complémentaire pour créer un middleware de PUB/SUB, cependant certaines bases comme <em>Redis</em> intègrent nativement genre de mécanisme.</p>
+<p>Par exemple, créer un système de messagerie :</p>
+<pre style="background-color:#212733;">
+  | Key            | Value                                 |
+  | ---------------|-------------------------------------: |
+  | topic/A/B/C    | { &quot;user&quot; : &quot;John&quot;, &quot;msg&quot; : &quot;coucou&quot; } |
+  | topic/A/B/C    | { &quot;user&quot; : &quot;Jack&quot;, &quot;msg&quot; : &quot;Yo!!&quot; }   |
+  | topic/A/B/D    | { &quot;user&quot; : &quot;Jaine&quot;, &quot;msg&quot; : &quot;Ohiho&quot; } |
+</pre><h2 id="qu-est-ce-qu-irmin">Qu'est-ce qu'Irmin</h2>
+<p>Irmin est une base de données clé / valeur, qui permet donc de mettre en oeuvre les différents pattern vus précédemment, créé par l'équipe <a href="https://mirage.io">Mirage</a>. La promesse de cette solution est de proposer une entrepôt de données facilement distribuable, grâce aux principes de Git : branches et merges.</p>
+<p>Un plus de cela, Irmin propose nativement :</p>
+<ul>
+<li>Un serveur HTTP / REST et un serveur GraphQL pour exposer une API</li>
+<li>Un système de snapshot pour les sauvegarde et restauration de données</li>
+<li>Plusieurs backends (en mémoire, git, système de fichiers, fichiers partitionnés, fichiers compressés, unikernel mirageOS)</li>
+<li>La possibilité de créer son propre backend (redis, postgres, ...), il suffit de la coder en respectant les contrats de types fournis</li>
+<li>Une solution portable sur système posix (Linux, macOS, Windows WSL, ...), dans un navigateur (grâce à <a href="https://github.com/ocsigen/js_of_ocaml">js_of_ocaml</a>) ou sur un unikernel MirageOS.</li>
+</ul>
+<h3 id="utilisation-standalone">Utilisation Standalone</h3>
+<p>Commençons par une utilisation <em>standalone</em> d'Irmin. En pré-requis, vous devez disposer d'un installation de <a href="http://opam.ocaml.org/doc/Install.html">opam</a> et <a href="https://ocaml.org/docs/install.fr.html">OCaml</a> en version supérieur à la <code>4.05.0</code></p>
+<p>Vérifiez votre version de OCaml :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ ocaml --version
+The OCaml toplevel, version &gt;=4.05.0
+</span></pre>
+<p>Installez <code>irmin-unix</code> avec <code>opam</code></p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ opam install irmin-unix
+</span></pre>
+<p>Créez votre première base Irmin :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ mkdir -p /tmp/irmin/example &amp;&amp; cd /tmp/irmin/example
+$ irmin init
+</span></pre>
+<p>Nous pouvons maintenant utiliser notre base avec le CLI :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ irmin set -s git &quot;149.178.232.77&quot; 2020-03-18T11:12:55+0000
+$ irmin get -s git &quot;149.178.232.77&quot;
+2020-03-18T11:12:55+0000
+$ irmin set -s git cle/60044201 &quot;Clé à molette 380 mm&quot;
+$ irmin list -s git /
+FILE 149.178.232.77
+DIR cle
+$ irmin tree -s git
+/cle/60044201.........................................Clé à molette 380 mm
+/149.178.232.77.....................................2020-03-18T11:12:55+0000
+
+</span></pre>
+<p>Les commandes se lisent :</p>
+<ul>
+<li><code>irmin set</code> permet d'écrire une valeur, l'argument <code>-s</code> permet de spécifier le backend (ici git), le premier paramètre représente la clé et le second la valeur ; comme on le voit une clé peut être une chaine de caractère ou un path.</li>
+<li><code>irmin get</code> permet de lire une valeur, le premier paramètre représente la clé dont on veut récupérer la valeur</li>
+<li><code>irmin tree</code> permet de lire les données d'un store et <code>irmin list $PATH</code> liste le contenu d'un path spécifique</li>
+</ul>
+<h3 id="serveur-graphql-integre">Serveur Graphql intégré</h3>
+<p>La librairie <code>irmin-unix</code> dispose également d'un serveur GraphQL prêt à l'emploi :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ irmin graphql --port 5000
+</span></pre>
+<p>Nous pouvons maintenant utiliser un client graphQL (ou n'importe quel client capable d'exécuter une requête POST) pour consilter nos données, par exemple avec <code>curl</code> nous pouvons lire la valeur stockée précédemment :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ curl -X POST -d &#39;{&quot;query&quot;: &quot;{master{tree{get(key:\&quot;149.178.232.77\&quot;)}}}&quot;}&#39; \
+-H &quot;Content-Type: application/json&quot; http://localhost:5000/graphql
+
+{&quot;data&quot;:{&quot;master&quot;:{&quot;tree&quot;:{&quot;get&quot;:&quot;2020-03-18T11:12:55+0000&quot;}}}}
+</span></pre>
+<p>Le serveur est configuré avec un clients <a href="https://github.com/graphql/graphiql">GraphiQL</a> exposé à cette adresse : <a href="http://localhost:5000/graphql_">http://localhost:5000/graphql_</a> qui permet d'exploré le schéma et les données.</p>
+<p>Irmin fournit en complément des clients en js et go :</p>
+<ul>
+<li>Js GraphQL client https://github.com/zshipko/irmin-js</li>
+<li>Go GraphQL client https://github.com/zshipko/irmin-go</li>
+</ul>
+<blockquote>
+<p>Il est également possible de démarrer une api HTTP REST, pour cela il suffit d'exécuter <code>irmin init --daemon</code>. Cependant cette API est assez bas niveau et non documenté, il est recommander d'utiliser l'API Graphql ou bien de coder votre propre API haut niveau si nécessaire</p>
+</blockquote>
+<h3 id="sauvegarde-et-restauration-de-base">Sauvegarde et restauration de base</h3>
+<p>Il est également possible de faire une sauvegarde de sa base :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ irmin snapshot
+a549f1538a15e9865677189d84c607b4d4777646
+</span></pre>
+<p>puis de la restaurer à partir du SHA1 :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ irmin revert a549f1538a15e9865677189d84c607b4d4777646
+</span></pre><h3 id="distribuer-son-data-store">Distribuer son data store</h3>
+<p>Irmin permet de synchroniser plusieurs stores entre eux pour obtenir une base distribuée. A ce niveau, rien de magique, Irmin tiens sa promesse d'utilisation de Git, lui même un système distribué.</p>
+<p>Pour répliquer son store il suffit de <code>push</code> :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ irmin push $MY_GIT_RMOTE_REPOSITORY
+</span></pre>
+<p>pour initialiser depuis un autre repository :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ irmin clone $MY_GIT_RMOTE_REPOSITORY
+</span></pre>
+<p>ou pour synchroniser</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">$ irmin pull -s $MY_GIT_RMOTE_REPOSITORY
+</span></pre><h3 id="une-autre-base-kv-avec-un-backend-git-un-serveur-graphql">Une autre base KV ... avec un backend git &amp; un serveur GraphQL</h3>
+<p>A ce stade, nous avons donc &quot;simplement&quot; une base clé / valeur traditionnelle, intégrant les principes de Git et un serveur GraphQL : c'est déjà très intéressant ! En quelques lignes de commandes, nous avons notre base local et la possibilité de la synchroniser avec n'importe quel serveur Git, y compris Gitlab ou Github.</p>
+<p>Mais nous avons également quelques faiblesses :</p>
+<ul>
+<li>Le serveur GraphQL présente un schéma très &quot;technique&quot;, en gros il propose une exploration d'un serveur Git, dans une logique conception dirigée par les domaines, <a href="https://fsharpforfunandprofit.com/books/">DDD</a>, on préfèrerait exposer des <strong>domaines</strong></li>
+<li>Le système de type de cette base est extrêmement pauvre, puisqu'il propose 3 types : <code>string</code>, <code>json</code> ou <code>json_value</code></li>
+</ul>
+<h1 id="utilisation-avec-reasonml-ou-ocaml">Utilisation avec ReasonML (ou OCaml)</h1>
+<p>Là où <code>irmin-unix</code> est un CLI, Irmin est également distribué sous forme d'une collection de librairies OCaml.</p>
+<h2 id="le-domaine">Le domaine</h2>
+<p>Revenons à l'exemple des précédents articles où nous avons commencer à travailler autour d'un créateur de personnages pour le jeu de rôle 7ème Mer ; pour notre exemple nous disposerons d'une version simplifié du domaine <strong>Hero</strong></p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Nation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+            | </span><span style="color:#ccc9c2;">Castille
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Montaigne
+            </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vodacce</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Trait </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+            brawn</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            finesse</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            resolve</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            wits</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            panache</span><span style="color:#f29e74;">: </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,
+        </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Hero </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+        </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+            id</span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            name</span><span style="color:#f29e74;">:</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+            nation</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Nation</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
+            </span><span style="color:#ffa759;">trait</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Trait</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
+        </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Cela nous permet par exemple de créer ces deux célèbres héros avec ces valeurs :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ccc9c2;">
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> inigo_montoya </span><span style="color:#f29e74;">=
+    </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">{
+        id</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;567de924-cc04-41a0-acc8-431dd332ce79&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        name</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;Inigo Montoya&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        nation</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Castille</span><span style="color:#f29e74;">,
+        </span><span style="color:#ffa759;">trait</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">{
+        brawn</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        finesse</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">5</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        resolve</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">3</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        wits</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        panache</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">4</span><span style="color:#f29e74;">,
+        </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">,
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> vizzini </span><span style="color:#f29e74;">=
+    </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">{
+        id</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;9779a6fa-a7fe-4475-a546-350b5e3c3b56&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        name</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;Vizzini&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        nation</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Vodacce</span><span style="color:#f29e74;">,
+        </span><span style="color:#ffa759;">trait</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">{
+        brawn</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        finesse</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">2</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        resolve</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">4</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        wits</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">4</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+        panache</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">3</span><span style="color:#f29e74;">,
+        </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">,
+    </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre><h2 id="jouons-avec-irmin">Jouons avec Irmin</h2>
+<p>Pour réaliser le programme à suivre, nous avons besoin des dépendances : <code>irmin</code>, <code>irmin-unix</code>, <code>irmin-git</code>, <code>lwt</code> et <code>lwt_ssl</code>. Si vous ne savez pas comment faire, lisez le billet sur l'<a href="../esy-reasonml/#gestion-des-dependances">outillage projet</a></p>
+<h3 id="des-donnees-type-safe">Des données &quot;type safe&quot;</h3>
+<p>Un des intérêts d'utiliser un système de typage statique est d'apporter plus de sécurité dans les valeurs manipulées, c'est bien ce qu'on va chercher pour les valeurs que nous voulons stocker grâce à Irmin. On ne peut pas directement utiliser nos types, mais on nous n'avons pas non plus à gérer un mapping entre deux systèmes de types distincts, comme on le fait habituellement avec un ORM. En effet, puisqu'on partage le même langage, Irmin permet d'utiliser n'importe quelle valeur de type <code>Irmin.Type.t('a)</code> pour définir les valeurs d'un store. Nous allons donc simplement créer des types compatibles, encapsulé dans un module : cette opération est relativement simple car Irmin fournit des fonctions pour représenter les <strong>variants</strong> et les <strong>record</strong></p>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IrminHero </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> nation </span><span style="color:#f29e74;">=
+    </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Type</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(
+      Nation</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(
+        </span><span style="color:#f28779;">variant</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;nation&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">(castille</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> montaigne</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> vodacce) </span><span style="color:#f29e74;">=&gt;
+          </span><span style="color:#ffa759;">fun
+          </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Castille </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> castille
+          </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Montaigne </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> montaigne
+          </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Vodacce </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> vodacce
+        )
+        </span><span style="color:#f29e74;">|~ </span><span style="color:#f28779;">case0</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Castille&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">Castille)
+        </span><span style="color:#f29e74;">|~ </span><span style="color:#f28779;">case0</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Montaigne&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">Montaigne)
+        </span><span style="color:#f29e74;">|~ </span><span style="color:#f28779;">case0</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Vodacce&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">Vodacce)
+        </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> sealv
+      )
+    )</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> trait </span><span style="color:#f29e74;">=
+    </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Type</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(
+      Trait</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(
+        </span><span style="color:#f28779;">record</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;trait&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">(brawn</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> finesse</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> resolve</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> wits</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> panache) </span><span style="color:#f29e74;">=&gt;
+          </span><span style="color:#ccc9c2;">{brawn</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> finesse</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> resolve</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> wits</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> panache}
+        )
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;brawn&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">brawn)
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;finesse&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">finesse)
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;resolve&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">resolve)
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;wits&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">wits)
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;panache&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">panache)
+        </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> sealr
+      )
+    )</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
+    </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Type</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(
+      Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(
+        </span><span style="color:#f28779;">record</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;hero&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">(id</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> name</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> nation</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt;
+          </span><span style="color:#ccc9c2;">{id</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> name</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> nation</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">}
+        )
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;id&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">id)
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;name&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">name)
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;nation&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> nation</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">nation)
+        </span><span style="color:#f29e74;">|+ </span><span style="color:#f28779;">field</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;trait&quot;</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">trait</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">.</span><span style="color:#ffa759;">trait</span><span style="color:#ccc9c2;">)
+        </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> sealr
+      )
+    )</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> merge </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Merge</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">idempotent</span><span style="color:#ccc9c2;">(t)))</span><span style="color:#f29e74;">;
+</span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></pre>
+<p>J'ai mis ici le code pour vous montrer qu'il n'y a rien de magique, mais il est possible d'utiliser un ppx pour réduire le code <em>boilerplate</em> : <a href="https://github.com/mirage/irmin/blob/master/README_PPX.md">https://github.com/mirage/irmin/blob/master/README_PPX.md</a></p>
+<p>Maintenant que nous avons nos types, il nous reste à définir un data store et les opérations sur ce store. Encore une fois, cela est très facile grâce aux <a href="../reasonml-modules/#les-foncteurs">Foncteurs</a> mis à disposition par Irmin :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">HeroStore </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin_unix</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Git</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">FS</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">KV(IrminHero)</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Sync </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Sync(HeroStore)</span><span style="color:#f29e74;">;
+</span></pre><h3 id="prepartion-du-repository">Prépartion du repository</h3>
+<p>Il nous faut ensuite définir notre repository de données :</p>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> gitConfig </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin_git</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">config</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">~</span><span style="color:#ccc9c2;">bare</span><span style="color:#f29e74;">=</span><span style="color:#ffcc66;">true</span><span style="color:#f29e74;">, </span><span style="color:#bae67e;">&quot;/path/to/my/local&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> gitRepo </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> gitRemote </span><span style="color:#f29e74;">=
+  </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">remote</span><span style="color:#ccc9c2;">(
+    </span><span style="color:#bae67e;">&quot;https://login:password@path/to/my/remote.git&quot;</span><span style="color:#f29e74;">,
+  </span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></pre>
+<p>Ce qui peut nous permettre dans un premier temps de définir ces quelques fonctions utilitaires :</p>
+<pre style="background-color:#212733;">
+<span style="font-style:italic;color:#5c6773;">/* Access master brach */
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> master </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> config </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(config) </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master</span><span style="color:#f29e74;">;
+</span><span style="font-style:italic;color:#5c6773;">/* Access a named brach */
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> branch </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(config</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> name) </span><span style="color:#f29e74;">=&gt;
+  </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(config) </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(repo </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">of_branch</span><span style="color:#ccc9c2;">(repo</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> name))</span><span style="color:#f29e74;">;
+</span><span style="font-style:italic;color:#5c6773;">/* Add info to &quot;commit&quot; */
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> info </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(author</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> message) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Irmin_unix</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">info</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">~</span><span style="color:#ccc9c2;">author</span><span style="color:#f29e74;">, </span><span style="color:#bae67e;">&quot;%s&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> message)</span><span style="color:#f29e74;">;
+</span></pre><h3 id="exemple-de-programme">Exemple de programme</h3>
+<pre style="background-color:#212733;">
+<span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Infix</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> main </span><span style="color:#f29e74;">=
+  </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">join</span><span style="color:#ccc9c2;">([
+    HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)
+    </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master
+    </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
+      t </span><span style="color:#f29e74;">=&gt;
+        </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">set_exn</span><span style="color:#ccc9c2;">(
+          t</span><span style="color:#f29e74;">,
+          </span><span style="color:#ccc9c2;">[inigo_montoya</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">id]</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+          inigo_montoya</span><span style="color:#f29e74;">,
+          ~</span><span style="color:#ccc9c2;">info</span><span style="color:#f29e74;">=</span><span style="color:#f28779;">info</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;oteku&quot;</span><span style="color:#f29e74;">, </span><span style="color:#bae67e;">&quot;create Montoya&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">,
+        </span><span style="color:#ccc9c2;">)
+        </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
+          () </span><span style="color:#f29e74;">=&gt;
+            </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">get</span><span style="color:#ccc9c2;">(t</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">[inigo_montoya</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">id])
+            </span><span style="color:#f29e74;">&gt;|= </span><span style="color:#ccc9c2;">(s </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">assert</span><span style="color:#ccc9c2;">(s </span><span style="color:#f29e74;">==</span><span style="color:#ccc9c2;"> inigo_montoya))
+        )
+    )</span><span style="color:#f29e74;">,
+    </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)
+    </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master
+    </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
+      t </span><span style="color:#f29e74;">=&gt;
+        </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">set_exn</span><span style="color:#ccc9c2;">(
+          t</span><span style="color:#f29e74;">,
+          </span><span style="color:#ccc9c2;">[vizzini</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">id]</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
+          vizzini</span><span style="color:#f29e74;">,
+          ~</span><span style="color:#ccc9c2;">info</span><span style="color:#f29e74;">=</span><span style="color:#f28779;">info</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;oteku&quot;</span><span style="color:#f29e74;">, </span><span style="color:#bae67e;">&quot;create Vizzini&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">,
+        </span><span style="color:#ccc9c2;">)
+        </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
+          () </span><span style="color:#f29e74;">=&gt;
+            </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">get</span><span style="color:#ccc9c2;">(t</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">[vizzini</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">id]) </span><span style="color:#f29e74;">&gt;|= </span><span style="color:#ccc9c2;">(s </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">assert</span><span style="color:#ccc9c2;">(s </span><span style="color:#f29e74;">==</span><span style="color:#ccc9c2;"> vizzini))
+        )
+    )</span><span style="color:#f29e74;">,
+  </span><span style="color:#ccc9c2;">])
+  </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(
+    () </span><span style="color:#f29e74;">=&gt;
+      </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)
+      </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master
+      </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Sync</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">push</span><span style="color:#ccc9c2;">(t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> git_remote))
+  )
+  </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">print_endline</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;finished&quot;</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">|&gt; </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">() </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Lwt_main</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">run</span><span style="color:#ccc9c2;">(main)</span><span style="color:#f29e74;">;
+
+</span></pre>
+<p>Et voilà ! J'ai présenté Irmin lors du Lambda Remote 2 dont voici la vidéo :</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BT2e-DkcVQo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
+    </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
+    
+<!-- The loading of KaTeX is deferred to speed up page rendering -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz"
+  crossorigin="anonymous"
+></script>
+
+<!-- To automatically render math in text elements, include the auto-render extension: -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+  crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"
+></script>
+
+  </body>
+</html>
