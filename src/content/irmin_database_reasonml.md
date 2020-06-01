@@ -163,8 +163,8 @@ Le serveur est configuré avec un clients [GraphiQL](https://github.com/graphql/
 
 Irmin fournit en complément des clients en js et go :
 
-- Js GraphQL client https://github.com/zshipko/irmin-js
-- Go GraphQL client https://github.com/zshipko/irmin-go
+- [Js GraphQL client](https://github.com/zshipko/irmin-js)
+- [Go GraphQL client](https://github.com/zshipko/irmin-go)
 
 > Il est également possible de démarrer une api HTTP REST, pour cela il suffit d'exécuter `irmin init --daemon`. Cependant cette API est assez bas niveau et non documenté, il est recommandé d'utiliser l'API Graphql ou bien de coder votre propre API haut niveau si nécessaire
 
