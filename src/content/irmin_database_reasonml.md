@@ -166,7 +166,7 @@ Irmin fournit en complément des clients en js et go :
 - Js GraphQL client https://github.com/zshipko/irmin-js
 - Go GraphQL client https://github.com/zshipko/irmin-go
 
-> Il est également possible de démarrer une api HTTP REST, pour cela il suffit d'exécuter `irmin init --daemon`. Cependant cette API est assez bas niveau et non documenté, il est recommander d'utiliser l'API Graphql ou bien de coder votre propre API haut niveau si nécessaire
+> Il est également possible de démarrer une api HTTP REST, pour cela il suffit d'exécuter `irmin init --daemon`. Cependant cette API est assez bas niveau et non documenté, il est recommandé d'utiliser l'API Graphql ou bien de coder votre propre API haut niveau si nécessaire
 
 ### Sauvegarde et restauration de base
 
@@ -207,11 +207,11 @@ $ irmin pull -s $MY_GIT_RMOTE_REPOSITORY
 
 ### Une autre base KV ... avec un backend git & un serveur GraphQL
 
-A ce stade, nous avons donc "simplement" une base clé / valeur traditionnelle, intégrant les principes de Git et un serveur GraphQL : c'est déjà très intéressant ! En quelques lignes de commandes, nous avons notre base local et la possibilité de la synchroniser avec n'importe quel serveur Git, y compris Gitlab ou Github.
+A ce stade, nous avons donc "simplement" une base clé / valeur traditionnelle, intégrant les principes de Git et un serveur GraphQL : c'est déjà très intéressant ! En quelques lignes de commandes, nous avons notre base locale et la possibilité de la synchroniser avec n'importe quel serveur Git, y compris Gitlab ou Github.
 
 Mais nous avons également quelques faiblesses :
 
-- Le serveur GraphQL présente un schéma très "technique", en gros il propose une exploration d'un serveur Git, dans une logique conception dirigée par les domaines, [DDD](https://fsharpforfunandprofit.com/books/), on préfèrerait exposer des **domaines**
+- Le serveur GraphQL présente un schéma très "technique" : il propose une exploration d'un serveur Git, dans une logique conception dirigée par les domaines, [DDD](https://fsharpforfunandprofit.com/books/), on préfèrerait exposer des **domaines**
 - Le système de types de cette base est extrêmement pauvre, puisqu'il propose 3 types : `string`, `json` ou `json_value`
 
 # Utilisation avec ReasonML

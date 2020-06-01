@@ -348,7 +348,7 @@ $ irmin tree -s git
 <li>Go GraphQL client https://github.com/zshipko/irmin-go</li>
 </ul>
 <blockquote>
-<p>Il est également possible de démarrer une api HTTP REST, pour cela il suffit d'exécuter <code>irmin init --daemon</code>. Cependant cette API est assez bas niveau et non documenté, il est recommander d'utiliser l'API Graphql ou bien de coder votre propre API haut niveau si nécessaire</p>
+<p>Il est également possible de démarrer une api HTTP REST, pour cela il suffit d'exécuter <code>irmin init --daemon</code>. Cependant cette API est assez bas niveau et non documenté, il est recommandé d'utiliser l'API Graphql ou bien de coder votre propre API haut niveau si nécessaire</p>
 </blockquote>
 <h3 id="sauvegarde-et-restauration-de-base">Sauvegarde et restauration de base</h3>
 <p>Il est également possible de faire une sauvegarde de sa base :</p>
@@ -373,10 +373,10 @@ a549f1538a15e9865677189d84c607b4d4777646
 <pre style="background-color:#212733;">
 <span style="color:#ccc9c2;">$ irmin pull -s $MY_GIT_RMOTE_REPOSITORY
 </span></pre><h3 id="une-autre-base-kv-avec-un-backend-git-un-serveur-graphql">Une autre base KV ... avec un backend git &amp; un serveur GraphQL</h3>
-<p>A ce stade, nous avons donc &quot;simplement&quot; une base clé / valeur traditionnelle, intégrant les principes de Git et un serveur GraphQL : c'est déjà très intéressant ! En quelques lignes de commandes, nous avons notre base local et la possibilité de la synchroniser avec n'importe quel serveur Git, y compris Gitlab ou Github.</p>
+<p>A ce stade, nous avons donc &quot;simplement&quot; une base clé / valeur traditionnelle, intégrant les principes de Git et un serveur GraphQL : c'est déjà très intéressant ! En quelques lignes de commandes, nous avons notre base locale et la possibilité de la synchroniser avec n'importe quel serveur Git, y compris Gitlab ou Github.</p>
 <p>Mais nous avons également quelques faiblesses :</p>
 <ul>
-<li>Le serveur GraphQL présente un schéma très &quot;technique&quot;, en gros il propose une exploration d'un serveur Git, dans une logique conception dirigée par les domaines, <a href="https://fsharpforfunandprofit.com/books/">DDD</a>, on préfèrerait exposer des <strong>domaines</strong></li>
+<li>Le serveur GraphQL présente un schéma très &quot;technique&quot; : il propose une exploration d'un serveur Git, dans une logique conception dirigée par les domaines, <a href="https://fsharpforfunandprofit.com/books/">DDD</a>, on préfèrerait exposer des <strong>domaines</strong></li>
 <li>Le système de types de cette base est extrêmement pauvre, puisqu'il propose 3 types : <code>string</code>, <code>json</code> ou <code>json_value</code></li>
 </ul>
 <h1 id="utilisation-avec-reasonml">Utilisation avec ReasonML</h1>
