@@ -10,8 +10,7 @@
     <link rel="shortcut icon" href="/img/hacker_mind.svg" />
     <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
     <title>ReasonML : les modules</title>
-     <link rel="alternate"
-    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    
     <script
       type="text/javascript"
       src="https://buttons.github.io/buttons.js"
@@ -288,43 +287,43 @@
 <h2 id="open-modules">Open modules</h2>
 <p>Pour accèder au contenu d'un module, il est possible de l'ouvrir. Plutôt que d'écrire :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilNation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">nation</span><span style="color:#f29e74;">;
-</span></pre>
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilNation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">nation</span><span style="color:#f29e74;">;
+</span></code></pre>
 <p>On peut écrire :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">;
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">;
     </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilNation </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">nation</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>Le contenu du module est visible dans le <em>scope</em>. Ci dessus dans l'ensemble du fichier mais il est possible d'avoir un scope par expression :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilBrawnInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">traits</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">brawn </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> toInt)</span><span style="color:#f29e74;">;
-</span></pre>
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilBrawnInt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">traits</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">brawn </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> toInt)</span><span style="color:#f29e74;">;
+</span></code></pre>
 <p>ou de créer un scrope limité :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="font-style:italic;color:#5c6773;">/* module non ouvert ici */
+<code><span style="color:#ccc9c2;">    </span><span style="font-style:italic;color:#5c6773;">/* module non ouvert ici */
     </span><span style="color:#ccc9c2;">{
       </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">;
       </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> agilBrawnInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elAgilCamello</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">traits</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">brawn </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}
     </span><span style="font-style:italic;color:#5c6773;">/* module non ouvert ici */
-</span></pre><h2 id="namespaces">Namespaces</h2>
+</span></code></pre><h2 id="namespaces">Namespaces</h2>
 <p>La dimension espaces de nom des modules ReasonML est assez limitée : vous n'avez pas de possibilité de les regrouper dans des packages et vous ne pouvez pas compiler un programme qui contient deux modules du même nom. Cela peut devenir contraignant quand vous travaillez sur des grands projets.</p>
 <p>De la même manière que nous avons vu qu'il était possible de faire des alias de types, il est également possible de faire des alias de modules. Un technique courante est de faire de <a href="https://blog.janestreet.com/better-namespaces-through-module-aliases/">packed modules</a>, c'est à dire un module regroupant des alias de module:</p>
 <pre style="background-color:#212733;">
-<span style="font-style:italic;color:#5c6773;">/* Supposant que nous sommes dans Core_kernel.re */
+<code><span style="font-style:italic;color:#5c6773;">/* Supposant que nous sommes dans Core_kernel.re */
     </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">List </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Core_kernel_list</span><span style="color:#f29e74;">;
     </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Array </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Core_kernel_array</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>et dans un autre fichier on peut faire</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Core_kernel</span><span style="color:#f29e74;">;
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Core_kernel</span><span style="color:#f29e74;">;
     </span><span style="font-style:italic;color:#5c6773;">/* List.filter ci-dessous se réfère au module Core_kernel.List et non au module List fournit par le compilateur, issu du module Pervasives */
     </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> dropZeros </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> l </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">List</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">filter</span><span style="color:#ccc9c2;">(l</span><span style="color:#f29e74;">, ~</span><span style="color:#ccc9c2;">f</span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;">x </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> x </span><span style="color:#f29e74;">!= </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
-</span></pre><h1 id="franchir-le-portail">Franchir le portail</h1>
+</span></code></pre><h1 id="franchir-le-portail">Franchir le portail</h1>
 <h2 id="modules-imbriques">Modules imbriqués</h2>
 <p>Les modules peuvent s'imbriquer : nous avons vu que chaque fichier crée un module, mais il est également possible de déclarer des sous-modules :</p>
 <pre style="background-color:#212733;">
-<span style="font-style:italic;color:#5c6773;">/* Ceci est le fichier Hero.re */
+<code><span style="font-style:italic;color:#5c6773;">/* Ceci est le fichier Hero.re */
     /* On déclare un sous-module Hero.Nation */
     </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Nation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type trait </span><span style="color:#f29e74;">=
@@ -388,12 +387,12 @@
     traits</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Traits</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
     nation</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Nation</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>Vous remarquerez le nommmage des types <code>t</code> : il s'agit d'une convention largement utilisée dans les écosystèmes ReasonML / OCaml, où le type nommé <code>t</code> désigne le type principal habitant le module. On utilise <code>Nation.t</code> plutôt que <code>Nation.nation</code> bien que ce ne soit pas une obligation.</p>
 <h2 id="signatures">Signatures</h2>
 <p>Les modules sont eux même statiquement typés statiquement. Il est donc possible de spécifier des types de modules. Pour notre exemple, nous décidons de créer un module <code>Traits</code> dans un fichier <code>Traits.re</code> :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
             | </span><span style="color:#ccc9c2;">Two
             </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
@@ -426,11 +425,11 @@
             }</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> return</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> value</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>On parle en général de signature ou d'interface car le <code>module type</code> est en réalité le <em>contrat public</em> que doit remplir un module de ce type. Seul les types et bindings déclarés dans la signature sont accessibles quand on ouvre le module. Dans notre exemple <code>Score.t</code>, <code>toInt</code> et <code>fromInt</code>. En revanche <code>return</code> n'est accessible que dans la scope de la déclaration du module, même si <code>Score</code> était ouvert.</p>
 <p>Il est possible également d'isoler la signature d'un module via un fichier <code>.rei</code></p>
 <pre style="background-color:#212733;">
-<span style="font-style:italic;color:#5c6773;">/* Traits.rei */
+<code><span style="font-style:italic;color:#5c6773;">/* Traits.rei */
 </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">{
   </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
     | </span><span style="color:#ccc9c2;">Two
@@ -448,8 +447,8 @@
   wits</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
   panache</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
 </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre><pre style="background-color:#212733;">
-<span style="font-style:italic;color:#5c6773;">/* Traits.re */
+</span></code></pre><pre style="background-color:#212733;">
+<code><span style="font-style:italic;color:#5c6773;">/* Traits.re */
 </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Score </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
   </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
     | </span><span style="color:#ccc9c2;">Two
@@ -481,20 +480,20 @@
   wits</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
   panache</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Score</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
 </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre><h2 id="abstraction">Abstraction</h2>
+</span></code></pre><h2 id="abstraction">Abstraction</h2>
 <p>Il est possible d'abstraire les types contenus dans un <code>module type</code> :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#ffa759;">: int </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(t)</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>Ici <code>t</code> est abstrait, un module de type <code>ScoreType</code> devra fournir un type concret pour <code>t</code>.</p>
 <p>Dans une approche de <em>programmation par contrat</em> (interface based programming), il peut être intéressant de ne pas définir de type concret dans le contrat. Cela permet de retarder au moment de l'implémentation du contrat le choix à faire.</p>
 <p>Souvenez-vous, nous nous étions posé des questions sur la manière de concevoir le type <code>Score.t</code> qui correspond aux entiers de 2 à 5. Mais au final, au moment de la définition du contrat nous n'avons à nous poser que question de savoir quelles sont les interactions possible entre ce type et le monde extérieur :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">;
         </span><span style="font-style:italic;color:#5c6773;">/* Quelques soit le choix on se doute qu&#39;on devra intéragir avec des int */
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
@@ -505,10 +504,10 @@
         </span><span style="font-style:italic;color:#5c6773;">/* on souhaite avoir une arithmétique basique sans convertir en int à l&#39;extéieur */
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> print </span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>Nous laissans plus tard le choix de l'implémentation avec un variant :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScoreVariant</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScoreVariant</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
          </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
             | </span><span style="color:#ccc9c2;">Two
             </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Three
@@ -533,10 +532,10 @@
         </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(score1</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> score2) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score1) </span><span style="color:#f29e74;">- </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score2) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> print </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> string_of_int</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>ou avec int :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScoreInt</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">ScoreInt</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">ScoreType </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> toInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ts </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> ts</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> fromInt </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt;
@@ -549,22 +548,22 @@
         </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(score1</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> score2) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score1) </span><span style="color:#f29e74;">- </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score2) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> fromInt</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> print </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> score </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">toInt</span><span style="color:#ccc9c2;">(score) </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> string_of_int</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>L'abstraction a pour intérêt également d'obfusquer le type de <code>t</code> à l'extérieur de l'implémentation du module et donc <code>ScoreInt.t</code> est différent de <code>int</code>, par exemple il n'est pas possible d'écrire :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> printScore</span><span style="color:#ffa759;">: ScoreInt.t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> string </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> aScore </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">ScoreInt</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(aScore))</span><span style="color:#f29e74;">;
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> printScore</span><span style="color:#ffa759;">: ScoreInt.t </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> string </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> aScore </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">ScoreInt</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(aScore))</span><span style="color:#f29e74;">;
 
     </span><span style="color:#f28779;">printScore</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">4</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* ne compile pas */
-</span></pre>
+</span></code></pre>
 <p>qui produira une erreur de compilation</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">printScore</span><span style="color:#ccc9c2;">(4)</span><span style="color:#f29e74;">;
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">printScore</span><span style="color:#ccc9c2;">(4)</span><span style="color:#f29e74;">;
 
     </span><span style="color:#ffd580;">This</span><span style="color:#ccc9c2;"> type doesn</span><span style="color:#bae67e;">&#39;t match what is expected.
 
     This type: int
     Expecting: ScoreInt.t
-</span></pre>
+</span></code></pre>
 <p>Au final, l'abstraction nous fournit une solution plus simple et aussi sûre que le variant pour nous permettre de représenter un sous-ensemble parmis les entiers.</p>
 <p>Dans le prochain article nous initialiserons notre projet.</p>
 <h1 id="le-mal-du-passage">Le mal du passage</h1>
@@ -573,7 +572,7 @@
 <h2 id="module-d-ordre-superieur">Module d'ordre supérieur</h2>
 <p>Il existe une stratification entre le langage principal (les valeurs et les types) et le langage de module (les modules et les type de modules), ce qui fait qu'on ne peut pas directement utiliser un module dans une variable ou un paramètre de fonction. Pour cela ReasonML fournit une syntaxe spécifique pour pouvoir bénéficier de module d'ordre supérieur (First-Class Module) :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">Scalar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module type </span><span style="color:#ccc9c2;">Scalar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value</span><span style="color:#ffa759;">: t;
     };
@@ -596,12 +595,12 @@
         </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">M </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(val m</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
         </span><span style="color:#ccc9c2;">M</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">value</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>L'opérateur <code>with</code> permet d'ajouter des contraintes dans l'équation de type du <code>module type</code>. Pratiquement cela nous permet ici de lever l'abstraction pour obtenir par exemple <code>ScarlarY.t = char</code>. Cela peut également permettre d'exprimer des contraintes entre plusieurs modules.</p>
 <h2 id="les-foncteurs">Les Foncteurs</h2>
 <p>ReasonML dispose aussi de modules fonctionnels, appelé foncteurs (functors). Il s'agit simplement de modules paramétrés par d'autres modules :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IncrementChar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(X</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">char</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IncrementChar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(X</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">char</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">X</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">;
         </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Char</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">code</span><span style="color:#ccc9c2;">(X</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">value) </span><span style="color:#f29e74;">+ </span><span style="color:#ffcc66;">1 </span><span style="color:#f29e74;">|&gt; </span><span style="color:#ccc9c2;">Char</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">chr</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
@@ -615,7 +614,7 @@
 
     </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Scalar6 </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">IncrementInt((val scalar5</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Scalar with </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">))</span><span style="color:#f29e74;">;
 
-</span></pre>
+</span></code></pre>
 <blockquote>
 <p>Ces foncteurs ne sont ni les <a href="https://wiki.haskell.org/Functor">foncteurs Haskell</a> (Functor typeclass), ni les <a href="https://en.cppreference.com/w/cpp/utility/functional">foncteurs C++</a> (function Objects)</p>
 </blockquote>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta name="description" content="" />
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>Gestion des erreurs en ReasonML</title>
+    
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+<meta property="og:title" content="Gestion des erreurs en ReasonML" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr" />
+<meta property="og:img" content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg" />
+<meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;error-management-reasonml&#x2F;" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content="Gestion des erreurs en ReasonML" />
+<meta property="twitter:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;error-management-reasonml&#x2F;" />
+<meta property="twitter:description" content="" />
+<meta
+  property="twiter:image"
+  content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+  crossorigin="anonymous"
+/>
+
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
+
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;reasonml&#x2F;" target="_self">ReasonML</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;tooling&#x2F;" target="_self">Tooling</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+    </div>
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Chapitres</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Chapitres</h3>
+            <ul class="">
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/error-management-reasonml/#tout-va-bien-se-passer-ou-presque"
+                  >Tout va bien se passer ... ou presque</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/error-management-reasonml/#degainer-et-frapper">Dégainer et frapper</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/error-management-reasonml/#les-exceptions">Les exceptions</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/error-management-reasonml/#modeliser-une-absence-de-valeur">Modéliser une absence de valeur</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/error-management-reasonml/#modeliser-une-erreur-potentielle">Modéliser une erreur potentielle</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/error-management-reasonml/#que-retenir-de-tout-ca">Que retenir de tout ça ?</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;error-management-reasonml&#x2F;">Gestion des erreurs en ReasonML</a>
+          </h1>
+          <p class="post-meta">
+            2020-08-23 | Temps de lecture 10 minutes
+          </p>
+          
+          <a href="/tags/ReasonML"> #ReasonML </a>
+        </header>
+        <article class="post-content">
+          <div><p>Les plantages d'un programme à l'exécution sont très coûteux, surtout lorsqu'ils se produisent en production : arrêt du service, interruption d'un traitement, perte de données, ...</p>
+<p>Dans ce billet nous allons passer en revue les différents mode de gestion des erreurs, et comment les traiter avec ReasonML.</p>
+<span id="continue-reading"></span>
+<blockquote>
+<p>Bien que pouvant être lu indépendemment, ce billet est le cinquième de la série d'articles <a href="../reasonml-serie/#un-programme-reason-able">ReasonML : la série</a></p>
+</blockquote>
+<h1 id="tout-va-bien-se-passer-ou-presque">Tout va bien se passer ... ou presque</h1>
+<h2 id="degainer-et-frapper">Dégainer et frapper</h2>
+<p>Nous voudrions que notre héro :</p>
+<ol>
+<li>dégaine son arme</li>
+<li>vise son ennemi</li>
+<li>frappe l'ennemi visé</li>
+</ol>
+<p>A chaque étape de cette description, une erreur peut se produire. Ces erreurs peuvent représenter soit :</p>
+<ul>
+<li>Une absence de valeur</li>
+<li>Un chemin alternatif dans le flux d'exécution du programme</li>
+<li>Une exception du runtime</li>
+</ul>
+<h2 id="les-exceptions">Les exceptions</h2>
+<p>De manière courante, on découvre une erreur dans notre programme à travers des exceptions. Ce modèle très utilisé pose plusieurs problèmes.</p>
+<h3 id="les-exceptions-sont-des-ombres">Les exceptions sont des ombres</h3>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> weapon</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> target</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> impacted</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> draw_your_rapier </span><span style="color:#ffa759;">: weapon </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> raise </span><span style="color:#f29e74;">@@ </span><span style="color:#ccc9c2;">Failure(</span><span style="color:#bae67e;">&quot;BrokenBlade&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> targeted_ennemy </span><span style="color:#ffa759;">: target </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> raise </span><span style="color:#f29e74;">@@ </span><span style="color:#ccc9c2;">Failure (</span><span style="color:#bae67e;">&quot;TooFar&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain </span><span style="color:#ffa759;">: weapon </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> target </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> impacted  </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(w</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> t) </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> raise </span><span style="color:#f29e74;">@@ </span><span style="color:#ccc9c2;">Failure (</span><span style="color:#bae67e;">&quot;Looser&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></code></pre>
+<blockquote>
+<p>Si vous découvrez l'opérateur de composition <code>@@</code>, il permet de déduire le besoin de parenthèses : <code>f @@ g(x)</code> = <code>f(g(x))</code> = <code>g(x) |&gt; f</code></p>
+</blockquote>
+<p>On remarque à cette étape que le système de type ne retranscrit pas le fait qu'une valeur puisse lancer une exception ou même qu'une fonction puisse lancer une exception. Les exceptions sont comme des <strong>ombres</strong> dans notre code</p>
+<p>Si vous venez de langages tels que Java, Javascript, Typescript ou C# vous serez sans doute surpris de voir que <code>raise</code> (équivalent de throw dans ces langages), est une expression et non une instruction. En Java par exemple on aurait écrit :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">class </span><span style="color:#73d0ff;">Weapon </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">Weapon</span><span style="color:#ccc9c2;">(){
+    </span><span style="color:#ffa759;">throw new </span><span style="font-style:italic;color:#5ccfe6;">Exception</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;BrokenBlade&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ccc9c2;">}
+}
+</span><span style="color:#ffa759;">class </span><span style="color:#73d0ff;">Target </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">Target</span><span style="color:#ccc9c2;">(){
+    </span><span style="color:#ffa759;">throw new </span><span style="font-style:italic;color:#5ccfe6;">Exception</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;TooFar&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ccc9c2;">}
+}
+</span><span style="color:#ffa759;">class </span><span style="color:#73d0ff;">Impacted</span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">Impacted</span><span style="color:#ccc9c2;">(){
+    </span><span style="color:#ffa759;">throw new </span><span style="font-style:italic;color:#5ccfe6;">Exception</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;Looser&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ccc9c2;">}
+}
+
+</span><span style="color:#ffa759;">public class </span><span style="color:#73d0ff;">Main </span><span style="color:#ccc9c2;">{
+    </span><span style="font-style:italic;color:#5ccfe6;">Weapon </span><span style="color:#ccc9c2;">drawYourRapier </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="font-style:italic;color:#5ccfe6;">Weapon</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="font-style:italic;color:#5ccfe6;">Target </span><span style="color:#ccc9c2;">targetedMonster </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="font-style:italic;color:#5ccfe6;">Target</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="font-style:italic;color:#5ccfe6;">Impacted </span><span style="color:#ffd580;">hitMonster</span><span style="color:#ccc9c2;">(</span><span style="font-style:italic;color:#5ccfe6;">Weapon </span><span style="color:#ffcc66;">w</span><span style="color:#ccc9c2cc;">, </span><span style="font-style:italic;color:#5ccfe6;">Target </span><span style="color:#ffcc66;">t</span><span style="color:#ccc9c2;">) {
+        </span><span style="color:#ffa759;">return new </span><span style="font-style:italic;color:#5ccfe6;">Impacted</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ccc9c2;">}
+}
+</span></code></pre>
+<p>Le fait que <code>throw</code> soit une instruction oblige à utiliser un encodage dans la classe, ce qui rend encore plus complexe le fait de savoir à l'écriture que notre code peut produire des exceptions.</p>
+<h3 id="les-erreurs-sont-des-goto-perdus-dans-l-espace-et-le-temps">Les erreurs sont des GOTO perdus dans l'espace et le temps</h3>
+<p>Non seulement le système de type ne fait pas apparaitre la possibilité d'exception elle même, mais en plus il n'y a aucune obligation de traiter une exception. C'est en quelque sorte un <strong>GOTO</strong>, un saut inconditionnel qui casse le flux d'exécution du programme... qui ne sera peut-être jamais intercepté, auquel cas il est fortement probable que le comportement du programme soit de s'arrêter de manière inattendue.</p>
+<p>Pire encore, la programmation asynchrone peut totalement occulter une erreur qui interviendrait dans un light thread (promesse, future ou coroutine). Imaginez que nous ayons maintenant une fonction <code>attack</code> en Java :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">public class </span><span style="color:#73d0ff;">Main </span><span style="color:#ccc9c2;">{
+    </span><span style="font-style:italic;color:#5ccfe6;">Weapon </span><span style="color:#ccc9c2;">drawYourRapier </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="font-style:italic;color:#5ccfe6;">Weapon</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="font-style:italic;color:#5ccfe6;">Target </span><span style="color:#ccc9c2;">targetedMonster </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="font-style:italic;color:#5ccfe6;">Target</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="font-style:italic;color:#5ccfe6;">Impacted </span><span style="color:#ffd580;">hitMonster</span><span style="color:#ccc9c2;">(</span><span style="font-style:italic;color:#5ccfe6;">Weapon </span><span style="color:#ffcc66;">w</span><span style="color:#ccc9c2cc;">, </span><span style="font-style:italic;color:#5ccfe6;">Target </span><span style="color:#ffcc66;">t</span><span style="color:#ccc9c2;">) {
+        </span><span style="color:#ffa759;">return new </span><span style="font-style:italic;color:#5ccfe6;">Impacted</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+    </span><span style="color:#ccc9c2;">}
+    </span><span style="font-style:italic;color:#5ccfe6;">FutureTask</span><span style="color:#ccc9c2;">&lt;</span><span style="font-style:italic;color:#5ccfe6;">Impacted</span><span style="color:#ccc9c2;">&gt; attack </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="font-style:italic;color:#5ccfe6;">FutureTask</span><span style="color:#ccc9c2;">(</span><span style="color:#ffd580;">hitMonster</span><span style="color:#ccc9c2;">(armYouBow</span><span style="color:#ccc9c2cc;">,</span><span style="color:#ccc9c2;"> targetMonster))</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ccc9c2;">}
+</span></code></pre>
+<p>L'erreur qui ne serait pas traitée dans la <code>Task</code> va devoir attendre qu'un <code>Executor</code> récupère l'erreur et soit la traite, soit laisse planter le programme.
+Cela devient encore plus drôle si on s'intéresse aux promesses en Javascript :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">class </span><span style="color:#73d0ff;">Weapon </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">constructor</span><span style="color:#ccc9c2;">() {
+    </span><span style="color:#ffa759;">throw new </span><span style="color:#ccc9c2;">Exception(</span><span style="color:#bae67e;">&quot;BrokenBlade&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ccc9c2;">}
+}
+</span><span style="color:#ffa759;">class </span><span style="color:#73d0ff;">Target </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">constructor</span><span style="color:#ccc9c2;">() {
+    </span><span style="color:#ffa759;">throw new </span><span style="color:#ccc9c2;">Exception(</span><span style="color:#bae67e;">&quot;TooFar&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ccc9c2;">}
+}
+</span><span style="color:#ffa759;">class </span><span style="color:#73d0ff;">Impacted </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">constructor</span><span style="color:#ccc9c2;">() {
+    </span><span style="color:#ffa759;">throw new </span><span style="color:#ccc9c2;">Exception(</span><span style="color:#bae67e;">&quot;Looser&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ccc9c2;">}
+}
+
+</span><span style="color:#ffa759;">const </span><span style="color:#ccc9c2;">hitMonster </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">w</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffcc66;">t</span><span style="color:#ccc9c2;">) </span><span style="color:#ffa759;">=&gt; new </span><span style="color:#ccc9c2;">Impacted()</span><span style="color:#ccc9c2cc;">;
+
+</span><span style="color:#ffa759;">const </span><span style="color:#ccc9c2;">attack </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="font-style:italic;color:#5ccfe6;">Promise</span><span style="color:#ccc9c2;">((</span><span style="color:#ffcc66;">resolve</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ffcc66;">reject</span><span style="color:#ccc9c2;">) </span><span style="color:#ffa759;">=&gt; </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">const </span><span style="color:#ccc9c2;">drawYourRapier </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="color:#ccc9c2;">Weapon()</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ffa759;">const </span><span style="color:#ccc9c2;">targetedMonster </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="color:#ccc9c2;">Target()</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ffd580;">hitMonster</span><span style="color:#ccc9c2;">(drawYourRapier</span><span style="color:#ccc9c2cc;">, </span><span style="color:#ccc9c2;">targetedMonster)</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ccc9c2;">})</span><span style="color:#ccc9c2cc;">;
+</span></code></pre>
+<p>Ici comme aucune méthode <code>.catch</code> n'est attachée à la chaine de promesse, l'exception est réellement <em>perdue</em> dans l'espace et le temps, sans même une interruption du programme. Et donc si vous compilez votre code ReasonML pour Javascript (ce que nous verrons dans un prochain billet) en utilisant les promesses JS, vous risquez d'être confronté à ce cas.</p>
+<p>Si on revient à ReasonML native, vous utiliserez très vraissemblablement la librairie <a href="http://ocsigen.org/lwt/5.2.0/manual/manual">Lwt</a></p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> attack </span><span style="color:#ffa759;">: Lwt.t(unit) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">wrap</span><span style="color:#ccc9c2;">(() </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+    raise </span><span style="color:#f29e74;">@@ </span><span style="color:#ccc9c2;">Failure(</span><span style="color:#bae67e;">&quot;Looser&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">;
+  </span><span style="color:#ccc9c2;">})</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">run</span><span style="color:#ccc9c2;">(attack)</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Ici on est dans une situation similaire à l'exemple Java. Grâce au hook <code>Lwt.async_exception_hook</code> une exception non traitée sera remontée au plus haut niveau et pourra interrompre l'exécution du programme.</p>
+<h3 id="try-catch-ou-l-impression-de-securite">Try/Catch ou l'impression de sécurité</h3>
+<p>Puisque le code peut provoquer des exceptions, on a l'habitude d'utiliser un <code>try/catch</code>, comme ici en Javascript :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">class </span><span style="color:#73d0ff;">Weapon </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">constructor</span><span style="color:#ccc9c2;">() {
+    </span><span style="color:#ffa759;">throw new </span><span style="color:#ccc9c2;">RuntimeError(</span><span style="color:#bae67e;">&quot;BrokenBlade&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ccc9c2;">}
+}
+
+</span><span style="color:#ffa759;">try </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffd580;">stuffThatMayThrowEvalError</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ffd580;">otherStuffThatMayThrowRuntimeError</span><span style="color:#ccc9c2;">()</span><span style="color:#ccc9c2cc;">;
+  </span><span style="color:#ffa759;">const </span><span style="color:#ccc9c2;">drawYourRapier </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">new </span><span style="color:#ccc9c2;">Weapon()</span><span style="color:#ccc9c2cc;">;
+</span><span style="color:#ccc9c2;">} </span><span style="color:#ffa759;">catch </span><span style="color:#ccc9c2;">(e) {
+  </span><span style="font-style:italic;color:#5c6773;">/* Which ERROR ? Which Type ? */
+</span><span style="color:#ccc9c2;">}
+</span></code></pre>
+<p>Ce fonctionnement comporte plusieurs problèmes :</p>
+<ul>
+<li>A quel niveau l'exception va-t-elle être traitée ?</li>
+<li>Quelle est l'instruction qui a provoquée l'erreur ?</li>
+<li>Quel est le type de l'erreur interceptée ?</li>
+</ul>
+<p>Enfin on peut décider de <em>ne rien faire</em> et donc masquer complètement le fait qu'une exception soit intervenu durant l'exécution du programme.</p>
+<p>Le modèle expressif a un avantage sur ce point : il oblige à traiter l'erreur ou à la passer au niveau suivant :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> draw_your_rapier</span><span style="color:#ffa759;">: weapon </span><span style="color:#f29e74;">=
+  </span><span style="color:#f28779;">try</span><span style="color:#ccc9c2;">(
+    {
+      </span><span style="color:#f28779;">stuff_that_may_raise_exn</span><span style="color:#ccc9c2;">()</span><span style="color:#f29e74;">;</span><span style="color:#ccc9c2;">
+      raise </span><span style="color:#f29e74;">@@ </span><span style="color:#ccc9c2;">Failure(</span><span style="color:#bae67e;">&quot;BrokenBlade&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+    </span><span style="color:#ccc9c2;">}
+  ) {
+  </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Failure(s) </span><span style="color:#f29e74;">=&gt;
+    </span><span style="color:#f28779;">print_endline</span><span style="color:#ccc9c2;">(s)</span><span style="color:#f29e74;">;
+    </span><span style="color:#f28779;">raise</span><span style="color:#ccc9c2;">(Failure(</span><span style="color:#bae67e;">&quot;unarmed&quot;</span><span style="color:#ccc9c2;">))</span><span style="color:#f29e74;">;
+  | </span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">raise</span><span style="color:#ccc9c2;">(Failure(</span><span style="color:#bae67e;">&quot;what was the exn ?&quot;</span><span style="color:#ccc9c2;">))
+  }</span><span style="color:#f29e74;">;
+</span></code></pre><h3 id="que-retenir-des-exceptions">Que retenir des exceptions ?</h3>
+<p>Les exceptions sont un mauvais choix pour :</p>
+<ul>
+<li>Modéliser l’absence de valeur</li>
+<li>Modéliser une erreur fonctionnelle</li>
+<li>Modéliser des erreurs asynchrones</li>
+</ul>
+<p>Elles peuvent être acceptable si :</p>
+<ul>
+<li>Vous n’espérez pas que quelqu’un les « catch » (contributeur d'une librairie)</li>
+<li>Vous savez ce que vous faites (contributeur VM)</li>
+<li>Vous voulez semer le chaos sur Théah !!!</li>
+</ul>
+<h2 id="modeliser-une-absence-de-valeur">Modéliser une absence de valeur</h2>
+<p>La plupart des langages disposent d'une valeur pour représenter l'absence de valeur <code>Null</code> en Java ou <code>null</code> et <code>undefined</code> en javascript. <code>Uncaught TypeError: undefined has no properties ...</code> et <code>Exception in thread &quot;main&quot; java.lang.NullPointerException</code> sont la cause d'un nombre incalculable de bugs : à croire que ces valeurs ont été créées pour semer la désolation. <strong>Bonne nouvelle, en ReasonML aucune valeur ne null n'existe</strong></p>
+<p>Pourtant ces valeurs ont un sens : il est parfois nécessaire de représenter l'absence de valeur. Pour cela nous disposons, comme dans beaucoup de langages maintenant, de type optionnels.</p>
+<h3 id="option">Option</h3>
+<p>Le type <code>option('a)</code> est un type dont les valeurs peuvent être égale à <code>Some('a)</code>, ce qui représente la présence d'une valeur, ou bien <code>None</code>, ce qui représente l'absence de valeur. Ce type est définit ainsi :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> weapon</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> target</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> impacted </span><span style="color:#f29e74;">= | </span><span style="color:#ccc9c2;">Impacted</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">type </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=
+  | </span><span style="color:#ccc9c2;">Some(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">)
+  </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">None</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> draw_your_rapier</span><span style="color:#ffa759;">: option(weapon) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">None</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> targeted_ennemy</span><span style="color:#ffa759;">: option(target) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">None</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain</span><span style="color:#ffa759;">: (option(weapon), option(target)) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(impacted) </span><span style="color:#f29e74;">=
+  </span><span style="color:#ccc9c2;">(ow</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> ot) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Etant donné que ReasonML/OCaml fournissent ce type nativement, il n'est pas nécessaire de le déclarer, on peut ainsi écrire directement :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> weapon</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> target</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> impacted </span><span style="color:#f29e74;">= | </span><span style="color:#ccc9c2;">Impacted</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> draw_your_rapier</span><span style="color:#ffa759;">: option(weapon) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">None</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> targeted_ennemy</span><span style="color:#ffa759;">: option(target) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">None</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain</span><span style="color:#ffa759;">: (option(weapon), option(target)) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(impacted) </span><span style="color:#f29e74;">=
+  </span><span style="color:#ccc9c2;">(ow</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> ot) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Grâce au pattern matching on peut traiter les valeurs optionnelles :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain_pattern_match </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(ow</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> ot) </span><span style="color:#f29e74;">=&gt;
+  </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(ow) {
+  </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">None </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None
+  </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Some(</span><span style="color:#f28779;">_</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt;
+    </span><span style="color:#ffa759;">switch </span><span style="color:#ccc9c2;">(ot) {
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">None </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">None
+    </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Some(</span><span style="color:#f28779;">_</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Impacted)
+    }
+  }</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Cela reste assez verbeux, on peut facilement faire la même chose grâce au <code>bind</code> (appelé <em>flatmap</em> ou <em>and_then</em> dans d'autres langages) du module <code>Option</code> de ReasonML. On remarquera que cette syntaxe resemble beaucoup aux chaines de promesses en javascript :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain_bind </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(ow</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> ot) </span><span style="color:#f29e74;">=&gt;
+  </span><span style="color:#ccc9c2;">Option</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">bind</span><span style="color:#ccc9c2;">(ow) </span><span style="color:#f29e74;">@@
+    </span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Option</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">bind</span><span style="color:#ccc9c2;">(ot) </span><span style="color:#f29e74;">@@
+      </span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Impacted)))</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Pour rendre cela plus lisible, il est courant d'avoir recours l'opérateur infix de bind : <code>&gt;&gt;=</code>.
+Comme la librairie standard n'intègre pas encore cet opérateur pour le module Option nous devrons le définir (très simplement), pour pouvoir l'utiliser :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">&gt;&gt;=</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Option</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">bind</span><span style="color:#f29e74;">; </span><span style="font-style:italic;color:#5c6773;">/* Infix operator for bind */
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain_dot_free </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(ow</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> ot) </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;">
+  ow </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;"> ot) </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">_ </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Some(Impacted))</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Il est également possible de rendre la manipulation plus lisible encore grâce à l'opérateur monadique <code>let*</code>.
+Comme la librairie standard n'intègre pas encore cet opérateur pour le module Option nous devrons également le définir :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">let</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Option</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">bind</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain_let_star </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(ow</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> ot) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">let</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> _used </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ow </span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> _targeted </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> ot </span><span style="color:#f29e74;">;
+  </span><span style="color:#ccc9c2;">Some(Impacted)
+}</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Dans tout les exemples, la fonction retournera <code>None</code> SI <code>ow</code> OU <code>ot</code> valent <code>None</code>.</p>
+<p>Les différentes notation sont du sucre syntaxique, à vous de choisir celle qui vous convient. Pour ma part, j'ai tendance à apprécier fortement le <code>let*</code></p>
+<h4 id="apparte-sur-le">Apparté sur le <code>;</code></h4>
+<p>Si le dernier exemple vous semble bizarre, en ReasonML, il faut bien comprendre que le point-vigurle n'a pas le même sens qu'en Java ou Javascript. L'utilisation du <code>;</code> homogénéifie l'écriture de code, bien qu'il puisse représenter 3 trois cas différents :</p>
+<ol>
+<li>
+<p>La soumission et l'évaluation d'un input quand on utilise un toplevel tel que <code>rtop</code> (le REPL de Reason, similaire à utop pour OCaml). En OCaml, l'équivalent est un double point-virgule <code>;;</code></p>
+</li>
+<li>
+<p>Du sucre syntaxique pour le scope local, en ReasonML :</p>
+</li>
+</ol>
+<pre style="background-color:#212733;">
+<code><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> foo </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;FOO&quot;</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> foobar </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> foo </span><span style="color:#f29e74;">++ </span><span style="color:#bae67e;">&quot;BAR&quot;</span><span style="color:#f29e74;">;
+</span><span style="color:#ccc9c2;">}
+</span></code></pre>
+<p>est équivalent en OCaml à :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> _ </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">foo </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;FOO&quot; </span><span style="color:#ffa759;">in
+let </span><span style="color:#ccc9c2;">foobar </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> foo </span><span style="color:#f29e74;">^ </span><span style="color:#bae67e;">&quot;BAR&quot; </span><span style="color:#ffa759;">in </span><span style="color:#ffcc66;">()
+</span></code></pre>
+<ol start="3">
+<li>L'unification la syntaxe des modules avec celle du local scope. En ReasonML :</li>
+</ol>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">FooBar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> value</span><span style="color:#ffa759;">: t </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;FooBar&quot;</span><span style="color:#f29e74;">;
+</span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>est équivalent en OCaml à :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">FooBar </span><span style="color:#f29e74;">=
+  </span><span style="color:#ffa759;">struct
+    type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+    let</span><span style="color:#ccc9c2;"> value: t </span><span style="color:#f29e74;">= </span><span style="color:#bae67e;">&quot;FooBar&quot;
+  </span><span style="color:#ffa759;">end
+</span></code></pre><h3 id="que-retenir-des-options">Que retenir des options ?</h3>
+<p>Les options servent à modéliser l'absence de valeur. Dans le contexte d'un langage disposant d'<a href="../reasonml-adt">ADT</a>, elles sont faciles à utiliser, surtout avec la syntaxe <code>let*</code> ou l'opérateur infixe <code>&gt;&gt;=</code>.</p>
+<h2 id="modeliser-une-erreur-potentielle">Modéliser une erreur potentielle</h2>
+<p>Si on utilise le type <code>option('a)</code> pour modéliser une erreur, on perd toute information sur l'erreur. On aimerait un type de valeur qui permette de savoir si une fonction a réussi ou échoué, et auquel cas avoir des informations sur l'erreur rencontrée.</p>
+<h3 id="result">Result</h3>
+<p>Le type <code>result('a, 'b)</code> est un type dont les valeurs peuvent être égale à <code>Ok('a)</code>, ce qui représente la réussite du traitement, ou bien <code>Error('b)</code>, ce qui représente l'échec du traitement. Ce type est définit ainsi :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> weapon </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> target </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> impacted </span><span style="color:#f29e74;">=
+  | </span><span style="color:#ccc9c2;">Impacted(target)</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">type </span><span style="color:#f28779;">result</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#f29e74;">, </span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=
+  | </span><span style="color:#ccc9c2;">Ok(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">a</span><span style="color:#ccc9c2;">)
+  </span><span style="color:#f29e74;">| </span><span style="color:#ccc9c2;">Error(</span><span style="color:#ffa759;">&#39;</span><span style="color:#73d0ff;">b</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> arm_your_bow</span><span style="color:#ffa759;">: result(weapon, exn) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Error(Failure(</span><span style="color:#bae67e;">&quot;only have a rapier&quot;</span><span style="color:#ccc9c2;">))</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> targeted_villain</span><span style="color:#ffa759;">: result(target, string) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Error(</span><span style="color:#bae67e;">&quot;too far&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>Etant donné que ReasonML/OCaml fournissent ce type nativement, il n'est pas nécessaire de le déclarer, on peut ainsi écrire directement :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> weapon </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> target </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> impacted </span><span style="color:#f29e74;">=
+  | </span><span style="color:#ccc9c2;">Impacted(target)</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> arm_your_bow</span><span style="color:#ffa759;">: result(weapon, exn) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Error(Failure(</span><span style="color:#bae67e;">&quot;only have a rapier&quot;</span><span style="color:#ccc9c2;">))</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> targeted_villain</span><span style="color:#ffa759;">: result(target, string) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Error(</span><span style="color:#bae67e;">&quot;too far&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+</span></code></pre>
+<p>ReasonML fournit également une fonction <code>bind</code> dans le module <code>Result</code> qui facilite la manipulation des valeurs :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">( </span><span style="color:#ffa759;">let</span><span style="color:#f29e74;">* </span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Result</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">bind</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> weapon </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> target </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> string</span><span style="color:#f29e74;">;
+</span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> impacted </span><span style="color:#f29e74;">=
+  | </span><span style="color:#ccc9c2;">Impacted(target)</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> must_be_carried </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> w </span><span style="color:#f29e74;">=&gt;</span><span style="color:#ccc9c2;">
+  w </span><span style="color:#f29e74;">== </span><span style="color:#bae67e;">&quot;rapier&quot;</span><span style="color:#ccc9c2;"> ? Ok(w) </span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Error(Failure(</span><span style="color:#bae67e;">&quot;not carried&quot;</span><span style="color:#ccc9c2;">))</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> hit_villain_let_star </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(rw</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> rt) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">{
+  </span><span style="color:#ffa759;">let</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> _used </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> rw</span><span style="color:#f29e74;">;
+  </span><span style="color:#ffa759;">let</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> targeted </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> rt</span><span style="color:#f29e74;">;
+  </span><span style="color:#ccc9c2;">Ok(Impacted(targeted))</span><span style="color:#f29e74;">;
+</span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
+
+</span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> foo </span><span style="color:#f29e74;">= </span><span style="color:#f28779;">hit_villain_let_star</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">must_be_carried</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;bow&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">, </span><span style="color:#ccc9c2;">Ok(</span><span style="color:#bae67e;">&quot;pirate&quot;</span><span style="color:#ccc9c2;">))</span><span style="color:#f29e74;">;
+</span></code></pre><h2 id="que-retenir-de-tout-ca">Que retenir de tout ça ?</h2>
+<ul>
+<li>N'utilisez pas d'exception ... la plupart du temps</li>
+<li>Utilisez le type <code>option('a)</code> pour représenter la possibilité d'abscence de valeur</li>
+<li>Utilisez le type <code>result('a,'b)</code> pour représenter la possibilité d'une erreur</li>
+</ul>
+<p>Ces types ont également l'avantage d'intégrer dans le typage l'information de possibilité d'erreur qui était masqué avec les exception.</p>
+</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
+    </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
+    
+<!-- The loading of KaTeX is deferred to speed up page rendering -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz"
+  crossorigin="anonymous"
+></script>
+
+<!-- To automatically render math in text elements, include the auto-render extension: -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+  crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"
+></script>
+
+  </body>
+</html>
