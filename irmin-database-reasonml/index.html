@@ -10,8 +10,7 @@
     <link rel="shortcut icon" href="/img/hacker_mind.svg" />
     <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
     <title>Découverte de la base de données Irmin</title>
-     <link rel="alternate"
-    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    
     <script
       type="text/javascript"
       src="https://buttons.github.io/buttons.js"
@@ -241,24 +240,24 @@
 <p>Il s'agit sûrement de l'usage principal, sérialiser des valeurs indexées par une clé afin de partager une information entre plusieurs instances d'une même application.</p>
 <p>Par exemple, tracer la dernière tentative de login d'une IP pour détecter des attaques Brute force :</p>
 <pre style="background-color:#212733;">
-  | Key            | Value                       |
+<code>  | Key            | Value                       |
   | ---------------|---------------------------: |
   | 149.178.232.77 |   2020-03-18T11:12:55+0000  |
   | 120.32.234.80  |   2020-03-10T19:08:37+0000  |
-</pre><h3 id="directory">Directory</h3>
+</code></pre><h3 id="directory">Directory</h3>
 <p>Les clés peuvent être organisées de manière arborescente afin de modéliser un annuaire ou un catalogue.</p>
 <p>Par exemple un catalogue de référeces d'outils :</p>
 <pre style="background-color:#212733;">
-  | Key            | Value                       |
+<code>  | Key            | Value                       |
   | ---------------|---------------------------: |
   | clé/60044201   |   Clé à molette 380 mm      |
   | clé/81989876   |   Clé à pipe 19 mmm         |
   | clé/65997463   |   Clé à griffe 17 mm        |
-</pre><h3 id="base-document">Base document</h3>
+</code></pre><h3 id="base-document">Base document</h3>
 <p>Les bases orientées documents sont en réalité une spécialisation des bases clé/valeur, dont la valeur peut être un document, en général représenté au format JSON.</p>
 <p>Par exemple, un suivi d'une flotte de véhicules :</p>
 <pre style="background-color:#212733;">
-  | Key            | Value                          |
+<code>  | Key            | Value                          |
   | ---------------|------------------------------: |
   | 5Y2SR67049Z45  |   {&quot;color&quot; : &quot;Black&quot;,          |
   |                |        &quot;license&quot; : &quot;MYCAR00&quot;,  |
@@ -274,16 +273,16 @@
   |                |         [&quot;Renault&quot;, &quot;Twingo&quot;], |
   |                |        &quot;owner&quot; :&quot;Danny Boon&quot;}  |
   | ---------------|------------------------------: |
-</pre><h3 id="middelware-de-pub-sub">Middelware de PUB/SUB</h3>
+</code></pre><h3 id="middelware-de-pub-sub">Middelware de PUB/SUB</h3>
 <p>Publish-Subscribe est un pattern de messagerie où les éditeurs de messages catégorisent les messages publiés sans connaitre les abonnés qui les consommeront. Il est courant d'utiliser une base KV pour gérer le pipeline de messages. Cela demande en général du code complémentaire pour créer un middleware de PUB/SUB, cependant certaines bases comme <em>Redis</em> intègrent nativement genre de mécanisme.</p>
 <p>Par exemple, créer un système de messagerie :</p>
 <pre style="background-color:#212733;">
-  | Key            | Value                                 |
+<code>  | Key            | Value                                 |
   | ---------------|-------------------------------------: |
   | topic/A/B/C    | { &quot;user&quot; : &quot;John&quot;, &quot;msg&quot; : &quot;coucou&quot; } |
   | topic/A/B/C    | { &quot;user&quot; : &quot;Jack&quot;, &quot;msg&quot; : &quot;Yo!!&quot; }   |
   | topic/A/B/D    | { &quot;user&quot; : &quot;Jaine&quot;, &quot;msg&quot; : &quot;Ohiho&quot; } |
-</pre><h2 id="qu-est-ce-qu-irmin">Qu'est-ce qu'Irmin</h2>
+</code></pre><h2 id="qu-est-ce-qu-irmin">Qu'est-ce qu'Irmin</h2>
 <p>Irmin est une base de données clé / valeur, qui permet donc de mettre en oeuvre les différents pattern vus précédemment, créé par l'équipe <a href="https://mirage.io">Mirage</a>. La promesse de cette solution est de proposer une entrepôt de données facilement distribuable, grâce aux principes de Git : branches et merges.</p>
 <p>En plus de cela, Irmin propose nativement :</p>
 <ul>
@@ -297,21 +296,21 @@
 <p>Commençons par une utilisation <em>standalone</em> d'Irmin. En pré-requis, vous devez disposer d'un installation de <a href="http://opam.ocaml.org/doc/Install.html">opam</a> et <a href="https://ocaml.org/docs/install.fr.html">OCaml</a> en version supérieur à la <code>4.05.0</code></p>
 <p>Vérifiez votre version de OCaml :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ ocaml --version
+<code><span style="color:#ccc9c2;">$ ocaml --version
 The OCaml toplevel, version 4.10.0
-</span></pre>
+</span></code></pre>
 <p>Installez <code>irmin-unix</code> avec <code>opam</code></p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ opam install irmin-unix
-</span></pre>
+<code><span style="color:#ccc9c2;">$ opam install irmin-unix
+</span></code></pre>
 <p>Créez votre première base Irmin :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ mkdir -p /tmp/irmin/example &amp;&amp; cd /tmp/irmin/example
+<code><span style="color:#ccc9c2;">$ mkdir -p /tmp/irmin/example &amp;&amp; cd /tmp/irmin/example
 $ irmin init
-</span></pre>
+</span></code></pre>
 <p>Nous pouvons maintenant utiliser notre base avec le CLI :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ irmin set -s git &quot;149.178.232.77&quot; 2020-03-18T11:12:55+0000
+<code><span style="color:#ccc9c2;">$ irmin set -s git &quot;149.178.232.77&quot; 2020-03-18T11:12:55+0000
 $ irmin get -s git &quot;149.178.232.77&quot;
 2020-03-18T11:12:55+0000
 $ irmin set -s git cle/60044201 &quot;Clé à molette 380 mm&quot;
@@ -322,7 +321,7 @@ $ irmin tree -s git
 /cle/60044201.........................................Clé à molette 380 mm
 /149.178.232.77.....................................2020-03-18T11:12:55+0000
 
-</span></pre>
+</span></code></pre>
 <p>Les commandes se lisent :</p>
 <ul>
 <li><code>irmin set</code> permet d'écrire une valeur, l'argument <code>-s</code> permet de spécifier le backend (ici git), le premier paramètre représente la clé et le second la valeur ; comme on le voit une clé peut être une chaine de caractère ou un path.</li>
@@ -332,15 +331,15 @@ $ irmin tree -s git
 <h3 id="serveur-graphql-integre">Serveur Graphql intégré</h3>
 <p>La librairie <code>irmin-unix</code> dispose également d'un serveur GraphQL prêt à l'emploi :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ irmin graphql --port 5000
-</span></pre>
+<code><span style="color:#ccc9c2;">$ irmin graphql --port 5000
+</span></code></pre>
 <p>Nous pouvons maintenant utiliser un client graphQL (ou n'importe quel client capable d'exécuter une requête POST) pour consilter nos données, par exemple avec <code>curl</code> nous pouvons lire la valeur stockée précédemment :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ curl -X POST -d &#39;{&quot;query&quot;: &quot;{master{tree{get(key:\&quot;149.178.232.77\&quot;)}}}&quot;}&#39; \
+<code><span style="color:#ccc9c2;">$ curl -X POST -d &#39;{&quot;query&quot;: &quot;{master{tree{get(key:\&quot;149.178.232.77\&quot;)}}}&quot;}&#39; \
 -H &quot;Content-Type: application/json&quot; http://localhost:5000/graphql
 
 {&quot;data&quot;:{&quot;master&quot;:{&quot;tree&quot;:{&quot;get&quot;:&quot;2020-03-18T11:12:55+0000&quot;}}}}
-</span></pre>
+</span></code></pre>
 <p>Le serveur est configuré avec un clients <a href="https://github.com/graphql/graphiql">GraphiQL</a> exposé à cette adresse : <a href="http://localhost:5000/graphql_">http://localhost:5000/graphql_</a> qui permet d'explorer le schéma et les données.</p>
 <p>Irmin fournit en complément des clients en js et go :</p>
 <ul>
@@ -353,26 +352,26 @@ $ irmin tree -s git
 <h3 id="sauvegarde-et-restauration-de-base">Sauvegarde et restauration de base</h3>
 <p>Il est également possible de faire une sauvegarde de sa base :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ irmin snapshot
+<code><span style="color:#ccc9c2;">$ irmin snapshot
 a549f1538a15e9865677189d84c607b4d4777646
-</span></pre>
+</span></code></pre>
 <p>puis de la restaurer à partir du SHA1 :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ irmin revert a549f1538a15e9865677189d84c607b4d4777646
-</span></pre><h3 id="distribuer-son-data-store">Distribuer son data store</h3>
+<code><span style="color:#ccc9c2;">$ irmin revert a549f1538a15e9865677189d84c607b4d4777646
+</span></code></pre><h3 id="distribuer-son-data-store">Distribuer son data store</h3>
 <p>Irmin permet de synchroniser plusieurs stores entre eux pour obtenir une base distribuée. A ce niveau, rien de magique, Irmin tient sa promesse d'utilisation de Git, lui-même un système distribué.</p>
 <p>Pour répliquer son store, il suffit de <code>push</code> :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ irmin push $MY_GIT_RMOTE_REPOSITORY
-</span></pre>
+<code><span style="color:#ccc9c2;">$ irmin push $MY_GIT_RMOTE_REPOSITORY
+</span></code></pre>
 <p>pour initialiser depuis un autre repository de <code>clone</code> :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ irmin clone $MY_GIT_RMOTE_REPOSITORY
-</span></pre>
+<code><span style="color:#ccc9c2;">$ irmin clone $MY_GIT_RMOTE_REPOSITORY
+</span></code></pre>
 <p>ou pour synchroniser de <code>pull</code>:</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">$ irmin pull -s $MY_GIT_RMOTE_REPOSITORY
-</span></pre><h3 id="une-autre-base-kv-avec-un-backend-git-un-serveur-graphql">Une autre base KV ... avec un backend git &amp; un serveur GraphQL</h3>
+<code><span style="color:#ccc9c2;">$ irmin pull -s $MY_GIT_RMOTE_REPOSITORY
+</span></code></pre><h3 id="une-autre-base-kv-avec-un-backend-git-un-serveur-graphql">Une autre base KV ... avec un backend git &amp; un serveur GraphQL</h3>
 <p>A ce stade, nous avons donc &quot;simplement&quot; une base clé / valeur traditionnelle, intégrant les principes de Git et un serveur GraphQL : c'est déjà très intéressant ! En quelques lignes de commandes, nous avons notre base locale et la possibilité de la synchroniser avec n'importe quel serveur Git, y compris Gitlab ou Github.</p>
 <p>Mais nous avons également quelques faiblesses :</p>
 <ul>
@@ -384,7 +383,7 @@ a549f1538a15e9865677189d84c607b4d4777646
 <h2 id="le-domaine">Le domaine</h2>
 <p>Revenons à l'exemple des précédents articles, où nous avons commencé à travailler autour d'un créateur de personnages pour le jeu de rôle 7ème Mer ; pour notre exemple nous disposerons d'une version simplifiée du domaine <strong>Hero</strong></p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">
+<code><span style="color:#ccc9c2;">
     </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Nation </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
         </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">=
             | </span><span style="color:#ccc9c2;">Castille
@@ -410,10 +409,10 @@ a549f1538a15e9865677189d84c607b4d4777646
             </span><span style="color:#ffa759;">trait</span><span style="color:#f29e74;">: </span><span style="color:#ccc9c2;">Trait</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">,
         </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>Cela nous permet, par exemple, de créer ces deux célèbres héros avec ces valeurs :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> inigo_montoya </span><span style="color:#f29e74;">=
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> inigo_montoya </span><span style="color:#f29e74;">=
     </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">{
         id</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;567de924-cc04-41a0-acc8-431dd332ce79&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
         name</span><span style="color:#f29e74;">: </span><span style="color:#bae67e;">&quot;Inigo Montoya&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;">
@@ -439,12 +438,12 @@ a549f1538a15e9865677189d84c607b4d4777646
         panache</span><span style="color:#f29e74;">: </span><span style="color:#ffcc66;">3</span><span style="color:#f29e74;">,
         </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">,
     </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre><h2 id="jouons-avec-irmin">Jouons avec Irmin</h2>
+</span></code></pre><h2 id="jouons-avec-irmin">Jouons avec Irmin</h2>
 <p>Pour réaliser le programme à suivre, nous avons besoin des dépendances : <code>irmin</code>, <code>irmin-unix</code>, <code>irmin-git</code>, <code>lwt</code> et <code>lwt_ssl</code>. Si vous ne savez pas comment faire, lisez le billet sur l'<a href="../esy-reasonml/#gestion-des-dependances">outillage projet</a></p>
 <h3 id="des-donnees-type-safe">Des données &quot;type safe&quot;</h3>
 <p>Un des intérêts d'utiliser un système de typage statique est d'apporter plus de sécurité dans les valeurs manipulées, c'est bien ce qu'on va chercher pour les valeurs que nous voulons stocker grâce à Irmin. On ne peut pas directement utiliser nos types, mais nous n'avons pas non plus à gérer un mapping entre deux systèmes de types distincts, comme on le fait habituellement avec un ORM. En effet, puisqu'on partage le même langage, Irmin permet d'utiliser n'importe quelle valeur de type <code>Irmin.Type.t('a)</code> pour définir les valeurs d'un store. Nous allons donc simplement créer des types compatibles, encapsulés dans un module : cette opération est relativement simple car Irmin fournit des fonctions pour représenter les <strong>variants</strong> et les <strong>record</strong></p>
 <pre style="background-color:#212733;">
-<span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IrminHero </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
+<code><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">IrminHero </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{
   </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Hero</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">t</span><span style="color:#f29e74;">;
   </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> nation </span><span style="color:#f29e74;">=
     </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Type</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(
@@ -490,34 +489,34 @@ a549f1538a15e9865677189d84c607b4d4777646
     )</span><span style="color:#f29e74;">;
   </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> merge </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Merge</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">option</span><span style="color:#ccc9c2;">(</span><span style="color:#f28779;">idempotent</span><span style="color:#ccc9c2;">(t)))</span><span style="color:#f29e74;">;
 </span><span style="color:#ccc9c2;">}</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>J'ai mis ici le code pour vous montrer qu'il n'y a rien de magique, mais il est possible d'utiliser un ppx pour réduire le code <em>boilerplate</em> : <a href="https://github.com/mirage/irmin/blob/master/README_PPX.md">https://github.com/mirage/irmin/blob/master/README_PPX.md</a></p>
 <p>A présent que nous avons nos types, il nous reste à définir un data store et les opérations sur ce store. Cela est très facile grâce aux <a href="../reasonml-modules/#les-foncteurs">Foncteurs</a> mis à disposition par Irmin :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">HeroStore </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin_unix</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Git</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">FS</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">KV(IrminHero)</span><span style="color:#f29e74;">;
+<code><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">HeroStore </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin_unix</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Git</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">FS</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">KV(IrminHero)</span><span style="color:#f29e74;">;
 </span><span style="color:#ffa759;">module </span><span style="color:#ccc9c2;">Sync </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Sync(HeroStore)</span><span style="color:#f29e74;">;
-</span></pre><h3 id="prepartion-du-repository">Prépartion du repository</h3>
+</span></code></pre><h3 id="prepartion-du-repository">Prépartion du repository</h3>
 <p>Il nous faut ensuite définir notre repository de données :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> gitConfig </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin_git</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">config</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">~</span><span style="color:#ccc9c2;">bare</span><span style="color:#f29e74;">=</span><span style="color:#ffcc66;">true</span><span style="color:#f29e74;">, </span><span style="color:#bae67e;">&quot;/path/to/my/local&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
+<code><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> gitConfig </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Irmin_git</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">config</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">~</span><span style="color:#ccc9c2;">bare</span><span style="color:#f29e74;">=</span><span style="color:#ffcc66;">true</span><span style="color:#f29e74;">, </span><span style="color:#bae67e;">&quot;/path/to/my/local&quot;</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
 </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> gitRepo </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(git_config)</span><span style="color:#f29e74;">;
 </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> gitRemote </span><span style="color:#f29e74;">=
   </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">remote</span><span style="color:#ccc9c2;">(
     </span><span style="color:#bae67e;">&quot;https://login:password@path/to/my/remote.git&quot;</span><span style="color:#f29e74;">,
   </span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">;
-</span></pre>
+</span></code></pre>
 <p>Ce qui peut nous permettre dans un premier temps de définir ces quelques fonctions utilitaires :</p>
 <pre style="background-color:#212733;">
-<span style="font-style:italic;color:#5c6773;">/* Access master brach */
+<code><span style="font-style:italic;color:#5c6773;">/* Access master brach */
 </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> master </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> config </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(config) </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">master</span><span style="color:#f29e74;">;
 </span><span style="font-style:italic;color:#5c6773;">/* Access a named brach */
 </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> branch </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(config</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> name) </span><span style="color:#f29e74;">=&gt;
   </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Repo</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">v</span><span style="color:#ccc9c2;">(config) </span><span style="color:#f29e74;">&gt;&gt;= </span><span style="color:#ccc9c2;">(repo </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">HeroStore</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">of_branch</span><span style="color:#ccc9c2;">(repo</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> name))</span><span style="color:#f29e74;">;
 </span><span style="font-style:italic;color:#5c6773;">/* Add info to &quot;commit&quot; */
 </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> info </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(author</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> message) </span><span style="color:#f29e74;">=&gt; </span><span style="color:#ccc9c2;">Irmin_unix</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">info</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">~</span><span style="color:#ccc9c2;">author</span><span style="color:#f29e74;">, </span><span style="color:#bae67e;">&quot;%s&quot;</span><span style="color:#f29e74;">,</span><span style="color:#ccc9c2;"> message)</span><span style="color:#f29e74;">;
-</span></pre><h3 id="exemple-de-programme">Exemple de programme</h3>
+</span></code></pre><h3 id="exemple-de-programme">Exemple de programme</h3>
 <pre style="background-color:#212733;">
-<span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Infix</span><span style="color:#f29e74;">;
+<code><span style="color:#ffa759;">open </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">Infix</span><span style="color:#f29e74;">;
 
 </span><span style="color:#ffa759;">let</span><span style="color:#ccc9c2;"> main </span><span style="color:#f29e74;">=
   </span><span style="color:#ccc9c2;">Lwt</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">join</span><span style="color:#ccc9c2;">([
@@ -563,7 +562,7 @@ a549f1538a15e9865677189d84c607b4d4777646
 
 </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">() </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Lwt_main</span><span style="color:#f29e74;">.</span><span style="color:#f28779;">run</span><span style="color:#ccc9c2;">(main)</span><span style="color:#f29e74;">;
 
-</span></pre>
+</span></code></pre>
 <p>Et voilà ! J'ai également présenté Irmin lors du Lambda Remote 2 dont voici la vidéo :</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BT2e-DkcVQo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>

@@ -10,8 +10,7 @@
     <link rel="shortcut icon" href="/img/hacker_mind.svg" />
     <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
     <title>ReasonML : Outillage d&#x27;un projet</title>
-     <link rel="alternate"
-    type="application/rss+xml" title="RSS" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;rss.xml" /> 
+    
     <script
       type="text/javascript"
       src="https://buttons.github.io/buttons.js"
@@ -250,11 +249,11 @@
 <h2 id="initialisation">Initialisation</h2>
 <p>Dans notre répertoire projet, nous commençons par créer les fichiers nécessaire :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#f28779;">echo </span><span style="color:#bae67e;">&#39;(lang dune 1.11)\n (name sorte)&#39; </span><span style="color:#f29e74;">&gt;&gt;</span><span style="color:#ccc9c2;"> dune-project
+<code><span style="color:#ccc9c2;">    </span><span style="color:#f28779;">echo </span><span style="color:#bae67e;">&#39;(lang dune 1.11)\n (name sorte)&#39; </span><span style="color:#f29e74;">&gt;&gt;</span><span style="color:#ccc9c2;"> dune-project
     </span><span style="color:#f28779;">echo </span><span style="color:#bae67e;">&#39;(dirs (:standard \ node_modules \ _esy))&#39; </span><span style="color:#f29e74;">&gt;&gt;</span><span style="color:#ccc9c2;"> dune
     </span><span style="color:#ffd580;">touch</span><span style="color:#ccc9c2;"> package.json
     </span><span style="color:#ffd580;">touch</span><span style="color:#ccc9c2;"> sorte.opam
-</span></pre>
+</span></code></pre>
 <ul>
 <li>Le fichier <a href="https://dune.readthedocs.io/en/latest/dune-files.html#dune-project">dune-project</a> se place à la racine du projet et sert à définir les informations communes, à minima la version de <strong>Dune</strong> utilisée.</li>
 </ul>
@@ -269,60 +268,60 @@
 <h2 id="gestion-des-dependances">Gestion des dépendances</h2>
 <p>Commençons par éditer une première version du manifeste <code>package.json</code> :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">{
-  </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte&quot;</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;version&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;0.0.1&quot;</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;description&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Sorte is a 7th characters builder written in ReasonML&quot;</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;license&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;MPL-2.0&quot;</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;scripts&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-    </span><span style="color:#5ccfe6;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;bash -c &#39;env PESY_MODE=update pesy&#39;&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;start&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;esy x SorteApp.exe&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;test&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;esy x TestSorte.exe&quot;
+<code><span style="color:#ccc9c2;">{
+  </span><span style="color:#bae67e;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#bae67e;">&quot;version&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;0.0.1&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#bae67e;">&quot;description&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Sorte is a 7th characters builder written in ReasonML&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#bae67e;">&quot;license&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;MPL-2.0&quot;</span><span style="color:#ccc9c2cc;">,
+  </span><span style="color:#bae67e;">&quot;scripts&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#bae67e;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;bash -c &#39;env PESY_MODE=update pesy&#39;&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;start&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;esy x SorteApp.exe&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;test&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;esy x TestSorte.exe&quot;
   </span><span style="color:#ccc9c2;">}</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;dependencies&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-    </span><span style="color:#5ccfe6;">&quot;@opam/dune&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;&gt;=1.11&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;@esy-ocaml/reason&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;ocaml&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;~4.8.1000&quot;
+  </span><span style="color:#bae67e;">&quot;dependencies&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#bae67e;">&quot;@opam/dune&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;&gt;=1.11&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;@esy-ocaml/reason&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;ocaml&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;~4.8.1000&quot;
   </span><span style="color:#ccc9c2;">}</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;devDependencies&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-    </span><span style="color:#5ccfe6;">&quot;ocaml&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;~4.8.1000&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;refmterr&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;@opam/merlin&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;@reason-native/rely&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;
+  </span><span style="color:#bae67e;">&quot;devDependencies&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#bae67e;">&quot;ocaml&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;~4.8.1000&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;refmterr&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;@opam/merlin&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;@reason-native/rely&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;*&quot;
   </span><span style="color:#ccc9c2;">}</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;esy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-    </span><span style="color:#5ccfe6;">&quot;build&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;dune build -p &lt;PACKAGE_NAME&gt;&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;buildDev&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;release&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-      </span><span style="color:#5ccfe6;">&quot;releasedBinaries&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;SorteApp.exe&quot;</span><span style="color:#ccc9c2;">]
+  </span><span style="color:#bae67e;">&quot;esy&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#bae67e;">&quot;build&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;dune build -p &lt;PACKAGE_NAME&gt;&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;buildDev&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;pesy&quot;</span><span style="color:#ccc9c2cc;">,
+    </span><span style="color:#bae67e;">&quot;release&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#bae67e;">&quot;releasedBinaries&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;SorteApp.exe&quot;</span><span style="color:#ccc9c2;">]
     }
   }</span><span style="color:#ccc9c2cc;">,
-  </span><span style="color:#5ccfe6;">&quot;buildDirs&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-    </span><span style="color:#5ccfe6;">&quot;lib&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-      </span><span style="color:#5ccfe6;">&quot;namespace&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Lib&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[]
+  </span><span style="color:#bae67e;">&quot;buildDirs&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+    </span><span style="color:#bae67e;">&quot;lib&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#bae67e;">&quot;namespace&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Lib&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[]
     }</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;bin&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-      </span><span style="color:#5ccfe6;">&quot;main&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;SorteApp&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;SorteApp.exe&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2;">]
+    </span><span style="color:#bae67e;">&quot;bin&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#bae67e;">&quot;main&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;SorteApp&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;SorteApp.exe&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2;">]
     }</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;test&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-      </span><span style="color:#5ccfe6;">&quot;namespace&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Test&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte.test&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;ocamloptFlags&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;-linkall&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#bae67e;">&quot;-g&quot;</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#bae67e;">&quot;rely.lib&quot;</span><span style="color:#ccc9c2;">]
+    </span><span style="color:#bae67e;">&quot;test&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#bae67e;">&quot;namespace&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;Test&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;sorte.test&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;ocamloptFlags&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;-linkall&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#bae67e;">&quot;-g&quot;</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.lib&quot;</span><span style="color:#ccc9c2cc;">, </span><span style="color:#bae67e;">&quot;rely.lib&quot;</span><span style="color:#ccc9c2;">]
     }</span><span style="color:#ccc9c2cc;">,
-    </span><span style="color:#5ccfe6;">&quot;test-runner&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
-      </span><span style="color:#5ccfe6;">&quot;main&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;TestSorte&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;TestSorte.exe&quot;</span><span style="color:#ccc9c2cc;">,
-      </span><span style="color:#5ccfe6;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.test&quot;</span><span style="color:#ccc9c2;">]
+    </span><span style="color:#bae67e;">&quot;test-runner&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">{
+      </span><span style="color:#bae67e;">&quot;main&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;TestSorte&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;name&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#bae67e;">&quot;TestSorte.exe&quot;</span><span style="color:#ccc9c2cc;">,
+      </span><span style="color:#bae67e;">&quot;require&quot;</span><span style="color:#ccc9c2cc;">: </span><span style="color:#ccc9c2;">[</span><span style="color:#bae67e;">&quot;sorte.test&quot;</span><span style="color:#ccc9c2;">]
     }
   }
 }
-</span></pre>
+</span></code></pre>
 <p>Comme vous le constatez, ce fichier mime le <a href="https://docs.npmjs.com/files/package.json">package.json de npmjs</a> avec quelques <a href="https://esy.sh/docs/en/configuration.html">spécificités propres à esy</a>.</p>
 <h3 id="scripts">Scripts</h3>
 <p>Les <code>scripts</code> fonctionnent comme pour npm, à la différence qu'ils se lancent avec la commande <code>esy [NOM_DU_SCRIPT]</code>.</p>
@@ -336,40 +335,40 @@
 <p>Il est également possible d'avoir des résolutions sur npm, préfixées par <code>@npm/</code>, utiles pour les projet <a href="https://ocsigen.org/js_of_ocaml/3.5.1/manual/overview">js_of_ocaml</a> ou depuis n'importe quelle origine en utilisant des <a href="https://esy.sh/docs/en/linking-workflow.html">resolutions</a></p>
 <p>Vous pouvez mainteant exécuter le commande :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> install
-</span></pre><h3 id="ajouter-des-dependances">Ajouter des dépendances</h3>
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> install
+</span></code></pre><h3 id="ajouter-des-dependances">Ajouter des dépendances</h3>
 <p>Il est bien sûr possible d'ajouter les dépendences directement en utilisant le CLI.
 Dans le cas de ce projet je souhaite utliser <a href="https://irmin.io">Irmin</a> dont je parlerai prochainement.</p>
 <pre style="background-color:#212733;">
-<span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> add @opam/irmin @opam/irmin-unix @opam/irmin-git
-</span></pre><h2 id="pesy">Pesy</h2>
+<code><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> add @opam/irmin @opam/irmin-unix @opam/irmin-git
+</span></code></pre><h2 id="pesy">Pesy</h2>
 <p>Devoir gérer un fichier Dune dans chaque répertoire est assez rébarbatif et rend difficile une vue d'ensemble sur des projets complexes. De plus, si vous n'êtes pas issu.e de l'écosystème <strong>OCaml</strong>, l'utilisation de <a href="https://en.wikipedia.org/wiki/S-expression">S-Expressions</a> vous est peut-être étrangère.</p>
 <p>Pour faciliter cela, <a href="https://github.com/esy/pesy">pesy</a> est très pratique. Cet sous-projet de <strong>esy</strong> vous permet de générer les répertoires de vos projets ainsi que les fichiers Dune, grâce à la définition d'un noeud <code>buildDirs</code> dans votre manifeste.</p>
 <h3 id="generation-de-configuration">Génération de configuration</h3>
 <p>Je vous propose une arborescence assez classique :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">        </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">-</span><span style="color:#ccc9c2;"> bin </span><span style="font-style:italic;color:#5c6773;">#contient l&#39;executable principal de notre projet
+<code><span style="color:#ccc9c2;">        </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">-</span><span style="color:#ccc9c2;"> bin </span><span style="font-style:italic;color:#5c6773;">#contient l&#39;executable principal de notre projet
         </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">-</span><span style="color:#ccc9c2;"> lib </span><span style="font-style:italic;color:#5c6773;">#contient le métier de notre projet
         </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">-</span><span style="color:#ccc9c2;"> test </span><span style="font-style:italic;color:#5c6773;">#contient les tests de notre lib
         </span><span style="color:#f29e74;">|</span><span style="color:#ffd580;">_</span><span style="color:#ccc9c2;"> test-runner </span><span style="font-style:italic;color:#5c6773;">#contient l&#39;execution de nos tests
-</span></pre>
+</span></code></pre>
 <p>Vous pouvez mainteant exécuter le commande suivante, qui correspond au script de votre manifeste :</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> pesy
-</span></pre>
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> pesy
+</span></code></pre>
 <p>N'hésitez pas à consulter les fichiers Dune générer dans chaque répertoire, pour appréhender cet outtil.</p>
 <blockquote>
 <p>Si vous êtes déjà familier de Dune, vous remarquerez que l'attribut <strong>name</strong> correspond à l'attribut <strong>public_name</strong> de Dune alors que l'attribut <strong>namespace</strong> correspond à l'attribut <strong>name</strong> de Dune</p>
 </blockquote>
 <p>Vous pouvez ensuite compiler et executer le programme issu de cette génération.</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> build </span><span style="font-style:italic;color:#5c6773;"># compile le projet
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> build </span><span style="font-style:italic;color:#5c6773;"># compile le projet
 </span><span style="color:#ccc9c2;">    esy x SorteApp.exe </span><span style="font-style:italic;color:#5c6773;"># exécute l&#39;exécutable
-</span></pre>
+</span></code></pre>
 <p>ou le script que nous avons déclaré dans notre manifeste</p>
 <pre style="background-color:#212733;">
-<span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> start
-</span></pre>
+<code><span style="color:#ccc9c2;">    </span><span style="color:#ffd580;">esy</span><span style="color:#ccc9c2;"> start
+</span></code></pre>
 <p>Vous venez de réalisez votre premier <code>Hello world</code> en initialisant votre projet.</p>
 <p>Bien que beaucoup de <a href="https://github.com/esy/pesy/blob/master/site/docs/supported-config.md">configurations soient disponibles</a> via <strong>pesy</strong>, vous pouvez rencontrer des limitations. Dans ce cas, il vous suffit de supprimer le noeud <code>buildDirs</code> de votre manifeste et de continuer à gérer manuellement vos fichiers Dune.</p>
 <blockquote>

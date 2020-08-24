@@ -18,7 +18,7 @@ L'intention derrière le projet [ReasonML](https://reasonml.github.io/) tiens da
 
 > Reason lets you write simple, fast and quality type safe code while leveraging both the JavaScript & OCaml ecosystems.
 
-Dis autrement, partant du postulat que la syntaxe est un problème à l'accès au merveilleux écosystème OCaml, **ReasonML** propose d'introduire une syntaxe le plus proche possible de celle de Javascript au dessus du modèle de type d'OCaml. Dès le départ, il y a clairement une intention de faciliter le _Javascript as a bytecode_, nous aurons l'occasion d'en reparler, mais pas que. A l'inverse, des langages tels que le populaire Typescript ou le plus confidentiel Purescript, en passant par Clojurescript ou Elm, la volonté n'est pas de créer un nouveau langage dédié à la compilation vers js, mais un langage complet dont la compilation vers js n'est qu'une des possibilité. Dès lors, s'appuyer sur un ecosystème riche de plus de 20 ans d'expérience est un gage de confiance.
+Dis autrement, partant du postulat que la syntaxe est un problème à l'accès au merveilleux écosystème OCaml, **ReasonML** propose d'introduire une syntaxe le plus proche possible de celle de Javascript au dessus du modèle de type d'OCaml. Dès le départ, il y a clairement une intention de faciliter le _Javascript as a bytecode_, nous aurons l'occasion d'en reparler, mais pas que. A l'inverse, des langages tels que le populaire Typescript ou le plus confidentiel Purescript, en passant par Clojurescript ou Elm, la volonté n'est pas de créer un nouveau langage dédié à la compilation vers js, mais un langage complet dont la compilation vers js n'est qu'une des possibilités. Dès lors, s'appuyer sur un ecosystème riche de plus de 20 ans d'expérience est un gage de confiance.
 
 # Tour d'O-Reason
 
@@ -120,6 +120,7 @@ Dans cette série de découverte, nous aborderons ensemble prochainement :
 - [Les modules ReasonML](../reasonml-modules)
 - [Outillage d'un projet ReasonML](../esy-reasonml)
 - [Découverte d'Irmin](../irmin-database-reasonml)
+- [Gestion des erreurs](../error-management-reasonml)
 - Tests de propriétés
 - GUI avec Revery
 
