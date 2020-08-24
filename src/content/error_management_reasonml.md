@@ -310,7 +310,7 @@ let _ = let foo = "FOO" in
 let foobar = foo ^ "BAR" in ()
 ```
 
-3. L'unification la syntaxe des modules avec celle du local scope. En ReasonML :
+3. L'unification de la syntaxe des modules avec celle du local scope. En ReasonML :
 
 ```reason
 module FooBar = {
@@ -395,4 +395,4 @@ let foo = hit_villain_let_star(must_be_carried("bow"), Ok("pirate"));
 - Utilisez le type `option('a)` pour représenter la possibilité d'abscence de valeur
 - Utilisez le type `result('a,'b)` pour représenter la possibilité d'une erreur
 
-Ces types ont également l'avantage d'intégrer dans le typage l'information de possibilité d'erreur qui était masqué avec les exception.
+Ces types ont également l'avantage d'intégrer dans le typage l'information de possibilité d'erreur qui était masquée avec les exception.
