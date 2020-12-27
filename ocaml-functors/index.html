@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta name="description" content="" />
+    <meta name="generator" content="Zola" />
+    <link rel="shortcut icon" href="/img/hacker_mind.svg" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;main.css" /> <link rel="stylesheet" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;fontawsome.css" />
+    <title>OCaml : DnD Kata</title>
+    
+    <script
+      type="text/javascript"
+      src="https://buttons.github.io/buttons.js"
+    ></script>
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    
+<meta property="og:title" content="OCaml : DnD Kata" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr" />
+<meta property="og:img" content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg" />
+<meta property="og:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;ocaml-functors&#x2F;" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content="OCaml : DnD Kata" />
+<meta property="twitter:url" content="https:&#x2F;&#x2F;oteku.github.io&#x2F;ocaml-functors&#x2F;" />
+<meta property="twitter:description" content="" />
+<meta
+  property="twiter:image"
+  content="https:&#x2F;&#x2F;oteku.github.io/img/hacker_mind.svg"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+  crossorigin="anonymous"
+/>
+
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var checkActiveCategory = true;
+      for (var i = 0; i < coll.length; i++) {
+        var links = coll[i].nextElementSibling.getElementsByTagName("*");
+        if (checkActiveCategory) {
+          for (var j = 0; j < links.length; j++) {
+            if (links[j].classList.contains("navListItemActive")) {
+              coll[i].nextElementSibling.classList.toggle("hide");
+              coll[i].childNodes[1].classList.toggle("rotate");
+              checkActiveCategory = false;
+              break;
+            }
+          }
+        }
+
+        coll[i].addEventListener("click", function() {
+          var arrow = this.childNodes[1];
+          arrow.classList.toggle("rotate");
+          var content = this.nextElementSibling;
+          content.classList.toggle("hide");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        createToggler("#navToggler", "#docsNav", "docsSliderActive");
+        createToggler("#tocToggler", "body", "tocActive");
+
+        var headings = document.querySelector(".toc-headings");
+        headings &&
+          headings.addEventListener(
+            "click",
+            function(event) {
+              var el = event.target;
+              while (el !== headings) {
+                if (el.tagName === "A") {
+                  document.body.classList.remove("tocActive");
+                  break;
+                } else {
+                  el = el.parentNode;
+                }
+              }
+            },
+            false
+          );
+
+        function createToggler(togglerSelector, targetSelector, className) {
+          var toggler = document.querySelector(togglerSelector);
+          var target = document.querySelector(targetSelector);
+
+          if (!toggler) {
+            return;
+          }
+
+          toggler.onclick = function(event) {
+            event.preventDefault();
+
+            target.classList.toggle(className);
+          };
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="fixedHeaderContainer">
+      <div class="headerWrapper wrapper">
+        <header>
+          <a href="https:&#x2F;&#x2F;oteku.github.io"
+            ><img class="logo" src="/img/hacker_mind.svg" alt="Hacker Mind" />
+            <h2 class="headerTitleWithLogo">Oteku</h2></a
+          >
+          <div class="navigationWrapper navigationSlider">
+            <nav class="slidingNav">
+              <ul class="nav-site nav-site-internal">
+                 
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;ocaml&#x2F;" target="_self">OCaml</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;reasonml&#x2F;" target="_self">ReasonML</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;rust&#x2F;" target="_self">Rust</a>
+                </li>
+                
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;oteku.github.io&#x2F;tags&#x2F;tooling&#x2F;" target="_self">Tooling</a>
+                </li>
+                  
+                <li class="">
+                  <a href="https:&#x2F;&#x2F;github.com&#x2F;oteku&#x2F;oteku.github.io" target="_self"
+                    >Github</a
+                  >
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+    </div>
+    <div class="navPusher">
+      <div class="docMainWrapper wrapper">
+        
+<div id="docsNav" class="docsNavContainer">
+  <nav class="toc">
+    <div class="toggleNav">
+      <section class="navWrapper wrapper">
+        <div class="navBreadcrumb wrapper">
+          <div class="navToggle" id="navToggler">
+            <div class="hamburger-menu">
+              <div class="line1"></div>
+              <div class="line2"></div>
+              <div class="line3"></div>
+            </div>
+          </div>
+          <h2><i>›</i><span>Chapitres</span></h2>
+        </div>
+        <div class="navGroups">
+          <div class="navGroup">
+            <h3 class="navGroupCategoryTitle">Chapitres</h3>
+            <ul class="">
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#a-propos-de-donjon-et-dragons"
+                  >A propos de Donjon et Dragons</a
+                >
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#nous-sommes-les-nains"
+                  >Nous sommes les Nains</a
+                >
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#les-heros-ont-des-caracteristiques"
+                  >Les Héros ont des caractéristiques</a
+                >
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#les-races-donnent-des-modificateurs"
+                  >Les races donnent des modificateurs</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/ocaml-functors/#les-nains-ont-un-bonus-de-2-en-constitution">Les nains ont un bonus de +2 en constitution</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/ocaml-functors/#n-oublions-pas-les-elfes-demi-orc-halfling-ou-tieflings">N&#x27;oublions pas les Elfes, Demi-Orc, Halfling ou Tieflings</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/ocaml-functors/#toutes-les-competences-peuvent-avoir-des-bonus">Toutes les compétences peuvent avoir des bonus</a>
+                  </li>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/ocaml-functors/#synthese">Synthèse</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#united-color-of-faerun"
+                  >United color of Faerûn</a
+                >
+                
+                <ul>
+                  
+                  <li>
+                    <a href="https://oteku.github.io/ocaml-functors/#the-companions-of-the-hall">The companions of the Hall</a>
+                  </li>
+                  
+                </ul>
+                
+              </li>
+              
+              <li class="navListItem">
+                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#take-away"
+                  >Take away</a
+                >
+                
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </nav>
+</div>
+<div class="container mainContainer postContainer blogContainer">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="post">
+        <header class="postHeader">
+          <h1 class="postHeaderTitle">
+            <a class="navItem" href="https:&#x2F;&#x2F;oteku.github.io&#x2F;ocaml-functors&#x2F;">OCaml : DnD Kata</a>
+          </h1>
+          <p class="post-meta">
+            2020-12-27 | Temps de lecture 12 minutes
+          </p>
+          
+          <a href="/tags/OCaml"> #OCaml </a>
+        </header>
+        <article class="post-content">
+          <div><p>Lorsque je découvre ou veux expliquer un concept, j'aime assez m'appuyer sur un Kata, un excercice court pour mettre en avant une pratique de programmation. Je vous propose donc le <strong>DnD Kata</strong>, dont l'objectif est de modéliser une équipes de personnage pour une partie du jeu de rôle Donjon et Dragons. Bien sûr modéliser l'ensemble des règles est un exercice complexe, nous nous contenterons ici de représenter un personnage par :</p>
+<ul>
+<li>son nom</li>
+<li>sa race</li>
+<li>ses compétences, incluant et bien sûr ses bonus raciaux</li>
+</ul>
+<p>Une équipe est une collection de personnages, pouvant être de races différentes.</p>
+<p>L'objectif pédagogique de ce kata est d'illustrer les <a href="https://oteku.github.io/reasonml-modules/#les-foncteurs">foncteurs OCaml</a> et de démontrer comment ils contribuent à appliquer les principes S.O.L.I.D en OCaml.</p>
+<span id="continue-reading"></span><h2 id="a-propos-de-donjon-et-dragons">A propos de Donjon et Dragons</h2>
+<p>Donjon &amp; Dragons a.k.a DnD est un jeu de rôle où les joueurs incarnent des héros dans un univers fantastique. L'univers principal de ce jeu est Faerûn, un continent de la planète Abeir-Toril. Nous utiliserons le système <a href="https://github.com/Umbyology/OGL-SRD5">Donjon &amp; Dragons 5ème Édition sous la licence Open-Gaming (OGL)</a>.</p>
+<h2 id="nous-sommes-les-nains">Nous sommes les Nains</h2>
+<p>Nous allons commencer par modéliser les Nains, l'une des races jouables de Faerûn, par leur nom.</p>
+<p>Nous savons déjà qu'un bon moyen d'avoir un espace de noms dans OCaml est d'utiliser des modules, nous pouvons donc commencer par cette représentation :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end
+</span></code></pre>
+<p>Dans cette implémentation, le type du module est inféré. On peut aussi le rendre explicite en ajoutant une signature de module et en modélisant les Elfes en même temps :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">sig
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end
+
+module </span><span style="color:#73d0ff;">Elf </span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">sig
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end
+</span></code></pre>
+<p>A cette étape on remarque que les 2 modules partagent la même signature. Étant donné que les modules Elf et Nain représentent des héros jouables, cela semble légitime et nous préciserions que tous les héros jouables partagent la même signature. Pour ce faire, nous pouvons utiliser un type de module :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end
+
+module </span><span style="color:#73d0ff;">Dwarf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end
+
+module </span><span style="color:#73d0ff;">Elf </span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+end
+</span></code></pre>
+<p>Les autres modules n'ont pas besoin de connaître la forme du type <code>PLAYABLE.t</code>, ils ont seulement besoin de savoir qu'il existe et le module doit exposer des fonctions pour l'utiliser.</p>
+<p>On appelle cela une <strong>abstraction</strong>, car on rend le type <code>t</code> abstrait :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
+  type t
+  val to_string : t -&gt; string
+  val of_string : string -&gt; t
+end
+</span></code></pre>
+<p>Chaque module de type PLAYABLE doit implémenter ces fonctions. Faisons le :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">to_string </span><span style="color:#ffcc66;">dwarf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> dwarf.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">of_string </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name}
+</span><span style="color:#ffa759;">end
+
+module </span><span style="color:#73d0ff;">Elf </span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
+  let </span><span style="color:#ffd580;">to_string </span><span style="color:#ffcc66;">elf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elf
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">of_string </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> name
+</span><span style="color:#ffa759;">end
+</span></code></pre>
+<p>Puisque <code>t</code> est abstrait, vous remarquerez que chaque module implémentant<code> PLAYABLE</code> peut avoir un type de concret différent pour <code>t</code>. C'est tout à fait correct tant qu'ils respectent leur contrat de type de module.</p>
+<p>Depuis un autre module, nous ne pouvons pas accéder à une valeur concrète de <code>t</code>, mais nous pouvons créer un nain ou obtenir une représentation sous forme de <code>string</code>.</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">gimly </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Dwarf.of_string </span><span style="color:#bae67e;">&quot;Gimly&quot;
+</span><span style="color:#ffa759;">let </span><span style="color:#ffcc66;">() </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Dwarf.to_string gimply </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> print_endline
+</span></code></pre><h2 id="les-heros-ont-des-caracteristiques">Les Héros ont des caractéristiques</h2>
+<p>Dans DnD, un héros est également représenté par ses caractéristiques :</p>
+<ul>
+<li>La Force représente la puissance physique, l'aptitude athlétique naturelle</li>
+<li>La Dextérité représente l'agilité, les réflexes, l'équilibre</li>
+<li>La Constitution représente la santé, l'endurance, la force vitale</li>
+<li>L'Intelligence représente l'acuité mentale, le raisonnement, la mémoire</li>
+<li>La Sagesse représente la perception, l'intuition, la perspicacité</li>
+<li>Le Charisme représente la force de personnalité, l'éloquence, le leadership</li>
+</ul>
+<p>Il y a plusieurs règles optionnelles pour les caractéristiques à la création, nous n'implémenterons que celle des <em>Standard scores</em>. Au début, chaque capacité a une valeur de 10 :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Abilities </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{
+    strength : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">dexterity : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">constitution : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">intelligence : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">wisdom : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">charisma : </span><span style="color:#ffa759;">int
+  </span><span style="color:#ccc9c2;">}
+
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">init </span><span style="color:#ffcc66;">() </span><span style="color:#f29e74;">=  </span><span style="color:#ccc9c2;">{
+    strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2;">}
+</span><span style="color:#ffa759;">end
+</span></code></pre>
+<p>Nous pouvons ainsi faire évoluer notre module <code>Dwarf</code> :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">to_string </span><span style="color:#ffcc66;">dwarf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> dwarf.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">of_string </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+</span><span style="color:#ffa759;">end
+</span></code></pre>
+<p>Les noms de nos fonctions ne sont plus très appropriés, nous allons donc mettre à jour le type de module <code>PLAYABLE</code> puis les modules<code> Elf</code> et <code>Dwarf</code> :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
+  type t
+  val name : t -&gt; string
+  val make : string -&gt; t
+end
+
+module Dwarf: PLAYABLE  </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">name </span><span style="color:#ffcc66;">dwarf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> dwarf.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+</span><span style="color:#ffa759;">end
+
+module </span><span style="color:#73d0ff;">Elf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">name </span><span style="color:#ffcc66;">elf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> elf.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+</span><span style="color:#ffa759;">end
+</span></code></pre><h2 id="les-races-donnent-des-modificateurs">Les races donnent des modificateurs</h2>
+<h3 id="les-nains-ont-un-bonus-de-2-en-constitution">Les nains ont un bonus de +2 en constitution</h3>
+<p>En OCaml, les modules sont de premier ordre, cela signifie que vous pouvez utiliser module comme des valeurs. On peut donc créer un nouveau type de module pour représenter un bonus et des fonctions pour représenter un bonus de 2 :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">BONUS </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
+  type t
+  val value : t
+end
+</span></code></pre>
+<p>Ainsi qu'une valeur qui permet d'optenir un module de ce type :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ffd580;">bonus_2 </span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">(module BONUS with type t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module struct
+    type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">int
+    let </span><span style="color:#ccc9c2;">value </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+</span><span style="color:#ffa759;">end</span><span style="color:#ccc9c2;">)
+</span></code></pre>
+<p><code>bonus_2</code> est un module en tant que valeur. Puisque que <code>t</code> est abstrait, nous devons ajouter un  type témoin <code>with type t = int</code>.</p>
+<p>Pour extraire la valeur du bonus, nous avons également besoin d'un getter :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ffd580;">get_bonus </span><span style="color:#ffcc66;">b </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">let module </span><span style="color:#ccc9c2;">M </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">(val (b </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> (module BONUS with type t = int</span><span style="color:#ccc9c2;">))) </span><span style="color:#ffa759;">in </span><span style="color:#ccc9c2;">M.value
+</span></code></pre>
+<blockquote>
+<p>Je reconnais que la syntaxe des modules de premier ordre n'est pas des plus aggréable, nous verrons que leur usage est somme toute limité. Si vous cherchez des explications supplémentaires sur vous pouvez lire : https://dev.realworldocaml.org/first-class-modules.html</p>
+</blockquote>
+<p>Nous pouvons dorénavant écrire : </p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">name </span><span style="color:#ffcc66;">dwarf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> dwarf.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">constitution </span><span style="color:#ffcc66;">dwarf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> dwarf.abilities.constitution </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> get_bonus bonus_2
+</span><span style="color:#ffa759;">end
+</span></code></pre><h3 id="n-oublions-pas-les-elfes-demi-orc-halfling-ou-tieflings">N'oublions pas les Elfes, Demi-Orc, Halfling ou Tieflings</h3>
+<p>Les nains ne sont pas la seule race de Faerun. Chacun a un bonus de constitution différent. Les demi-orcs ont +1 tandis que les Elfes, les Halfling et les Tieflings n'ont pas de bonus de constitution.</p>
+<p>Lorsque les données d'une fonction varient, nous ajoutons un paramètre de fonction pour éviter la duplication de code. Nous pouvons faire de même au niveau du module. OCaml possèdes des <strong>foncteurs</strong> qui sont des modules fonctionnels : des fonctions de modules à module.</p>
+<p>Nous pouvons donc créer un foncteur <code>Race</code> :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(</span><span style="color:#73d0ff;">B </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">) : </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">name </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">constitution_bonus </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value </span><span style="font-style:italic;color:#5c6773;">(* here we get the value from module B *)
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">constitution </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.constitution </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> constitution_bonus
+</span><span style="color:#ffa759;">end
+</span></code></pre>
+<blockquote>
+<p>Se lit : le foncteur <code>Race</code> prend comme paramètre un module <code>B</code> de type <code>BONUS</code> dont le type <code>t</code> est <code>int</code> et retourne ensuite un module de type<code> PLAYBLE</code>.</p>
+</blockquote>
+<p>Ensuite, nous pouvons facilement construire nos modules :</p>
+<pre style="background-color:#212733;">
+<code><span style="font-style:italic;color:#5c6773;">(* we add a function to manage all bonus *)
+</span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">bonus </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">x</span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">) </span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">(module BONUS with type t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module struct
+    type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">int
+    let </span><span style="color:#ccc9c2;">value </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> x
+</span><span style="color:#ffa759;">end</span><span style="color:#ccc9c2;">)
+
+</span><span style="font-style:italic;color:#5c6773;">(* we use our Race functor to create the five races *)
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus </span><span style="color:#ffcc66;">2</span><span style="color:#ccc9c2;">)
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Elf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">)
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Tiefling </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">)
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Halfling </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">)
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">HalfOrc </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)
+</span></code></pre>
+<blockquote>
+<p>Vous comprenez maintenant pourquoi nous avons introduit les modules de premier ordre précédemment. Ils facilitent le passage de valeur entre le <em>Type level</em> et le <em>Module level</em>, ce qui est très pratique ici.</p>
+</blockquote>
+<h3 id="toutes-les-competences-peuvent-avoir-des-bonus">Toutes les compétences peuvent avoir des bonus</h3>
+<p>Les foncteurs ne sont pas limités à un paramètre, nous pouvons donc utiliser la même astuce pour toutes les caractéristiques :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Race
+    </span><span style="color:#ccc9c2;">(</span><span style="color:#73d0ff;">BS </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">)
+    (</span><span style="color:#73d0ff;">BD </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">)
+    (</span><span style="color:#73d0ff;">BC </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">)
+    (</span><span style="color:#73d0ff;">BI </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">)
+    (</span><span style="color:#73d0ff;">BW </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">)
+    (</span><span style="color:#73d0ff;">BCh </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">) : </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">name </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">bonus </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+      strength </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">BS.value
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">BD.value
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">BC.value
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">BI.value
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">BW.value
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">BCh.value
+    }
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">abilities </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+      strength </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.strength </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.strength
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.dexterity </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.dexterity
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.constitution </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.constitution
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.intelligence </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.intelligence
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.wisdom </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.wisdom
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.charisma </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.charisma
+    }
+</span><span style="color:#ffa759;">end
+
+module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">) (val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">) (val bonus </span><span style="color:#ffcc66;">2</span><span style="color:#ccc9c2;">)(val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">) (val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">) (val bonus </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">)
+</span></code></pre>
+<p>Pour notre cas d'utilisation, ce n'est pas pratique, nous devons nous souvenir de l'ordre des bonus. Nous avons déjà un type qui représente toutes les valeurs de capacités <code>Abilities.t</code>, utilisons-le :</p>
+<pre style="background-color:#212733;">
+<code><span style="font-style:italic;color:#5c6773;">(* just create a bonus function that take a Abilities.t and return a Bonus module *)
+</span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">bonus </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">x</span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;">Abilities.t</span><span style="color:#ccc9c2;">) </span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">(module BONUS with type t </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.t) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module struct
+    type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t
+    let </span><span style="color:#ccc9c2;">value </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> x
+</span><span style="color:#ffa759;">end</span><span style="color:#ccc9c2;">)
+
+</span><span style="font-style:italic;color:#5c6773;">(* the functor `Race` take a module `B` of type `BONUS` whom type `t` is `Abilities.t`
+** as parameter and then return a module of type `PLAYBLE`  *)
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Race
+    </span><span style="color:#ccc9c2;">(</span><span style="color:#73d0ff;">B </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = Abilities.t</span><span style="color:#ccc9c2;">) : </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">name </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">bonus </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+      strength </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.strength
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.dexterity
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.constitution
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.intelligence
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.wisdom
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.charisma
+    }
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">abilities </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+      strength </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.strength </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.strength
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.dexterity </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.dexterity
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.constitution </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.constitution
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.intelligence </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.intelligence
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.wisdom </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.wisdom
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.charisma </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.charisma
+    }
+</span><span style="color:#ffa759;">end
+
+</span><span style="font-style:italic;color:#5c6773;">(* create our Dwarf module *)
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2;">})
+</span></code></pre>
+<p>Pour être plus concis et explicite, nous pouvons travailler à partir d'une valeur <code>no_bonus</code> :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">no_bonus </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+    strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2;">}
+
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Elf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Halfling </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Tiefling </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">HalfOrc </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span></code></pre><h3 id="synthese">Synthèse</h3>
+<p>À la fin de cette section, vous devriez avoir :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ccc9c2;">
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Abilities </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{
+    strength : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">dexterity : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">constitution : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">intelligence : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">wisdom : </span><span style="color:#ffa759;">int
+  </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">charisma : </span><span style="color:#ffa759;">int
+  </span><span style="color:#ccc9c2;">}
+
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">init </span><span style="color:#ffcc66;">() </span><span style="color:#f29e74;">=  </span><span style="color:#ccc9c2;">{
+    strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">10
+  </span><span style="color:#ccc9c2;">}
+</span><span style="color:#ffa759;">end
+
+module type </span><span style="color:#73d0ff;">BONUS </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
+  type t
+  val value : t
+end
+
+let bonus (x:Abilities.t) : (module BONUS with type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module struct
+                                                                   type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t
+                                                                   let value </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">x
+                                                                 end</span><span style="color:#ccc9c2;">)
+
+</span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">no_bonus </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+    strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
+  </span><span style="color:#ccc9c2;">}
+
+</span><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
+  type t
+  val make : string -&gt; t
+  val name : t -&gt; string
+  val abilities : t -&gt; Abilities.t
+end
+
+
+module Race
+    (B : BONUS with type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">) : </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
+  type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string </span><span style="color:#f29e74;">; </span><span style="color:#ccc9c2;">abilities : Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">name </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.name
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
+  </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">bonus </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+      strength </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.strength
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.dexterity
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.constitution
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.intelligence
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.wisdom
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">B.value.charisma
+    }
+  </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">abilities </span><span style="color:#ffcc66;">character </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
+      strength </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.strength </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.strength
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.dexterity </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.dexterity
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.constitution </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.constitution
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.intelligence </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.intelligence
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.wisdom </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.wisdom
+    </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> character.abilities.charisma </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> bonus.charisma
+    }
+</span><span style="color:#ffa759;">end
+
+module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Elf </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Halfling </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Tiefling </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2;">})
+</span><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">HalfOrc </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
+  </span><span style="color:#ccc9c2;">})
+</span></code></pre>
+<p>On peut facilement ajouter n'importe quelle race, par exemple les humains on +1 à toutes les caractéristique :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Human </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
+    strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> dexterity </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> constitution </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> intelligence </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wisdom </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> charisma </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
+  </span><span style="color:#ccc9c2;">})
+</span></code></pre><h2 id="united-color-of-faerun">United color of Faerûn</h2>
+<p>Chaque joueur peut jouer un personnage de race différente. Comment modéliser une équipe ?</p>
+<h3 id="the-companions-of-the-hall">The companions of the Hall</h3>
+<blockquote>
+<p>The companions est un livre de R.A. Salvatore un romancier qui a écrit de nombreuses nouvelles situées à Faerûn</p>
+</blockquote>
+<p>Commençons par créer les personnages, nous avons déjà tout ce qu'il faut :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">catti </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Human.make </span><span style="color:#bae67e;">&quot;Catti-brie&quot;
+</span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">regis </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Halfling.make </span><span style="color:#bae67e;">&quot;Regis&quot;
+</span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">bruenor </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Dwarf.make </span><span style="color:#bae67e;">&quot;Bruenor Battlehammer&quot;
+</span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">wulfgar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Human.make </span><span style="color:#bae67e;">&quot;Wulfgar&quot;
+</span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">drizzt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Elf.make </span><span style="color:#bae67e;">&quot;Drizzt Do&#39;Urden&quot;
+</span></code></pre>
+<p>Que se passe-t-il si on crée <em>les compagnions</em> :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ccc9c2;">❌ </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">companions </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">[catti</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> regis</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> bruenor</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wulfgar</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">  drizzt]
+</span></code></pre>
+<p><strong>Error: This expression has type Halfing.t but an expression was expected of type
+Human.t</strong></p>
+<p>Souvenez-vous que le type de <code>list</code> est de type <code>type 'a t = 'a list</code>, moteur d'inférence set <code>'a = Human.t</code> car c'est le type du premier élément de notre liste <code>catti</code>, mais le type <code>regis</code> est <code>Halfing.t</code>.</p>
+<p>Comment pourrions-nous aider le compilateur ? Les paramètres de type doivent être des types concrets.</p>
+<pre style="background-color:#212733;">
+<code><span style="font-style:italic;color:#5c6773;">(* won&#39;t compile PLAYABLE is a module type  *)</span><span style="color:#ccc9c2;">
+❌ </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> team </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">PLAYABLE.t </span><span style="color:#ffa759;">list
+
+</span><span style="font-style:italic;color:#5c6773;">(* won&#39;t compile RACE is a functor
+** aka a function from module to module  *)</span><span style="color:#ccc9c2;">
+❌ </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> team </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">RACE.t </span><span style="color:#ffa759;">list
+</span></code></pre>
+<p>En réalité, il n'y a rien de bien compliqué, le point principal est que les listes OCaml sont monomorphique, il nous faut donc un type unique qui puisse représenter un personnage, quelque soit sa race :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">type buddy </span><span style="color:#ccc9c2cc;">=
+  | </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Dwarf</span><span style="color:#ffa759;">.t
+  </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">Elf </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Elf</span><span style="color:#ffa759;">.t
+  </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">Halfing </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Halfling</span><span style="color:#ffa759;">.t
+  </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">Tiefling </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Tiefling</span><span style="color:#ffa759;">.t
+  </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">HalfOrc </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">HalfOrc</span><span style="color:#ffa759;">.t
+  </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">Human </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Human</span><span style="color:#ffa759;">.t
+  
+let </span><span style="color:#ccc9c2;">companions </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">[</span><span style="color:#73d0ff;">Human</span><span style="color:#ccc9c2;"> catti</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">Halfing</span><span style="color:#ccc9c2;"> regis</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">Dwarf</span><span style="color:#ccc9c2;"> bruenor</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">Human</span><span style="color:#ccc9c2;"> wulfgar</span><span style="color:#ccc9c2cc;">;  </span><span style="color:#73d0ff;">Elf</span><span style="color:#ccc9c2;"> drizzt]
+</span></code></pre>
+<p>Cependant il existe beaucoup d'autre race dans Faerûn, ainsi que des variante. Drizzt par exemple est en réalité un elfe noir et non un elf. Il serait plus opportun d'utiliser des <a href="http://dev.realworldocaml.org/variants.html#scrollNav-4">variants polymorphes</a> afin de faciliter l'extentions de notre librairie, car nous en sommes encore à l'embrayons d'un véritable générateur de personnages :</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">companions_final </span><span style="color:#f29e74;">= 
+    </span><span style="color:#ccc9c2;">[</span><span style="color:#73d0ff;">`Human</span><span style="color:#ccc9c2;"> catti</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Halfing</span><span style="color:#ccc9c2;"> regis</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Dwarf</span><span style="color:#ccc9c2;"> bruenor</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Human</span><span style="color:#ccc9c2;"> wulfgar</span><span style="color:#ccc9c2cc;">;  </span><span style="color:#73d0ff;">`Elf</span><span style="color:#ccc9c2;"> drizzt]
+</span></code></pre>
+<p>dont le type sera</p>
+<pre style="background-color:#212733;">
+<code><span style="color:#ffa759;">val </span><span style="color:#73d0ff;">companions_final </span><span style="color:#ccc9c2cc;">:
+  </span><span style="color:#ccc9c2;">[&gt; </span><span style="color:#73d0ff;">`Dwarf </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Dwarf</span><span style="color:#ffa759;">.t
+   </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">`Elf </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Elf</span><span style="color:#ffa759;">.t
+   </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">`Halfing </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Halfling</span><span style="color:#ffa759;">.t
+   </span><span style="color:#ccc9c2cc;">| </span><span style="color:#73d0ff;">`Human </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Human</span><span style="color:#ffa759;">.t </span><span style="color:#ccc9c2;">]
+  </span><span style="color:#ffa759;">list </span><span style="color:#f29e74;">=
+  </span><span style="color:#ccc9c2;">[</span><span style="color:#73d0ff;">`Human </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;">abstr</span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Halfing </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;">abstr</span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Dwarf </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;">abstr</span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Human </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;">abstr</span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2cc;">;
+   </span><span style="color:#73d0ff;">`Elf </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;">abstr</span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2;">]
+</span></code></pre><h2 id="take-away">Take away</h2>
+<ol>
+<li>OCaml proposes des abstractions utiles pour :</li>
+</ol>
+<ul>
+<li>namespaces : <strong>module</strong></li>
+<li>protocole : <strong>module type</strong></li>
+<li>extension : <strong>functor</strong></li>
+<li>default value or implementation : <strong>functor</strong> ou <strong>first-class module</strong>
+<ul>
+<li>functors sont des fonctions de modules à module</li>
+<li>modules de premier ordre sont des valeurs et permettent de communiquer entre le type level et le module level.</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>S.O.L.I.D n'est pas uniquement une bonne pratique de POO :</li>
+</ol>
+<ul>
+<li>Single responsibility principle =&gt; module</li>
+<li>Open/closed principle =&gt; module</li>
+<li>Liskov substitution principle =&gt; module type</li>
+<li>Interface segregation principle =&gt; module type</li>
+<li>Dependency inversion principle =&gt; functor</li>
+</ul>
+</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      <footer class="nav-footer" id="footer">
+        <section class="sitemap">
+          <a href="/" class="nav-home"
+            ><img src="/img/hacker_mind.svg"" alt="Hacker Mind" width="66"
+            height="58" /></a
+          >
+          <div class="footerSection">
+            <h5>Social</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;twitter.com&#x2F;oteku"
+              class="icon-twitter"
+              >Twitter</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;mastodon.social&#x2F;@oteku"
+              class="icon-link"
+              >Mastodon</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Communauté</h5>
+            
+            <a
+              href="https:&#x2F;&#x2F;www.meetup.com&#x2F;fr-FR&#x2F;LambdaLille&#x2F;"
+              class="icon-beer"
+              >Lambda Lille</a
+            >
+            
+            <a
+              href="https:&#x2F;&#x2F;reactbeerlille.org&#x2F;"
+              class="icon-beer"
+              >React Beer Lille</a
+            >
+            
+          </div>
+          <div class="footerSection">
+            <h5>Hack</h5>
+            
+            <a
+              href="rss.xml"
+              class="icon-rss"
+              >Flux rss</a
+            >
+            <!-- Place this tag where you want the button to render. -->
+            <a
+              class="github-button"
+              href="https://github.com/oteku"
+              aria-label="Follow @oteku on GitHub"
+              >Follow @oteku</a
+            >
+            
+          </div>
+        </section>
+        <section class="copyright">
+          <span>Copyright © 2019 Thomas Haesslé</span>
+        </section>
+        <section class="copyright">
+          <span>Cette page est construite grâce à</span>
+          <a href="https://www.getzola.org/">Zola</a>. Logo by
+          <a href="https://undraw.co/">unDraw</a>.
+        </section>
+        <section class="copyright">
+          <span>Le contenu est distribué sous</span>
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+            >licence CC BY-SA</a
+          >.
+        </section>
+      </footer>
+    </div>
+    <script>
+      addBackToTop({
+        diameter: 56,
+        backgroundColor: "#000",
+        textColor: "#fff",
+        zIndex: 100
+      });
+    </script>
+    
+<!-- The loading of KaTeX is deferred to speed up page rendering -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz"
+  crossorigin="anonymous"
+></script>
+
+<!-- To automatically render math in text elements, include the auto-render extension: -->
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+  crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"
+></script>
+
+  </body>
+</html>
