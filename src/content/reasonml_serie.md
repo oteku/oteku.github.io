@@ -121,8 +121,12 @@ Dans cette série de découverte, nous aborderons ensemble prochainement :
 - [Outillage d'un projet ReasonML](../esy-reasonml)
 - [Découverte d'Irmin](../irmin-database-reasonml)
 - [Gestion des erreurs](../error-management-reasonml)
-- Tests de propriétés
-- GUI avec Revery
 
 Pour illustrer le propos, nous allons développer un générateur de personnage pour le jeu de rôle [Les secrets de la 7eme mer](http://www.legrog.org/jeux/secrets-de-la-7eme-mer) seconde édition.
 ![Vodacce banner](../img/theah.jpg)
+
+# \[EDIT - 27/12/2020\] : Arrêt de la série ReasonML
+
+Les évènements de l'été 2020, aillant amené à la création de [Rescript](https://rescript-lang.org/) ont très fortement réduit mon intérêt pour ces langages.
+
+La direction prise ne correspond plus à ce que j'attends, mes prochains billets seront probablement tournés autour de OCaml. Il est probable que je "traduise" certains billets en OCaml, si vous êtes intéressés, envoyer moi un MP sur Twitter https://twitter.com/Oteku

@@ -16,6 +16,10 @@
         <lastmod>2020-05-31</lastmod>
     </url>
     <url>
+        <loc>https://oteku.github.io/ocaml-functors/</loc>
+        <lastmod>2020-12-27</lastmod>
+    </url>
+    <url>
         <loc>https://oteku.github.io/pipe-macro-rust/</loc>
         <lastmod>2019-03-29</lastmod>
     </url>
@@ -37,6 +41,9 @@
     </url>
     <url>
         <loc>https://oteku.github.io/tags/</loc>
+    </url>
+    <url>
+        <loc>https://oteku.github.io/tags/ocaml/</loc>
     </url>
     <url>
         <loc>https://oteku.github.io/tags/reasonml/</loc>
