@@ -7,21 +7,21 @@ tags = ["OCaml"]
 +++
 
 
-Lorsque je découvre ou veux expliquer un concept, j'aime assez m'appuyer sur un Kata, un excercice court pour mettre en avant une pratique de programmation. Je vous propose donc le **DnD Kata**, dont l'objectif est de modéliser une équipes de personnage pour une partie du jeu de rôle Donjon et Dragons. Bien sûr modéliser l'ensemble des règles est un exercice complexe, nous nous contenterons ici de représenter un personnage par :
+Lorsque je découvre ou veux expliquer un concept, j'aime assez m'appuyer sur un Kata, un exercice court pour mettre en avant une pratique de programmation. Je vous propose donc le **DnD Kata**, dont l'objectif est de modéliser une équipe de personnages pour une partie du jeu de rôles Donjons et Dragons. Bien sûr modéliser l'ensemble des règles est un exercice complexe, nous nous contenterons ici de représenter un personnage par :
 - son nom
 - sa race
-- ses compétences, incluant et bien sûr ses bonus raciaux
+- ses compétences, en incluant bien sûr ses bonus raciaux
 
-Une équipe est une collection de personnages, pouvant être de races différentes.
+Une équipe est une collection de personnages, pouvant être de race différente.
 
 L'objectif pédagogique de ce kata est d'illustrer les [foncteurs OCaml](https://oteku.github.io/reasonml-modules/#les-foncteurs) et de démontrer comment ils contribuent à appliquer les principes S.O.L.I.D en OCaml.
 
 <!-- more -->
 
 
-## A propos de Donjon et Dragons
+## A propos de Donjons et Dragons
 
-Donjon & Dragons a.k.a DnD est un jeu de rôle où les joueurs incarnent des héros dans un univers fantastique. L'univers principal de ce jeu est Faerûn, un continent de la planète Abeir-Toril. Nous utiliserons le système [Donjon & Dragons 5ème Édition sous la licence Open-Gaming (OGL)](https://github.com/Umbyology/OGL-SRD5).
+Donjons & Dragons a.k.a DnD est un jeu de rôles où les joueurs incarnent des héros dans un univers fantastique. L'univers principal de ce jeu est Faerûn, un continent de la planète Abeir-Toril. Nous utiliserons le système [Donjons & Dragons 5ème Édition sous la licence Open-Gaming (OGL)](https://github.com/Umbyology/OGL-SRD5).
 
 ## Nous sommes les Nains
 
@@ -51,7 +51,7 @@ end = struct
 end
 ```
 
-A cette étape on remarque que les 2 modules partagent la même signature. Étant donné que les modules Elf et Nain représentent des héros jouables, cela semble légitime et nous préciserions que tous les héros jouables partagent la même signature. Pour ce faire, nous pouvons utiliser un type de module :
+A cette étape on remarque que les 2 modules partagent la même signature. Étant donné que les modules Elf et Dwarf représentent des héros jouables, cela semble légitime et nous préciserons que tous les héros jouables partagent la même signature. Pour ce faire, nous pouvons utiliser un type de module :
 
 
 ```OCaml
@@ -68,7 +68,7 @@ module Elf : PLAYABLE = struct
 end
 ```
 
-Les autres modules n'ont pas besoin de connaître la forme du type `PLAYABLE.t`, ils ont seulement besoin de savoir qu'il existe et le module doit exposer des fonctions pour l'utiliser.
+Les autres modules n'ont pas besoin de connaître la forme du type `PLAYABLE.t`, ils ont seulement besoin de savoir qu'il existe et le module doit exposer des fonctions pour pouvoir être utilisé.
 
 On appelle cela une **abstraction**, car on rend le type `t` abstrait :
 
@@ -80,7 +80,7 @@ module type PLAYABLE = sig
 end
 ```
 
-Chaque module de type PLAYABLE doit implémenter ces fonctions. Faisons le :
+Chaque module de type PLAYABLE doit implémenter ces fonctions. Faisons-le :
 
 
 ```ocaml
@@ -97,14 +97,14 @@ module Elf : PLAYABLE = struct
 end
 ```
 
-Puisque `t` est abstrait, vous remarquerez que chaque module implémentant` PLAYABLE` peut avoir un type de concret différent pour `t`. C'est tout à fait correct tant qu'ils respectent leur contrat de type de module.
+Puisque `t` est abstrait, vous remarquerez que chaque module implémentant` PLAYABLE` peut avoir un type concret différent pour `t`. C'est tout-à-fait correct tant qu'ils respectent leur contrat de type de module.
 
-Depuis un autre module, nous ne pouvons pas accéder à une valeur concrète de `t`, mais nous pouvons créer un nain ou obtenir une représentation sous forme de `string`.
+Depuis un autre module, nous ne pouvons pas accéder à une valeur concrète de `t`, mais nous pouvons créer un Nain ou obtenir une représentation sous forme de `string`.
 
 
 ```ocaml
 let gimly = Dwarf.of_string "Gimly"
-let () = Dwarf.to_string gimply |> print_endline
+let () = Dwarf.to_string gimly |> print_endline
 ```
 
 ## Les Héros ont des caractéristiques
@@ -117,7 +117,7 @@ Dans DnD, un héros est également représenté par ses caractéristiques :
 - La Sagesse représente la perception, l'intuition, la perspicacité
 - Le Charisme représente la force de personnalité, l'éloquence, le leadership
 
-Il y a plusieurs règles optionnelles pour les caractéristiques à la création, nous n'implémenterons que celle des _Standard scores_. Au début, chaque capacité a une valeur de 10 :
+Il y a plusieurs règles optionnelles pour les caractéristiques à la création, nous n'implémenterons que celles des _Standard scores_. Au début, chaque capacité a une valeur de 10 :
 
 
 ```ocaml
@@ -180,7 +180,7 @@ end
 
 ### Les nains ont un bonus de +2 en constitution
 
-En OCaml, les modules sont de premier ordre, cela signifie que vous pouvez utiliser module comme des valeurs. On peut donc créer un nouveau type de module pour représenter un bonus et des fonctions pour représenter un bonus de 2 :
+En OCaml, les modules sont de premier ordre, cela signifie que vous pouvez utiliser un module comme des valeurs. On peut donc créer un nouveau type de module pour représenter un bonus et des fonctions pour représenter un bonus de 2 :
 
 ```ocaml
 module type BONUS = sig
@@ -189,7 +189,7 @@ module type BONUS = sig
 end
 ```
 
-Ainsi qu'une valeur qui permet d'optenir un module de ce type :
+Ainsi qu'une valeur qui permet d'obtenir un module de ce type :
 
 ```ocaml
 let bonus_2 : (module BONUS with type t = int) = (module struct
@@ -198,7 +198,7 @@ let bonus_2 : (module BONUS with type t = int) = (module struct
 end)
 ```
 
-`bonus_2` est un module en tant que valeur. Puisque que `t` est abstrait, nous devons ajouter un  type témoin `with type t = int`.
+`bonus_2` est un module en tant que valeur. Puisque `t` est abstrait, nous devons ajouter un type témoin `with type t = int`.
 
 Pour extraire la valeur du bonus, nous avons également besoin d'un getter :
 
@@ -206,7 +206,7 @@ Pour extraire la valeur du bonus, nous avons également besoin d'un getter :
 let get_bonus b = let module M = (val (b : (module BONUS with type t = int))) in M.value
 ```
 
-> Je reconnais que la syntaxe des modules de premier ordre n'est pas des plus aggréable, nous verrons que leur usage est somme toute limité. Si vous cherchez des explications supplémentaires sur vous pouvez lire : https://dev.realworldocaml.org/first-class-modules.html
+> Je reconnais que la syntaxe des modules de premier ordre n'est pas des plus agréables, nous verrons que leur usage est somme toute limité. Si vous cherchez des explications supplémentaires vous pouvez lire : https://dev.realworldocaml.org/first-class-modules.html
 
 Nous pouvons dorénavant écrire : 
 
@@ -219,11 +219,11 @@ module Dwarf: PLAYABLE  = struct
 end
 ```
 
-### N'oublions pas les Elfes, Demi-Orc, Halfling ou Tieflings
+### N'oublions pas les Elfes, Demi-Orcs, Halflings ou Tieflings
 
-Les nains ne sont pas la seule race de Faerun. Chacun a un bonus de constitution différent. Les demi-orcs ont +1 tandis que les Elfes, les Halfling et les Tieflings n'ont pas de bonus de constitution.
+Les Nains ne sont pas la seule race de Faerûn. Chacune a un bonus de constitution différent. Les Demi-orcs ont +1 tandis que les Elfes, les Halflings et les Tieflings n'ont pas de bonus de constitution.
 
-Lorsque les données d'une fonction varient, nous ajoutons un paramètre de fonction pour éviter la duplication de code. Nous pouvons faire de même au niveau du module. OCaml possèdes des **foncteurs** qui sont des modules fonctionnels : des fonctions de modules à module.
+Lorsque les données d'une fonction varient, nous ajoutons un paramètre de fonction pour éviter la duplication de code. Nous pouvons faire de même au niveau du module. OCaml possède des **foncteurs** qui sont des modules fonctionnels : des fonctions de module(s) à module.
 
 Nous pouvons donc créer un foncteur `Race` :
 
@@ -237,7 +237,7 @@ module Race (B : BONUS with type t = int) : PLAYABLE  = struct
 end
 ```
 
-> Se lit : le foncteur `Race` prend comme paramètre un module `B` de type `BONUS` dont le type `t` est `int` et retourne ensuite un module de type` PLAYBLE`.
+> Se lit : le foncteur `Race` prend comme paramètre un module `B` de type `BONUS` dont le type `t` est `int` et retourne un module de type` PLAYABLE`.
 
 Ensuite, nous pouvons facilement construire nos modules :
 
@@ -403,10 +403,11 @@ module type BONUS = sig
   val value : t
 end
 
-let bonus (x:Abilities.t) : (module BONUS with type t = Abilities.t) = (module struct
-                                                                   type t = Abilities.t
-                                                                   let value = x
-                                                                 end)
+let bonus (x:Abilities.t) : (module BONUS with type t = Abilities.t) =
+  (module struct
+    type t = Abilities.t
+    let value = x
+  end)
 
 let no_bonus = Abilities.{
     strength = 0
@@ -465,7 +466,7 @@ module HalfOrc = Race (val bonus Abilities.{
   })
 ```
 
-On peut facilement ajouter n'importe quelle race, par exemple les humains on +1 à toutes les caractéristique :
+On peut facilement ajouter n'importe quelle race, par exemple les humains ont +1 à toutes les caractéristiques :
 
 ```ocaml
 module Human = Race (val bonus Abilities.{
@@ -496,7 +497,7 @@ let wulfgar = Human.make "Wulfgar"
 let drizzt = Elf.make "Drizzt Do'Urden"
 ```
 
-Que se passe-t-il si on crée *les compagnions* :
+Que se passe-t-il si on crée *les compagnons* :
 
 ```ocaml
 ❌ let companions = [catti; regis; bruenor; wulfgar;  drizzt]
@@ -505,7 +506,7 @@ Que se passe-t-il si on crée *les compagnions* :
 **Error: This expression has type Halfing.t but an expression was expected of type
 Human.t**
 
-Souvenez-vous que le type de `list` est de type `type 'a t = 'a list`, moteur d'inférence set `'a = Human.t` car c'est le type du premier élément de notre liste `catti`, mais le type `regis` est `Halfing.t`.
+Souvenez-vous que le type de `list` est `type 'a t = 'a list`, le moteur d'inférence a `'a = Human.t` car c'est le type du premier élément de notre liste `catti`, mais le type `regis` est `Halfing.t`.
 
 Comment pourrions-nous aider le compilateur ? Les paramètres de type doivent être des types concrets.
 
@@ -518,7 +519,7 @@ Comment pourrions-nous aider le compilateur ? Les paramètres de type doivent ê
 ❌ type team = RACE.t list
 ```
 
-En réalité, il n'y a rien de bien compliqué, le point principal est que les listes OCaml sont monomorphique, il nous faut donc un type unique qui puisse représenter un personnage, quelque soit sa race :
+En réalité, il n'y a rien de bien compliqué, le point principal est que les listes OCaml sont monomorphiques, il nous faut donc un type unique qui puisse représenter un personnage, quelque soit sa race :
 
 ```ocaml
 type buddy =
@@ -532,7 +533,7 @@ type buddy =
 let companions = [Human catti; Halfing regis; Dwarf bruenor; Human wulfgar;  Elf drizzt]
 ```
 
-Cependant il existe beaucoup d'autre race dans Faerûn, ainsi que des variante. Drizzt par exemple est en réalité un elfe noir et non un elf. Il serait plus opportun d'utiliser des [variants polymorphes](http://dev.realworldocaml.org/variants.html#scrollNav-4) afin de faciliter l'extentions de notre librairie, car nous en sommes encore à l'embrayons d'un véritable générateur de personnages :
+Cependant il existe beaucoup d'autres races dans Faerûn, ainsi que des variantes. Drizzt par exemple est en réalité un elfe noir et non un elf. Il serait plus opportun d'utiliser des [variants polymorphes](http://dev.realworldocaml.org/variants.html#scrollNav-4) afin de faciliter l'extension de notre librairie, car nous en sommes encore à l'embryon d'un véritable générateur de personnages :
 
 ```ocaml
 let companions_final = 
@@ -554,13 +555,13 @@ val companions_final :
 
 ## Take away
 
-1. OCaml proposes des abstractions utiles pour :
+1. OCaml propose des abstractions utiles pour :
 
-- namespaces : **module**
+- namespace : **module**
 - protocole : **module type**
 - extension : **functor**
-- default value or implementation : **functor** ou **first-class module**
-  - functors sont des fonctions de modules à module
+- default value ou implementation : **functor** ou **first-class module**
+  - functors sont des fonctions de module(s) à module
   - modules de premier ordre sont des valeurs et permettent de communiquer entre le type level et le module level.
 
 2. S.O.L.I.D n'est pas uniquement une bonne pratique de POO :
