@@ -165,8 +165,8 @@
             <ul class="">
               
               <li class="navListItem">
-                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#a-propos-de-donjon-et-dragons"
-                  >A propos de Donjon et Dragons</a
+                <a class="navItem" href="https://oteku.github.io/ocaml-functors/#a-propos-de-donjons-et-dragons"
+                  >A propos de Donjons et Dragons</a
                 >
                 
               </li>
@@ -197,7 +197,7 @@
                   </li>
                   
                   <li>
-                    <a href="https://oteku.github.io/ocaml-functors/#n-oublions-pas-les-elfes-demi-orc-halfling-ou-tieflings">N&#x27;oublions pas les Elfes, Demi-Orc, Halfling ou Tieflings</a>
+                    <a href="https://oteku.github.io/ocaml-functors/#n-oublions-pas-les-elfes-demi-orcs-halflings-ou-tieflings">N&#x27;oublions pas les Elfes, Demi-Orcs, Halflings ou Tieflings</a>
                   </li>
                   
                   <li>
@@ -256,16 +256,16 @@
           <a href="/tags/OCaml"> #OCaml </a>
         </header>
         <article class="post-content">
-          <div><p>Lorsque je découvre ou veux expliquer un concept, j'aime assez m'appuyer sur un Kata, un excercice court pour mettre en avant une pratique de programmation. Je vous propose donc le <strong>DnD Kata</strong>, dont l'objectif est de modéliser une équipes de personnage pour une partie du jeu de rôle Donjon et Dragons. Bien sûr modéliser l'ensemble des règles est un exercice complexe, nous nous contenterons ici de représenter un personnage par :</p>
+          <div><p>Lorsque je découvre ou veux expliquer un concept, j'aime assez m'appuyer sur un Kata, un exercice court pour mettre en avant une pratique de programmation. Je vous propose donc le <strong>DnD Kata</strong>, dont l'objectif est de modéliser une équipe de personnages pour une partie du jeu de rôles Donjons et Dragons. Bien sûr modéliser l'ensemble des règles est un exercice complexe, nous nous contenterons ici de représenter un personnage par :</p>
 <ul>
 <li>son nom</li>
 <li>sa race</li>
-<li>ses compétences, incluant et bien sûr ses bonus raciaux</li>
+<li>ses compétences, en incluant bien sûr ses bonus raciaux</li>
 </ul>
-<p>Une équipe est une collection de personnages, pouvant être de races différentes.</p>
+<p>Une équipe est une collection de personnages, pouvant être de race différente.</p>
 <p>L'objectif pédagogique de ce kata est d'illustrer les <a href="https://oteku.github.io/reasonml-modules/#les-foncteurs">foncteurs OCaml</a> et de démontrer comment ils contribuent à appliquer les principes S.O.L.I.D en OCaml.</p>
-<span id="continue-reading"></span><h2 id="a-propos-de-donjon-et-dragons">A propos de Donjon et Dragons</h2>
-<p>Donjon &amp; Dragons a.k.a DnD est un jeu de rôle où les joueurs incarnent des héros dans un univers fantastique. L'univers principal de ce jeu est Faerûn, un continent de la planète Abeir-Toril. Nous utiliserons le système <a href="https://github.com/Umbyology/OGL-SRD5">Donjon &amp; Dragons 5ème Édition sous la licence Open-Gaming (OGL)</a>.</p>
+<span id="continue-reading"></span><h2 id="a-propos-de-donjons-et-dragons">A propos de Donjons et Dragons</h2>
+<p>Donjons &amp; Dragons a.k.a DnD est un jeu de rôles où les joueurs incarnent des héros dans un univers fantastique. L'univers principal de ce jeu est Faerûn, un continent de la planète Abeir-Toril. Nous utiliserons le système <a href="https://github.com/Umbyology/OGL-SRD5">Donjons &amp; Dragons 5ème Édition sous la licence Open-Gaming (OGL)</a>.</p>
 <h2 id="nous-sommes-les-nains">Nous sommes les Nains</h2>
 <p>Nous allons commencer par modéliser les Nains, l'une des races jouables de Faerûn, par leur nom.</p>
 <p>Nous savons déjà qu'un bon moyen d'avoir un espace de noms dans OCaml est d'utiliser des modules, nous pouvons donc commencer par cette représentation :</p>
@@ -288,7 +288,7 @@ end </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">st
   type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
 end
 </span></code></pre>
-<p>A cette étape on remarque que les 2 modules partagent la même signature. Étant donné que les modules Elf et Nain représentent des héros jouables, cela semble légitime et nous préciserions que tous les héros jouables partagent la même signature. Pour ce faire, nous pouvons utiliser un type de module :</p>
+<p>A cette étape on remarque que les 2 modules partagent la même signature. Étant donné que les modules Elf et Dwarf représentent des héros jouables, cela semble légitime et nous préciserons que tous les héros jouables partagent la même signature. Pour ce faire, nous pouvons utiliser un type de module :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
   type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
@@ -302,7 +302,7 @@ module </span><span style="color:#73d0ff;">Elf </span><span style="color:#ccc9c2
   type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">string
 end
 </span></code></pre>
-<p>Les autres modules n'ont pas besoin de connaître la forme du type <code>PLAYABLE.t</code>, ils ont seulement besoin de savoir qu'il existe et le module doit exposer des fonctions pour l'utiliser.</p>
+<p>Les autres modules n'ont pas besoin de connaître la forme du type <code>PLAYABLE.t</code>, ils ont seulement besoin de savoir qu'il existe et le module doit exposer des fonctions pour pouvoir être utilisé.</p>
 <p>On appelle cela une <strong>abstraction</strong>, car on rend le type <code>t</code> abstrait :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">PLAYABLE </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
@@ -311,7 +311,7 @@ end
   val of_string : string -&gt; t
 end
 </span></code></pre>
-<p>Chaque module de type PLAYABLE doit implémenter ces fonctions. Faisons le :</p>
+<p>Chaque module de type PLAYABLE doit implémenter ces fonctions. Faisons-le :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Dwarf</span><span style="color:#ccc9c2cc;">: </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
   type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{name : </span><span style="color:#ffa759;">string</span><span style="color:#ccc9c2;">}
@@ -325,11 +325,11 @@ module </span><span style="color:#73d0ff;">Elf </span><span style="color:#ccc9c2
   </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">of_string </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> name
 </span><span style="color:#ffa759;">end
 </span></code></pre>
-<p>Puisque <code>t</code> est abstrait, vous remarquerez que chaque module implémentant<code> PLAYABLE</code> peut avoir un type de concret différent pour <code>t</code>. C'est tout à fait correct tant qu'ils respectent leur contrat de type de module.</p>
-<p>Depuis un autre module, nous ne pouvons pas accéder à une valeur concrète de <code>t</code>, mais nous pouvons créer un nain ou obtenir une représentation sous forme de <code>string</code>.</p>
+<p>Puisque <code>t</code> est abstrait, vous remarquerez que chaque module implémentant<code> PLAYABLE</code> peut avoir un type concret différent pour <code>t</code>. C'est tout-à-fait correct tant qu'ils respectent leur contrat de type de module.</p>
+<p>Depuis un autre module, nous ne pouvons pas accéder à une valeur concrète de <code>t</code>, mais nous pouvons créer un Nain ou obtenir une représentation sous forme de <code>string</code>.</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">gimly </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Dwarf.of_string </span><span style="color:#bae67e;">&quot;Gimly&quot;
-</span><span style="color:#ffa759;">let </span><span style="color:#ffcc66;">() </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Dwarf.to_string gimply </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> print_endline
+</span><span style="color:#ffa759;">let </span><span style="color:#ffcc66;">() </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Dwarf.to_string gimly </span><span style="color:#f29e74;">|&gt;</span><span style="color:#ccc9c2;"> print_endline
 </span></code></pre><h2 id="les-heros-ont-des-caracteristiques">Les Héros ont des caractéristiques</h2>
 <p>Dans DnD, un héros est également représenté par ses caractéristiques :</p>
 <ul>
@@ -340,7 +340,7 @@ module </span><span style="color:#73d0ff;">Elf </span><span style="color:#ccc9c2
 <li>La Sagesse représente la perception, l'intuition, la perspicacité</li>
 <li>Le Charisme représente la force de personnalité, l'éloquence, le leadership</li>
 </ul>
-<p>Il y a plusieurs règles optionnelles pour les caractéristiques à la création, nous n'implémenterons que celle des <em>Standard scores</em>. Au début, chaque capacité a une valeur de 10 :</p>
+<p>Il y a plusieurs règles optionnelles pour les caractéristiques à la création, nous n'implémenterons que celles des <em>Standard scores</em>. Au début, chaque capacité a une valeur de 10 :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Abilities </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
   type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">{
@@ -391,27 +391,27 @@ module </span><span style="color:#73d0ff;">Elf</span><span style="color:#ccc9c2c
 </span><span style="color:#ffa759;">end
 </span></code></pre><h2 id="les-races-donnent-des-modificateurs">Les races donnent des modificateurs</h2>
 <h3 id="les-nains-ont-un-bonus-de-2-en-constitution">Les nains ont un bonus de +2 en constitution</h3>
-<p>En OCaml, les modules sont de premier ordre, cela signifie que vous pouvez utiliser module comme des valeurs. On peut donc créer un nouveau type de module pour représenter un bonus et des fonctions pour représenter un bonus de 2 :</p>
+<p>En OCaml, les modules sont de premier ordre, cela signifie que vous pouvez utiliser un module comme des valeurs. On peut donc créer un nouveau type de module pour représenter un bonus et des fonctions pour représenter un bonus de 2 :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">module type </span><span style="color:#73d0ff;">BONUS </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">sig
   type t
   val value : t
 end
 </span></code></pre>
-<p>Ainsi qu'une valeur qui permet d'optenir un module de ce type :</p>
+<p>Ainsi qu'une valeur qui permet d'obtenir un module de ce type :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">let </span><span style="color:#ffd580;">bonus_2 </span><span style="color:#ccc9c2cc;">: </span><span style="color:#ffa759;">(module BONUS with type t </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">int</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module struct
     type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ffa759;">int
     let </span><span style="color:#ccc9c2;">value </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
 </span><span style="color:#ffa759;">end</span><span style="color:#ccc9c2;">)
 </span></code></pre>
-<p><code>bonus_2</code> est un module en tant que valeur. Puisque que <code>t</code> est abstrait, nous devons ajouter un  type témoin <code>with type t = int</code>.</p>
+<p><code>bonus_2</code> est un module en tant que valeur. Puisque <code>t</code> est abstrait, nous devons ajouter un type témoin <code>with type t = int</code>.</p>
 <p>Pour extraire la valeur du bonus, nous avons également besoin d'un getter :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">let </span><span style="color:#ffd580;">get_bonus </span><span style="color:#ffcc66;">b </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">let module </span><span style="color:#ccc9c2;">M </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">(val (b </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> (module BONUS with type t = int</span><span style="color:#ccc9c2;">))) </span><span style="color:#ffa759;">in </span><span style="color:#ccc9c2;">M.value
 </span></code></pre>
 <blockquote>
-<p>Je reconnais que la syntaxe des modules de premier ordre n'est pas des plus aggréable, nous verrons que leur usage est somme toute limité. Si vous cherchez des explications supplémentaires sur vous pouvez lire : https://dev.realworldocaml.org/first-class-modules.html</p>
+<p>Je reconnais que la syntaxe des modules de premier ordre n'est pas des plus agréables, nous verrons que leur usage est somme toute limité. Si vous cherchez des explications supplémentaires vous pouvez lire : https://dev.realworldocaml.org/first-class-modules.html</p>
 </blockquote>
 <p>Nous pouvons dorénavant écrire : </p>
 <pre style="background-color:#212733;">
@@ -421,9 +421,9 @@ end
   </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">make </span><span style="color:#ffcc66;">name </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">{name </span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> abilities </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.init</span><span style="color:#ffcc66;">()</span><span style="color:#ccc9c2;">}
   </span><span style="color:#ffa759;">let </span><span style="color:#ffd580;">constitution </span><span style="color:#ffcc66;">dwarf </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> dwarf.abilities.constitution </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> get_bonus bonus_2
 </span><span style="color:#ffa759;">end
-</span></code></pre><h3 id="n-oublions-pas-les-elfes-demi-orc-halfling-ou-tieflings">N'oublions pas les Elfes, Demi-Orc, Halfling ou Tieflings</h3>
-<p>Les nains ne sont pas la seule race de Faerun. Chacun a un bonus de constitution différent. Les demi-orcs ont +1 tandis que les Elfes, les Halfling et les Tieflings n'ont pas de bonus de constitution.</p>
-<p>Lorsque les données d'une fonction varient, nous ajoutons un paramètre de fonction pour éviter la duplication de code. Nous pouvons faire de même au niveau du module. OCaml possèdes des <strong>foncteurs</strong> qui sont des modules fonctionnels : des fonctions de modules à module.</p>
+</span></code></pre><h3 id="n-oublions-pas-les-elfes-demi-orcs-halflings-ou-tieflings">N'oublions pas les Elfes, Demi-Orcs, Halflings ou Tieflings</h3>
+<p>Les Nains ne sont pas la seule race de Faerûn. Chacune a un bonus de constitution différent. Les Demi-orcs ont +1 tandis que les Elfes, les Halflings et les Tieflings n'ont pas de bonus de constitution.</p>
+<p>Lorsque les données d'une fonction varient, nous ajoutons un paramètre de fonction pour éviter la duplication de code. Nous pouvons faire de même au niveau du module. OCaml possède des <strong>foncteurs</strong> qui sont des modules fonctionnels : des fonctions de module(s) à module.</p>
 <p>Nous pouvons donc créer un foncteur <code>Race</code> :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(</span><span style="color:#73d0ff;">B </span><span style="color:#ccc9c2cc;">:</span><span style="color:#ffa759;"> BONUS with type t = int</span><span style="color:#ccc9c2;">) : </span><span style="color:#73d0ff;">PLAYABLE  </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">struct
@@ -435,7 +435,7 @@ end
 </span><span style="color:#ffa759;">end
 </span></code></pre>
 <blockquote>
-<p>Se lit : le foncteur <code>Race</code> prend comme paramètre un module <code>B</code> de type <code>BONUS</code> dont le type <code>t</code> est <code>int</code> et retourne ensuite un module de type<code> PLAYBLE</code>.</p>
+<p>Se lit : le foncteur <code>Race</code> prend comme paramètre un module <code>B</code> de type <code>BONUS</code> dont le type <code>t</code> est <code>int</code> et retourne un module de type<code> PLAYABLE</code>.</p>
 </blockquote>
 <p>Ensuite, nous pouvons facilement construire nos modules :</p>
 <pre style="background-color:#212733;">
@@ -586,10 +586,11 @@ module type </span><span style="color:#73d0ff;">BONUS </span><span style="color:
   val value : t
 end
 
-let bonus (x:Abilities.t) : (module BONUS with type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module struct
-                                                                   type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t
-                                                                   let value </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">x
-                                                                 end</span><span style="color:#ccc9c2;">)
+let bonus (x:Abilities.t) : (module BONUS with type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t</span><span style="color:#ccc9c2;">) </span><span style="color:#f29e74;">=
+  </span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">module struct
+    type t </span><span style="color:#ccc9c2cc;">= </span><span style="color:#ccc9c2;">Abilities</span><span style="color:#ffa759;">.t
+    let value </span><span style="color:#f29e74;">= </span><span style="color:#ffa759;">x
+  end</span><span style="color:#ccc9c2;">)
 
 </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">no_bonus </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Abilities.{
     strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">0
@@ -647,7 +648,7 @@ module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e
     no_bonus </span><span style="color:#ffa759;">with</span><span style="color:#ccc9c2;"> strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">2
   </span><span style="color:#ccc9c2;">})
 </span></code></pre>
-<p>On peut facilement ajouter n'importe quelle race, par exemple les humains on +1 à toutes les caractéristique :</p>
+<p>On peut facilement ajouter n'importe quelle race, par exemple les humains ont +1 à toutes les caractéristiques :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">module </span><span style="color:#73d0ff;">Human </span><span style="color:#f29e74;">= </span><span style="color:#73d0ff;">Race </span><span style="color:#ccc9c2;">(val bonus Abilities.{
     strength </span><span style="color:#f29e74;">= </span><span style="color:#ffcc66;">1
@@ -671,13 +672,13 @@ module </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#f29e
 </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">wulfgar </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Human.make </span><span style="color:#bae67e;">&quot;Wulfgar&quot;
 </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">drizzt </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">Elf.make </span><span style="color:#bae67e;">&quot;Drizzt Do&#39;Urden&quot;
 </span></code></pre>
-<p>Que se passe-t-il si on crée <em>les compagnions</em> :</p>
+<p>Que se passe-t-il si on crée <em>les compagnons</em> :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ccc9c2;">❌ </span><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">companions </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">[catti</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> regis</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> bruenor</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;"> wulfgar</span><span style="color:#ccc9c2cc;">;</span><span style="color:#ccc9c2;">  drizzt]
 </span></code></pre>
 <p><strong>Error: This expression has type Halfing.t but an expression was expected of type
 Human.t</strong></p>
-<p>Souvenez-vous que le type de <code>list</code> est de type <code>type 'a t = 'a list</code>, moteur d'inférence set <code>'a = Human.t</code> car c'est le type du premier élément de notre liste <code>catti</code>, mais le type <code>regis</code> est <code>Halfing.t</code>.</p>
+<p>Souvenez-vous que le type de <code>list</code> est <code>type 'a t = 'a list</code>, le moteur d'inférence a <code>'a = Human.t</code> car c'est le type du premier élément de notre liste <code>catti</code>, mais le type <code>regis</code> est <code>Halfing.t</code>.</p>
 <p>Comment pourrions-nous aider le compilateur ? Les paramètres de type doivent être des types concrets.</p>
 <pre style="background-color:#212733;">
 <code><span style="font-style:italic;color:#5c6773;">(* won&#39;t compile PLAYABLE is a module type  *)</span><span style="color:#ccc9c2;">
@@ -687,7 +688,7 @@ Human.t</strong></p>
 ** aka a function from module to module  *)</span><span style="color:#ccc9c2;">
 ❌ </span><span style="color:#ffa759;">type</span><span style="color:#ccc9c2;"> team </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">RACE.t </span><span style="color:#ffa759;">list
 </span></code></pre>
-<p>En réalité, il n'y a rien de bien compliqué, le point principal est que les listes OCaml sont monomorphique, il nous faut donc un type unique qui puisse représenter un personnage, quelque soit sa race :</p>
+<p>En réalité, il n'y a rien de bien compliqué, le point principal est que les listes OCaml sont monomorphiques, il nous faut donc un type unique qui puisse représenter un personnage, quelque soit sa race :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">type buddy </span><span style="color:#ccc9c2cc;">=
   | </span><span style="color:#73d0ff;">Dwarf </span><span style="color:#ffa759;">of </span><span style="color:#ccc9c2;">Dwarf</span><span style="color:#ffa759;">.t
@@ -699,7 +700,7 @@ Human.t</strong></p>
   
 let </span><span style="color:#ccc9c2;">companions </span><span style="color:#f29e74;">= </span><span style="color:#ccc9c2;">[</span><span style="color:#73d0ff;">Human</span><span style="color:#ccc9c2;"> catti</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">Halfing</span><span style="color:#ccc9c2;"> regis</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">Dwarf</span><span style="color:#ccc9c2;"> bruenor</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">Human</span><span style="color:#ccc9c2;"> wulfgar</span><span style="color:#ccc9c2cc;">;  </span><span style="color:#73d0ff;">Elf</span><span style="color:#ccc9c2;"> drizzt]
 </span></code></pre>
-<p>Cependant il existe beaucoup d'autre race dans Faerûn, ainsi que des variante. Drizzt par exemple est en réalité un elfe noir et non un elf. Il serait plus opportun d'utiliser des <a href="http://dev.realworldocaml.org/variants.html#scrollNav-4">variants polymorphes</a> afin de faciliter l'extentions de notre librairie, car nous en sommes encore à l'embrayons d'un véritable générateur de personnages :</p>
+<p>Cependant il existe beaucoup d'autres races dans Faerûn, ainsi que des variantes. Drizzt par exemple est en réalité un elfe noir et non un elf. Il serait plus opportun d'utiliser des <a href="http://dev.realworldocaml.org/variants.html#scrollNav-4">variants polymorphes</a> afin de faciliter l'extension de notre librairie, car nous en sommes encore à l'embryon d'un véritable générateur de personnages :</p>
 <pre style="background-color:#212733;">
 <code><span style="color:#ffa759;">let </span><span style="color:#ccc9c2;">companions_final </span><span style="color:#f29e74;">= 
     </span><span style="color:#ccc9c2;">[</span><span style="color:#73d0ff;">`Human</span><span style="color:#ccc9c2;"> catti</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Halfing</span><span style="color:#ccc9c2;"> regis</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Dwarf</span><span style="color:#ccc9c2;"> bruenor</span><span style="color:#ccc9c2cc;">; </span><span style="color:#73d0ff;">`Human</span><span style="color:#ccc9c2;"> wulfgar</span><span style="color:#ccc9c2cc;">;  </span><span style="color:#73d0ff;">`Elf</span><span style="color:#ccc9c2;"> drizzt]
@@ -716,15 +717,15 @@ let </span><span style="color:#ccc9c2;">companions </span><span style="color:#f2
    </span><span style="color:#73d0ff;">`Elf </span><span style="color:#f29e74;">&lt;</span><span style="color:#ccc9c2;">abstr</span><span style="color:#f29e74;">&gt;</span><span style="color:#ccc9c2;">]
 </span></code></pre><h2 id="take-away">Take away</h2>
 <ol>
-<li>OCaml proposes des abstractions utiles pour :</li>
+<li>OCaml propose des abstractions utiles pour :</li>
 </ol>
 <ul>
-<li>namespaces : <strong>module</strong></li>
+<li>namespace : <strong>module</strong></li>
 <li>protocole : <strong>module type</strong></li>
 <li>extension : <strong>functor</strong></li>
-<li>default value or implementation : <strong>functor</strong> ou <strong>first-class module</strong>
+<li>default value ou implementation : <strong>functor</strong> ou <strong>first-class module</strong>
 <ul>
-<li>functors sont des fonctions de modules à module</li>
+<li>functors sont des fonctions de module(s) à module</li>
 <li>modules de premier ordre sont des valeurs et permettent de communiquer entre le type level et le module level.</li>
 </ul>
 </li>
